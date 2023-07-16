@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kex</string>
+    <string name="past_exams">Vergangene Klassenarbeiten anzeigen</string>
+    <string name="score">Note/Punkte</string>
+    <string name="theme">Themen</string>
+    <string name="save">Speichern</string>
+    <string name="login_google">Mit Google anmelden</string>
+    <string name="no_theme">Keine Themen angegeben</string>
+    <string name="no_score">Keine Punkte angegeben</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="create">Erstellen</string>
+    <string name="home">Startseite</string>
+    <string name="tasks">Aufgaben</string>
+    <string name="settings">Einstellungen</string>
+    <string name="exams">Klassenarbeiten</string>
+    <string name="subject">Schulfach</string>
+    <string name="date">Datum</string>
+    <string name="exam">Klassenarbeit</string>
+    <string name="test">Test</string>
+    <string name="type">Typ</string>
+    <string name="delete">Löschen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="delete_entry">Bist du dir sicher, dass du diesen Eintrag löschen willst?</string>
+    <string name="delete_entries">Bist du dir sicher, dass du alle Einträge löschen willst? Nicht benutzerdefinierte Einträge werden bei der Aktualisierung wieder hinzugefügt.</string>
+    <string name="exam_detail">Klassenarbeiten</string>
+    <string name="exam_create">Klassenarbeit erstellen</string>
+</resources>

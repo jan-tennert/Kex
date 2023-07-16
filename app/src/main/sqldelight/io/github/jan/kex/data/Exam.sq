@@ -1,0 +1,21 @@
+CREATE TABLE localExam(
+    id TEXT PRIMARY KEY NOT NULL,
+    subject TEXT NOT NULL,
+    theme TEXT,
+    date TEXT NOT NULL,
+    points INTEGER,
+    type TEXT NOT NULL,
+    custom INTEGER NOT NULL
+);
+
+selectAll:
+SELECT * FROM localExam;
+
+insert:
+INSERT OR REPLACE INTO localExam (id, subject, theme, date, points, type, custom) VALUES (?, ?, ?, ?, ?, ?, ?);
+
+update:
+UPDATE localExam SET id = ?, subject = ?, date = ?, points = ? WHERE id = ?;
+
+delete:
+DELETE FROM localExam WHERE id = ?;
