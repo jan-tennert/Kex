@@ -20,6 +20,7 @@ compose-navigation = "2.7.0-beta02"
 swipe-refresh = "0.31.5-beta"
 compose = "1.5.0-beta03"
 material3 = "1.1.1"
+compose-rich-editor = "1.0.0-alpha01"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -57,6 +58,8 @@ ktor-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 
 sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }
+
+compose-rich-editor = { group = "com.mohamedrejeb.richeditor", name = "richeditor-compose", version.ref = "compose-rich-editor" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

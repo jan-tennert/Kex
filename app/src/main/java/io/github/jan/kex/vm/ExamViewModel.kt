@@ -8,11 +8,9 @@ import io.github.jan.kex.data.remote.ExamApi
 import io.github.jan.kex.data.remote.ExamData
 import io.github.jan.kex.data.remote.toExam
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -23,19 +21,12 @@ class ExamViewModel(
     private val examDataSource: ExamDataSource
 ): ViewModel() {
 
-    lateinit var exams: StateFlow<List<Exam>>
+    val exams: Flow<List<Exam>> = examDataSource.getExamsAsFlow()
     val isLoading = MutableStateFlow(false)
     val showPastExams = MutableStateFlow(false)
-    lateinit var filteredExams: StateFlow<List<Exam>>
-
-    init {
-        viewModelScope.launch {
-            exams = examDataSource.getExamsAsFlow().stateIn(viewModelScope)
-            filteredExams = exams.combine(showPastExams) { exams, showPastExams ->
-                val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-                exams.filter { it.date > currentDate || showPastExams }.sortedBy { it.date }
-            }.stateIn(viewModelScope)
-        }
+    val filteredExams: Flow<List<Exam>> = exams.combine(showPastExams) { exams, showPastExams ->
+        val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        exams.filter { it.date > currentDate || showPastExams }.sortedBy { it.date }
     }
 
     fun refreshExams(username: String, password: String) {
@@ -83,12 +74,16 @@ class ExamViewModel(
         }
     }
 
-    fun deleteExam(examId: String) {
+    fun deleteExam(exam: Exam, custom: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
-                examApi.deleteExam(examId)
+                examApi.deleteExam(exam.id)
             }.onSuccess {
-                examDataSource.deleteExam(examId)
+                if(custom) {
+                    examDataSource.deleteExam(exam.id)
+                } else {
+                    examDataSource.insertExams(listOf(exam.copy(theme = null, points = null)))
+                }
             }.onFailure {
                 it.printStackTrace()
             }

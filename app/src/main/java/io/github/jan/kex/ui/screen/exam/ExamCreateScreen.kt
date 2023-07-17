@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -34,9 +36,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.mohamedrejeb.richeditor.model.RichTextState
+import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.ui.components.DropDownField
+import io.github.jan.kex.ui.components.RichTextStyleRow
 import io.github.jan.kex.ui.icons.rememberDateRange
 import io.github.jan.kex.ui.icons.rememberDone
 import io.github.jan.kex.ui.icons.rememberSubject
@@ -51,14 +56,13 @@ fun ExamCreateScreen(
     onCreate: (subject: String, date: String, theme: String, type: Exam.Type) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         var subject by remember { mutableStateOf("") }
         val datePickerState = rememberDatePickerState()
         var showDatePicker by remember { mutableStateOf(false) }
-        var theme by remember { mutableStateOf("") }
+        val theme by remember { mutableStateOf(RichTextState()) }
         val selectedDate = remember(datePickerState, showDatePicker) {
             datePickerState.selectedDateMillis?.let {
                 val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(
@@ -78,7 +82,6 @@ fun ExamCreateScreen(
             leadingIcon = { Icon(rememberTypeSpecimen(), contentDescription = null) },
             singleLine = true
         )
-        Spacer(modifier = Modifier.padding(8.dp))
         DropDownField(
             expanded = expandTypeField,
             value = stringResource(type.nameId),
@@ -89,7 +92,6 @@ fun ExamCreateScreen(
                 DropdownMenuItem(text = { Text(stringResource(it.nameId))}, onClick = { type = it; expandTypeField = false })
             }
         }
-        Spacer(modifier = Modifier.padding(8.dp))
         OutlinedTextField(
             value = selectedDate ?: "",
             onValueChange = {},
@@ -107,14 +109,12 @@ fun ExamCreateScreen(
                 disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         )
-        Spacer(modifier = Modifier.padding(8.dp))
-        OutlinedTextField(
-            value = theme,
-            onValueChange = { theme = it },
+        RichTextStyleRow(state = theme)
+        OutlinedRichTextEditor(
+            state = theme,
             label = { Text(stringResource(R.string.theme)) },
-            leadingIcon = { Icon(rememberSubject(), contentDescription = null) },
-            minLines = 2
-        )
+            //     leadingIcon = { Icon(rememberSubject(), null)},
+            modifier = Modifier.weight(1f).fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)        )
         if (showDatePicker) {
             DatePickerDialog(
                 onDismissRequest = { showDatePicker = false },
@@ -129,12 +129,10 @@ fun ExamCreateScreen(
                 )
             }
         }
-        Spacer(Modifier.weight(1f))
         Button(
-            onClick = { onCreate(subject, selectedDate!!, theme, type)},
+            onClick = { onCreate(subject, selectedDate!!, theme.toHtml(), type)},
             modifier = Modifier
-         //       .align(Alignment.Center)
-                .padding(16.dp)
+                .padding(12.dp)
         ) {
             Icon(rememberDone(), contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))

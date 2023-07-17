@@ -24,4 +24,6 @@
     <string name="delete_entries">Are you sure you want to delete all exams? Non custom entries will get re-added on refresh.</string>
     <string name="exam_detail">Exams</string>
     <string name="exam_create">Create Exam</string>
+    <string name="exam_edit">Edit Exam</string>
+    <string name="gfs">GFS</string>
 </resources>

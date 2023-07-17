@@ -55,9 +55,8 @@ fun ExamScreen(
     authVm: AuthenticationViewModel = getViewModel(),
     navController: NavController
 ) {
-    val exams by examVm.exams.collectAsState()
     val showPastExams by examVm.showPastExams.collectAsState()
-    val filteredExams by examVm.filteredExams.collectAsState()
+    val filteredExams by examVm.filteredExams.collectAsState(emptyList())
     
     val isLoading by examVm.isLoading.collectAsState()
     val swipeRefreshState = rememberSwipeRefreshState(isLoading)

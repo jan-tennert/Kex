@@ -39,7 +39,7 @@ data class Exam(
     val points: Long? = null
 ) {
     enum class Type(val nameId: Int) {
-        EXAM(R.string.exam), TEST(R.string.test)
+        EXAM(R.string.exam), TEST(R.string.test), GFS(R.string.gfs)
     }
 }
 

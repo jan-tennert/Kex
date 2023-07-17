@@ -25,4 +25,6 @@
     <string name="delete_entries">Bist du dir sicher, dass du alle Einträge löschen willst? Nicht benutzerdefinierte Einträge werden bei der Aktualisierung wieder hinzugefügt.</string>
     <string name="exam_detail">Klassenarbeiten</string>
     <string name="exam_create">Klassenarbeit erstellen</string>
+    <string name="exam_edit">Klassenarbeit bearbeiten</string>
+    <string name="gfs">GFS</string>
 </resources>
