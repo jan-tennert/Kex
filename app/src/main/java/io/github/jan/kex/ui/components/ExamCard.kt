@@ -1,5 +1,6 @@
 package io.github.jan.kex.ui.components
 
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.jan.kex.data.remote.Exam
+import java.time.format.TextStyle
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,14 +48,21 @@ fun ExamCard(exam: Exam, selected: Boolean, showSelection: Boolean, modifier: Mo
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(exam.subject, fontWeight = FontWeight.Bold, fontSize = 15.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text("${exam.date.dayOfMonth}.${exam.date.monthNumber}.${exam.date.year}", fontSize = 10.sp)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Text(
+                        text = exam.date.dayOfWeek.getDisplayName(
+                            TextStyle.SHORT,
+                            Locale.getDefault()
+                        ) + " ${exam.date.dayOfMonth} ${
+                            exam.date.month.getDisplayName(
+                                TextStyle.FULL,
+                                Locale.getDefault()
+                            )
+                        }",
+                        fontSize = 10.sp
+                    )
+                }
             }
         }
     }
-}
-
-@Composable
-@Preview
-fun ExamCardPreview() {
-  //  ExamCard(Exam("", "Math", "10.10.2021", null), Modifier.size(200.dp))
 }

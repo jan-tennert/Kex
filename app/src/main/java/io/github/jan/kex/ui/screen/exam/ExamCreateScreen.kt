@@ -3,11 +3,8 @@ package io.github.jan.kex.ui.screen.exam
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -16,15 +13,10 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,11 +32,10 @@ import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
+import io.github.jan.kex.ui.components.DatePickerField
 import io.github.jan.kex.ui.components.DropDownField
 import io.github.jan.kex.ui.components.RichTextStyleRow
-import io.github.jan.kex.ui.icons.rememberDateRange
 import io.github.jan.kex.ui.icons.rememberDone
-import io.github.jan.kex.ui.icons.rememberSubject
 import io.github.jan.kex.ui.icons.rememberTypeSpecimen
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -92,29 +83,16 @@ fun ExamCreateScreen(
                 DropdownMenuItem(text = { Text(stringResource(it.nameId))}, onClick = { type = it; expandTypeField = false })
             }
         }
-        OutlinedTextField(
-            value = selectedDate ?: "",
-            onValueChange = {},
-            enabled = false,
-            label = { Text(stringResource(R.string.date)) },
-            modifier = Modifier.noRippleClickable { showDatePicker = true },
-            leadingIcon = { Icon(rememberDateRange(), contentDescription = null) },
-            colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                disabledBorderColor = MaterialTheme.colorScheme.outline,
-                disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                //For Icons
-                disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        )
+        DatePickerField(selectedDate = selectedDate, onClick = { showDatePicker = true })
         RichTextStyleRow(state = theme)
         OutlinedRichTextEditor(
             state = theme,
             label = { Text(stringResource(R.string.theme)) },
             //     leadingIcon = { Icon(rememberSubject(), null)},
-            modifier = Modifier.weight(1f).fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)        )
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp)        )
         if (showDatePicker) {
             DatePickerDialog(
                 onDismissRequest = { showDatePicker = false },

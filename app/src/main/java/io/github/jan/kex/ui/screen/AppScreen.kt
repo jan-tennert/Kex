@@ -27,14 +27,20 @@ import io.github.jan.kex.ui.screen.exam.ExamCreateScreen
 import io.github.jan.kex.ui.screen.exam.ExamDetailScreen
 import io.github.jan.kex.ui.screen.exam.ExamEditScreen
 import io.github.jan.kex.ui.screen.exam.ExamScreen
+import io.github.jan.kex.ui.screen.subjects.SubjectDetailScreen
+import io.github.jan.kex.ui.screen.subjects.SubjectScreen
 import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
+import io.github.jan.kex.vm.SubjectViewModel
+import io.github.jan.kex.vm.TaskViewModel
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun AppScreen(
     examVm: ExamViewModel = getViewModel(),
     authVm: AuthenticationViewModel = getViewModel(),
+    subjectVm: SubjectViewModel = getViewModel(),
+    taskVm: TaskViewModel = getViewModel()
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -103,8 +109,15 @@ fun AppScreen(
                 composable(NavigationTarget.Settings.destination) {
                     SettingsScreen()
                 }
-                composable(NavigationTarget.Tasks.destination) {
-                    TaskScreen()
+                composable(NavigationTarget.Subjects.destination) {
+                    SubjectScreen(subjectVm, taskVm, navController)
+                }
+                composable(NavigationTarget.Subjects.Detail.destination, arguments = listOf(navArgument("subjectId") { type = NavType.StringType })) { entry ->
+                    SubjectDetailScreen(
+                        subjectId = entry.arguments?.getString("subjectId")?.toLongOrNull() ?: error("No subjectId provided"),
+                        taskViewModel = taskVm,
+                        subjectViewModel = subjectVm,
+                    )
                 }
             }
         }

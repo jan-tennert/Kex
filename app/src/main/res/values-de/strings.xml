@@ -23,8 +23,10 @@
     <string name="cancel">Abbrechen</string>
     <string name="delete_entry">Bist du dir sicher, dass du diesen Eintrag löschen willst?</string>
     <string name="delete_entries">Bist du dir sicher, dass du alle Einträge löschen willst? Nicht benutzerdefinierte Einträge werden bei der Aktualisierung wieder hinzugefügt.</string>
+    <string name="delete_subject">Bist du dir sicher, dass du dieses Fach löschen willst? Dies wird auch alle anstehenden Aufgaben löschen!</string>
     <string name="exam_detail">Klassenarbeiten</string>
     <string name="exam_create">Klassenarbeit erstellen</string>
     <string name="exam_edit">Klassenarbeit bearbeiten</string>
     <string name="gfs">GFS</string>
+    <string name="task">Aufgabe</string>
 </resources>

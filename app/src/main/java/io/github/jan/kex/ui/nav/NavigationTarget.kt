@@ -10,7 +10,11 @@ import io.github.jan.kex.ui.icons.SettingsIcon
 sealed class NavigationTarget(val destination: String, val labelId: Int) {
 
     data object Home: Main("home", HomeIcon, R.string.home)
-    data object Tasks: Main("tasks", ChecklistIcon, R.string.tasks)
+    data object Subjects: Main("subjects", ChecklistIcon, R.string.tasks) {
+
+        data object Detail: NavigationTarget("subjects/{subjectId}", R.string.tasks)
+
+    }
     data object Exams: Main("exams", ExamIcon, R.string.exams) {
         data object Detail: NavigationTarget("exams/{examId}", R.string.exam_detail)
         data object Create: NavigationTarget("exams/create", R.string.exam_create)
@@ -23,7 +27,7 @@ sealed class NavigationTarget(val destination: String, val labelId: Int) {
     sealed class Main(destination: String, val icon: ImageVector, labelId: Int): NavigationTarget(destination, labelId) {
 
         companion object {
-            val entries = listOf(Home, Tasks, Exams, Settings)
+            val entries = listOf(Home, Subjects, Exams, Settings)
         }
 
     }

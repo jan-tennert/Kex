@@ -1,0 +1,18 @@
+import kotlinx.datetime.Instant;
+
+CREATE TABLE localSubject(
+    id INTEGER PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM localSubject;
+
+insert:
+INSERT OR REPLACE INTO localSubject (id, name) VALUES ( ?, ?);
+
+update:
+UPDATE localSubject SET name = ? WHERE id = ?;
+
+delete:
+DELETE FROM localSubject WHERE id = ?;

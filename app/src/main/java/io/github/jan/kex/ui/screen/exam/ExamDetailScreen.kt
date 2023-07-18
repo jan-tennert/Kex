@@ -40,51 +40,59 @@ fun ExamDetailScreen(exam: Exam, onEdit: () -> Unit, onDelete: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
-        Column(
-            modifier = Modifier.align(Alignment.Start)
-        ) {
-            val themeState = remember(exam) {
-                exam.theme?.let {
-                    RichTextState().apply {
-                        setHtml(it)
-                    }
-                }
-            }
-            Text(exam.subject, fontSize = 40.sp)
-            Text("${exam.date.dayOfMonth}.${exam.date.monthNumber}.${exam.date.year}", fontSize = 15.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(stringResource(R.string.score), fontSize = 25.sp, fontWeight = FontWeight.Bold)
-            Text(exam.points?.toString() ?: stringResource(R.string.no_score), fontSize = 20.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(stringResource(R.string.theme), fontSize = 25.sp, fontWeight = FontWeight.Bold)
-            Box(Modifier.weight(1f)) {
-                if(themeState != null) {
-                    RichText(themeState, fontSize = 20.sp, modifier = Modifier.verticalScroll(rememberScrollState()))
-                } else {
-                    Text(stringResource(R.string.no_theme), fontSize = 20.sp)
-                }
-            }
-            Row(Modifier.fillMaxWidth().padding(top = 8.dp)) {
-                FloatingActionButton(
-                    onClick = { showDeleteDialog = true },
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(rememberDelete(), contentDescription = null)
-                }
-                ExtendedFloatingActionButton(onClick = { onEdit() }) {
-                    Icon(EditIcon, contentDescription = null)
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    Text(stringResource(R.string.edit))
+        val themeState = remember(exam) {
+            exam.theme?.let {
+                RichTextState().apply {
+                    setHtml(it)
                 }
             }
         }
+        Text(exam.subject, fontSize = 40.sp)
+        Text("${exam.date.dayOfMonth}.${exam.date.monthNumber}.${exam.date.year}", fontSize = 15.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(stringResource(R.string.score), fontSize = 25.sp, fontWeight = FontWeight.Bold)
+        Text(exam.points?.toString() ?: stringResource(R.string.no_score), fontSize = 20.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(stringResource(R.string.theme), fontSize = 25.sp, fontWeight = FontWeight.Bold)
+        Box(Modifier.weight(1f)) {
+            if (themeState != null) {
+                RichText(
+                    themeState,
+                    fontSize = 20.sp,
+                    modifier = Modifier.verticalScroll(rememberScrollState())
+                )
+            } else {
+                Text(stringResource(R.string.no_theme), fontSize = 20.sp)
+            }
+        }
+
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)) {
+            FloatingActionButton(
+                onClick = { showDeleteDialog = true },
+                containerColor = MaterialTheme.colorScheme.errorContainer
+            ) {
+                Icon(rememberDelete(), contentDescription = null)
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            ExtendedFloatingActionButton(onClick = { onEdit() }) {
+                Icon(EditIcon, contentDescription = null)
+                Spacer(modifier = Modifier.padding(8.dp))
+                Text(stringResource(R.string.edit))
+            }
+        }
+
     }
 
-    if(showDeleteDialog) {
-        DeleteDialog(onDelete = onDelete, onClose = { showDeleteDialog = false }, textId = R.string.delete_entry)
+    if (showDeleteDialog) {
+        DeleteDialog(
+            onDelete = onDelete,
+            onClose = { showDeleteDialog = false },
+            textId = R.string.delete_entry
+        )
     }
 }

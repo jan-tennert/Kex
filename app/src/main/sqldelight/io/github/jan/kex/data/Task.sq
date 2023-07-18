@@ -1,0 +1,21 @@
+import kotlinx.datetime.Instant;
+
+CREATE TABLE localTask(
+    id INTEGER PRIMARY KEY NOT NULL,
+    dueDate INTEGER AS Instant NOT NULL,
+    task TEXT NOT NULL,
+    subjectId INTEGER NOT NULL REFERENCES localSubject(id) ON DELETE CASCADE,
+    doneDate INTEGER AS Instant
+);
+
+selectAll:
+SELECT * FROM localTask;
+
+insert:
+INSERT OR REPLACE INTO localTask (id, dueDate, task, subjectId, doneDate) VALUES ( ?, ?, ?,?, ?);
+
+update:
+UPDATE localTask SET dueDate = ?, task = ?, doneDate = ? WHERE id = ?;
+
+delete:
+DELETE FROM localTask WHERE id = ?;
