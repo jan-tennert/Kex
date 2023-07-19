@@ -3,6 +3,8 @@ package io.github.jan.kex.ui.dialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -60,6 +62,7 @@ fun TaskCreateDialog(task: Task?, onDismiss: () -> Unit, onCreate: (task: String
                 )
             })
             DatePickerField(selectedDate) { showDatePicker = true }
+            Spacer(modifier = Modifier.height(8.dp))
             Button(onClick = {
                 onCreate(
                     newTask,

@@ -8,6 +8,7 @@ import io.github.jan.kex.data.remote.Subject
 import io.github.jan.kex.data.remote.SubjectApi
 import io.github.jan.kex.data.remote.Task
 import io.github.jan.kex.data.remote.TaskApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 
@@ -17,6 +18,7 @@ class TaskViewModel(
 ): ViewModel() {
 
     val tasks = taskDataSource.getTasksAsFlow()
+    val creatingTask = MutableStateFlow(false)
 
     fun refreshTasks() {
         viewModelScope.launch {
@@ -32,6 +34,7 @@ class TaskViewModel(
 
     fun deleteTask(id: Long) {
         viewModelScope.launch {
+            taskDataSource.toggleLoading(id)
             kotlin.runCatching {
                 tasksApi.deleteTask(id)
             }.onSuccess {
@@ -43,6 +46,7 @@ class TaskViewModel(
     }
 
     fun createTask(subjectId: Long, task: String, dueDate: Instant) {
+        creatingTask.value = true
         viewModelScope.launch {
             kotlin.runCatching {
                 tasksApi.createTask(subjectId, task, dueDate)
@@ -51,16 +55,19 @@ class TaskViewModel(
             }.onFailure {
                 it.printStackTrace()
             }
+            creatingTask.value = false
         }
     }
 
     fun updateTask(oldTask: Task, task: String, dueDate: Instant, doneDate: Instant?) {
         viewModelScope.launch {
+            taskDataSource.toggleLoading(oldTask.id)
             kotlin.runCatching {
                 tasksApi.updateSubject(oldTask.id, task, dueDate, doneDate)
             }.onSuccess {
-                taskDataSource.insertTask(listOf(oldTask.copy(task = task, dueDate = dueDate, doneDate = doneDate)))
+                taskDataSource.insertTask(listOf(oldTask.copy(task = task, dueDate = dueDate, doneDate = doneDate, loading = false)))
             }.onFailure {
+                taskDataSource.toggleLoading(oldTask.id)
                 it.printStackTrace()
             }
         }

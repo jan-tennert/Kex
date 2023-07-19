@@ -1,5 +1,6 @@
 package io.github.jan.kex.ui.screen.subjects
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +27,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.valentinilk.shimmer.shimmer
 import io.github.jan.kex.R
+import io.github.jan.kex.data.remote.Task
 import io.github.jan.kex.ui.components.TaskCard
 import io.github.jan.kex.ui.dialog.DeleteDialog
 import io.github.jan.kex.ui.dialog.TaskCreateDialog
@@ -36,18 +40,23 @@ import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
 import kotlinx.datetime.Clock
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SubjectDetailScreen(
     subjectId: Long,
     taskViewModel: TaskViewModel,
-    subjectViewModel: SubjectViewModel
+    subjectViewModel: SubjectViewModel,
+    navController: NavController
 ) {
     val subjects by subjectViewModel.subjects.collectAsState(emptyList())
     val subject = remember(subjects) { subjects.firstOrNull { it.id == subjectId } }
     val tasks by taskViewModel.tasks.collectAsState(emptyList())
-    val subjectTasks = remember(tasks, subject) { tasks.filter { it.subjectId == subjectId }.sortedBy { it.dueDate } }
+    val subjectTasks = remember(tasks, subject) {
+        tasks.filter { it.subjectId == subjectId }.sortedBy { it.dueDate }
+    }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showCreateTaskScreen by remember { mutableStateOf(false) }
+    val creatingTask by taskViewModel.creatingTask.collectAsState()
     subject?.let {
         Column(
             modifier = Modifier
@@ -60,7 +69,17 @@ fun SubjectDetailScreen(
             Spacer(modifier = Modifier.height(8.dp))
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(subjectTasks, { it.id }) {
-                    TaskCard(task = it, modifier = Modifier.padding(8.dp), onUpdate = { done, task, dueDate -> taskViewModel.updateTask(it, task, dueDate, if(done) Clock.System.now() else null) }) {
+                    TaskCard(
+                        task = it,
+                        modifier = Modifier.padding(8.dp).animateItemPlacement(),
+                        onUpdate = { done, task, dueDate ->
+                            taskViewModel.updateTask(
+                                it,
+                                task,
+                                dueDate,
+                                if (done) Clock.System.now() else null
+                            )
+                        }) {
                         taskViewModel.deleteTask(it.id)
                     }
                 }
@@ -68,7 +87,8 @@ fun SubjectDetailScreen(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp)) {
+                    .padding(top = 8.dp)
+            ) {
                 FloatingActionButton(
                     onClick = { showDeleteDialog = true },
                     containerColor = MaterialTheme.colorScheme.errorContainer
@@ -76,19 +96,28 @@ fun SubjectDetailScreen(
                     Icon(rememberDelete(), contentDescription = null)
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                ExtendedFloatingActionButton(onClick = { showCreateTaskScreen = true }) {
-                    Icon(EditIcon, contentDescription = null)
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    Text(stringResource(R.string.create))
-                }
+                ExtendedFloatingActionButton(
+                    onClick = { showCreateTaskScreen = true },
+                    text = { Text(stringResource(R.string.create)) },
+                    icon = {
+                        Icon(EditIcon, contentDescription = null)
+                    }
+                )
             }
         }
     }
-    if(showCreateTaskScreen) {
-        TaskCreateDialog(task = null, onDismiss = { showCreateTaskScreen = false }, onCreate = { task, dueDate -> taskViewModel.createTask(subjectId, task, dueDate) })
+    if (showCreateTaskScreen) {
+        TaskCreateDialog(
+            task = null,
+            onDismiss = { showCreateTaskScreen = false },
+            onCreate = { task, dueDate -> taskViewModel.createTask(subjectId, task, dueDate) })
     }
-    if(showDeleteDialog) {
-        DeleteDialog(textId = R.string.delete_subject, onDelete = { subjectViewModel.deleteSubject(subjectId)} ) {
+    if (showDeleteDialog) {
+        DeleteDialog(textId = R.string.delete_subject, onDelete = {
+            subjectViewModel.deleteSubject(subjectId)
+            showDeleteDialog = false;
+            navController.navigate("subjects")
+        }) {
             showDeleteDialog = false
         }
     }

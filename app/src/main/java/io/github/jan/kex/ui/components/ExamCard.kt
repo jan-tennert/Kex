@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.jan.kex.data.remote.Exam
+import io.github.jan.kex.localizedDateString
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -50,15 +51,7 @@ fun ExamCard(exam: Exam, selected: Boolean, showSelection: Boolean, modifier: Mo
                 Text(exam.subject, fontWeight = FontWeight.Bold, fontSize = 15.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     Text(
-                        text = exam.date.dayOfWeek.getDisplayName(
-                            TextStyle.SHORT,
-                            Locale.getDefault()
-                        ) + " ${exam.date.dayOfMonth} ${
-                            exam.date.month.getDisplayName(
-                                TextStyle.FULL,
-                                Locale.getDefault()
-                            )
-                        }",
+                        text = exam.date.localizedDateString,
                         fontSize = 10.sp
                     )
                 }

@@ -1,5 +1,6 @@
 package io.github.jan.kex.ui.screen.exam
 
+import android.os.Build
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
+import io.github.jan.kex.localizedDateString
 import io.github.jan.kex.ui.dialog.DeleteDialog
 import io.github.jan.kex.ui.icons.EditIcon
 import io.github.jan.kex.ui.icons.rememberDelete
@@ -50,7 +52,9 @@ fun ExamDetailScreen(exam: Exam, onEdit: () -> Unit, onDelete: () -> Unit) {
             }
         }
         Text(exam.subject, fontSize = 40.sp)
-        Text("${exam.date.dayOfMonth}.${exam.date.monthNumber}.${exam.date.year}", fontSize = 15.sp)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Text(exam.date.localizedDateString, fontSize = 15.sp)
+        }
         Spacer(modifier = Modifier.height(8.dp))
         Text(stringResource(R.string.score), fontSize = 25.sp, fontWeight = FontWeight.Bold)
         Text(exam.points?.toString() ?: stringResource(R.string.no_score), fontSize = 20.sp)
@@ -79,11 +83,11 @@ fun ExamDetailScreen(exam: Exam, onEdit: () -> Unit, onDelete: () -> Unit) {
                 Icon(rememberDelete(), contentDescription = null)
             }
             Spacer(modifier = Modifier.weight(1f))
-            ExtendedFloatingActionButton(onClick = { onEdit() }) {
-                Icon(EditIcon, contentDescription = null)
-                Spacer(modifier = Modifier.padding(8.dp))
-                Text(stringResource(R.string.edit))
-            }
+            ExtendedFloatingActionButton(
+                onClick = { onEdit() },
+                text = { Text(stringResource(R.string.edit)) },
+                icon = { Icon(EditIcon, contentDescription = null) },
+            )
         }
 
     }

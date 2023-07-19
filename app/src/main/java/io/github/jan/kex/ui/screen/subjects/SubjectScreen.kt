@@ -35,6 +35,7 @@ import io.github.jan.kex.R
 import io.github.jan.kex.ui.components.SubjectCard
 import io.github.jan.kex.ui.dialog.SubjectCreateDialog
 import io.github.jan.kex.ui.icons.EditIcon
+import io.github.jan.kex.ui.nav.NavigationTarget
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
 
@@ -48,7 +49,7 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
     SwipeRefresh(
         modifier = Modifier.fillMaxSize(),
         state = swipeRefreshState,
-        onRefresh = subjectVm::refreshSubjects,
+        onRefresh = { subjectVm.refreshSubjects(); taskViewModel.refreshTasks() },
         indicator = { state, refreshTrigger ->
             SwipeRefreshIndicator(
                 state = state,
@@ -74,7 +75,7 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
                             .size(200.dp)
                             .padding(8.dp)
                             .clickable {
-                                navController.navigate("subjects/${it.id}")
+                                navController.navigate(NavigationTarget.Subjects.Detail.destinationFormat.format(it.id))
                             }
                             .animateItemPlacement()
                     )
@@ -88,11 +89,11 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
                     .padding(16.dp)
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                ExtendedFloatingActionButton(onClick = { showSubjectCreateDialog = true }) {
-                    Icon(EditIcon, contentDescription = null)
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    Text(stringResource(R.string.create))
-                }
+                ExtendedFloatingActionButton(
+                    onClick = { showSubjectCreateDialog = true },
+                    text = { Text(stringResource(R.string.create)) },
+                    icon = { Icon(EditIcon, contentDescription = null) },
+                )
             }
         }
     }

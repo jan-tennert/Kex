@@ -19,6 +19,8 @@ interface TaskDataSource {
 
     suspend fun deleteTasks(ids: List<Long>)
 
+    suspend fun toggleLoading(id: Long)
+
 }
 
 internal class TaskDataSourceImpl(
@@ -63,6 +65,12 @@ internal class TaskDataSourceImpl(
         }
     }
 
+    override suspend fun toggleLoading(id: Long) {
+        withContext(Dispatchers.IO) {
+            queries.toggleLoading(id)
+        }
+    }
+
 }
 
 fun LocalTask.toTask() = Task(
@@ -71,4 +79,5 @@ fun LocalTask.toTask() = Task(
     subjectId = subjectId,
     dueDate = dueDate,
     doneDate = doneDate,
+    loading = loading
 )

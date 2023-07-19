@@ -43,6 +43,7 @@ import io.github.jan.kex.ui.icons.EditIcon
 import io.github.jan.kex.ui.icons.rememberDelete
 import io.github.jan.kex.ui.icons.rememberDeselect
 import io.github.jan.kex.ui.icons.rememberSelectAll
+import io.github.jan.kex.ui.nav.NavigationTarget
 import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
 import org.koin.androidx.compose.getViewModel
@@ -114,7 +115,7 @@ fun ExamScreen(
                                                 it
                                             )
                                         } else {
-                                            navController.navigate("exams/${it.id}")
+                                            navController.navigate(NavigationTarget.Exams.Detail.destinationFormat.format(it.id))
                                         }
                                     }
                                 )
@@ -155,11 +156,11 @@ fun ExamScreen(
                             onCheckedChange = { examVm.showPastExams.value = !showPastExams })
                         Spacer(modifier = Modifier.size(12.dp))
                         Text(stringResource(R.string.past_exams), modifier = Modifier.weight(1f))
-                        ExtendedFloatingActionButton(onClick = { navController.navigate("exams/create") }) {
-                            Icon(EditIcon, contentDescription = null)
-                            Spacer(modifier = Modifier.padding(8.dp))
-                            Text(stringResource(R.string.create))
-                        }
+                        ExtendedFloatingActionButton(
+                            onClick = { navController.navigate(NavigationTarget.Exams.Create.destinationFormat) },
+                            text = { Text(stringResource(R.string.create)) },
+                            icon = { Icon(EditIcon, contentDescription = null) }
+                        )
                     }
                 }
             }

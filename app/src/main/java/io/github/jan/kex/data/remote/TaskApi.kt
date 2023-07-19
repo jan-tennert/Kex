@@ -5,6 +5,7 @@ import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class TaskData(
@@ -28,7 +29,9 @@ data class Task(
     @SerialName("subject_id")
     val subjectId: Long,
     @SerialName("done_date")
-    val doneDate: Instant? = null
+    val doneDate: Instant? = null,
+    @Transient
+    val loading: Boolean = false
 )
 
 interface TaskApi {

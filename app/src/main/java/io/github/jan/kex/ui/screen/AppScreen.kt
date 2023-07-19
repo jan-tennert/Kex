@@ -77,7 +77,7 @@ fun AppScreen(
                     selectedExam?.let {
                         ExamDetailScreen(
                             exam = selectedExam,
-                            onEdit = { navController.navigate("exams/edit/${it.id}") },
+                            onEdit = { navController.navigate(NavigationTarget.Exams.Edit.destinationFormat.format(it.id)) },
                             onDelete = { examVm.deleteExam(selectedExam, selectedExam.custom); navController.navigate(NavigationTarget.Exams.destination) }
                         )
                     }
@@ -117,6 +117,7 @@ fun AppScreen(
                         subjectId = entry.arguments?.getString("subjectId")?.toLongOrNull() ?: error("No subjectId provided"),
                         taskViewModel = taskVm,
                         subjectViewModel = subjectVm,
+                        navController = navController
                     )
                 }
             }

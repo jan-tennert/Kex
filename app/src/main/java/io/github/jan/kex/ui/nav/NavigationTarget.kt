@@ -7,18 +7,18 @@ import io.github.jan.kex.ui.icons.ExamIcon
 import io.github.jan.kex.ui.icons.HomeIcon
 import io.github.jan.kex.ui.icons.SettingsIcon
 
-sealed class NavigationTarget(val destination: String, val labelId: Int) {
+sealed class NavigationTarget(val destination: String, val labelId: Int, val destinationFormat: String = destination) {
 
     data object Home: Main("home", HomeIcon, R.string.home)
     data object Subjects: Main("subjects", ChecklistIcon, R.string.tasks) {
 
-        data object Detail: NavigationTarget("subjects/{subjectId}", R.string.tasks)
+        data object Detail: NavigationTarget("subjects/{subjectId}", R.string.tasks, "subjects/%s")
 
     }
     data object Exams: Main("exams", ExamIcon, R.string.exams) {
-        data object Detail: NavigationTarget("exams/{examId}", R.string.exam_detail)
+        data object Detail: NavigationTarget("exams/{examId}", R.string.exam_detail, "exams/%s")
         data object Create: NavigationTarget("exams/create", R.string.exam_create)
-        data object Edit: NavigationTarget("exams/edit/{examId}", R.string.exam_edit)
+        data object Edit: NavigationTarget("exams/edit/{examId}", R.string.exam_edit, "exams/edit/%s")
 
         val entries = listOf(Detail, Create, Edit)
     }
