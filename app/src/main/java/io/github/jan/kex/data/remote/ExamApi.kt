@@ -10,13 +10,23 @@ import io.ktor.client.call.body
 import io.ktor.client.request.parameter
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.minus
+import kotlinx.datetime.toJavaPeriod
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayAt
+import kotlinx.datetime.todayIn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
 
 @Serializable
 data class ExamData(
@@ -38,6 +48,10 @@ data class Exam(
     val custom: Boolean,
     val points: Long? = null
 ) {
+
+    val daysUntil: Int
+        get() = Clock.System.todayIn(TimeZone.currentSystemDefault()).daysUntil(date)
+
     enum class Type(val nameId: Int) {
         EXAM(R.string.exam), TEST(R.string.test), GFS(R.string.gfs)
     }

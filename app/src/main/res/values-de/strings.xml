@@ -11,7 +11,7 @@
     <string name="edit">Bearbeiten</string>
     <string name="create">Erstellen</string>
     <string name="home">Startseite</string>
-    <string name="tasks">Aufgaben</string>
+    <string name="tasks">Hausaufgaben</string>
     <string name="settings">Einstellungen</string>
     <string name="exams">Klassenarbeiten</string>
     <string name="subject">Schulfach</string>
@@ -27,6 +27,13 @@
     <string name="exam_detail">Klassenarbeiten</string>
     <string name="exam_create">Klassenarbeit erstellen</string>
     <string name="exam_edit">Klassenarbeit bearbeiten</string>
+    <string name="create_task">Hausaufgabe erstellen</string>
     <string name="gfs">GFS</string>
-    <string name="task">Aufgabe</string>
+    <string name="task">Hausaufgabe</string>
+    <string name="tomorrow">Morgen</string>
+    <string name="today">Heute</string>
+    <string name="day_after_tomorrow">Übermorgen</string>
+    <string name="in_days">In %s Tagen</string>
+    <string name="no_exams">Keine Klassenarbeiten verfügbar</string>
+    <string name="no_tasks">Keine Hausaufgaben verfügbar</string>
 </resources>

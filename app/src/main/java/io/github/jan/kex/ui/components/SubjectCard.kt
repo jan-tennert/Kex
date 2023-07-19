@@ -58,11 +58,4 @@ fun SubjectCard(
     }
 }
 
-val Task.importance: TaskImportance get() {
-    val currentDate = Clock.System.now()
-    return when ((dueDate - currentDate).inWholeDays) {
-        1L -> TaskImportance.HIGH
-        2L -> TaskImportance.MEDIUM
-        else -> TaskImportance.LOW
-    }
-}
+val Task.daysUntil get() = (dueDate - Clock.System.now()).inWholeDays

@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.material3.windowsize)
     implementation(libs.bundles.supabase)
     implementation(libs.bundles.sqldelight)
    // implementation(libs.compose.destinations)

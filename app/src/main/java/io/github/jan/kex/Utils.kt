@@ -2,9 +2,6 @@ package io.github.jan.kex
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.Modifier
-import com.valentinilk.shimmer.Shimmer
-import com.valentinilk.shimmer.shimmer
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -41,4 +38,10 @@ val Instant.localizedDateString
     @RequiresApi(Build.VERSION_CODES.O)
     get() = toLocalDateTime(TimeZone.currentSystemDefault()).localizedDateString
 
-fun Modifier.shimmerIf(shimmer: Boolean, instance: Shimmer) = if (shimmer) shimmer(instance) else this
+val Int.localizedDay
+    get() = when(this) {
+        0 -> R.string.today
+        1 -> R.string.tomorrow
+        2 -> R.string.day_after_tomorrow
+        else -> R.string.in_days
+    }

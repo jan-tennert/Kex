@@ -56,6 +56,7 @@ fun TaskCreateDialog(task: Task?, onDismiss: () -> Unit, onCreate: (task: String
                     "${date.dayOfMonth}.${date.monthNumber}.${date.year}"
                 }
             }
+            Text(stringResource(R.string.create_task), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(bottom = 8.dp))
             OutlinedTextField(value = newTask, onValueChange = { newTask = it }, label = {
                 Text(
                     stringResource(R.string.task)

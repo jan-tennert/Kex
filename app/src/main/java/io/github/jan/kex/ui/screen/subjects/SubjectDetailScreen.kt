@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.valentinilk.shimmer.shimmer
 import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Task
 import io.github.jan.kex.ui.components.TaskCard

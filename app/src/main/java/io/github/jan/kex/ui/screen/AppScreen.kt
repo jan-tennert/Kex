@@ -65,7 +65,7 @@ fun AppScreen(
                 startDestination = NavigationTarget.Home.destination
             ) {
                 composable(NavigationTarget.Home.destination) {
-                    HomeScreen()
+                    HomeScreen(examVm, taskVm, subjectVm, navController)
                 }
                 composable(NavigationTarget.Exams.destination) {
                     ExamScreen(examVm, authVm, navController)

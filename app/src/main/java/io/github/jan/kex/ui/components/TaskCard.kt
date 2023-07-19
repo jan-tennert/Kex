@@ -24,17 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
 import io.github.jan.kex.data.remote.Task
 import io.github.jan.kex.localizedDateString
-import io.github.jan.kex.shimmerIf
 import io.github.jan.kex.ui.dialog.TaskCreateDialog
 import io.github.jan.kex.ui.icons.EditIcon
 import io.github.jan.kex.ui.icons.rememberDelete
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun TaskCard(task: Task, modifier: Modifier = Modifier, onUpdate: (done: Boolean, task: String, dueDate: Instant) -> Unit, onDelete: () -> Unit) {

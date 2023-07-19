@@ -25,7 +25,14 @@
     <string name="delete_subject">Are you sure you want to delete this subject? This will delete all your remaining tasks!</string>
     <string name="exam_detail">Exams</string>
     <string name="exam_create">Create Exam</string>
+    <string name="create_task">Create Task</string>
     <string name="exam_edit">Edit Exam</string>
     <string name="gfs">GFS</string>
     <string name="task">Task</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="today">Today</string>
+    <string name="day_after_tomorrow">In 2 days</string>
+    <string name="in_days">In %s days</string>
+    <string name="no_exams">No exams available</string>
+    <string name="no_tasks">No tasks available</string>
 </resources>
