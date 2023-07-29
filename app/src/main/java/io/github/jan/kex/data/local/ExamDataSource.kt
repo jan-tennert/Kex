@@ -20,6 +20,8 @@ interface ExamDataSource {
 
     suspend fun deleteExams(ids: List<String>)
 
+    suspend fun clear()
+
 }
 
 internal class ExamDataSourceImpl(
@@ -63,6 +65,12 @@ internal class ExamDataSourceImpl(
                     queries.delete(id)
                 }
             }
+        }
+    }
+
+    override suspend fun clear() {
+        withContext(Dispatchers.IO) {
+            queries.deleteAll()
         }
     }
 

@@ -5,12 +5,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Circle
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -20,26 +26,18 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mohamedrejeb.richeditor.model.RichTextState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.outlined.Circle
-import androidx.compose.material.icons.outlined.Code
-import androidx.compose.material.icons.outlined.FormatAlignCenter
-import androidx.compose.material.icons.outlined.FormatAlignLeft
-import androidx.compose.material.icons.outlined.FormatAlignRight
-import androidx.compose.material.icons.outlined.FormatBold
-import androidx.compose.material.icons.outlined.FormatItalic
-import androidx.compose.material.icons.outlined.FormatListBulleted
-import androidx.compose.material.icons.outlined.FormatListNumbered
-import androidx.compose.material.icons.outlined.FormatSize
-import androidx.compose.material.icons.outlined.FormatStrikethrough
-import androidx.compose.material.icons.outlined.FormatUnderlined
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.graphics.vector.ImageVector
+import io.github.jan.kex.ui.icons.rememberCircle
+import io.github.jan.kex.ui.icons.rememberCode
+import io.github.jan.kex.ui.icons.rememberFormatAlignCenter
+import io.github.jan.kex.ui.icons.rememberFormatAlignLeft
+import io.github.jan.kex.ui.icons.rememberFormatAlignRight
+import io.github.jan.kex.ui.icons.rememberFormatBold
+import io.github.jan.kex.ui.icons.rememberFormatItalic
+import io.github.jan.kex.ui.icons.rememberFormatListBulleted
+import io.github.jan.kex.ui.icons.rememberFormatListNumbered
+import io.github.jan.kex.ui.icons.rememberFormatSize
+import io.github.jan.kex.ui.icons.rememberFormatStrikethrough
+import io.github.jan.kex.ui.icons.rememberFormatUnderlined
 
 @Composable
 fun RichTextStyleButton(
@@ -99,7 +97,7 @@ fun RichTextStyleRow(
                     )
                 },
                 isSelected = state.currentParagraphStyle.textAlign == TextAlign.Left,
-                icon = Icons.Outlined.FormatAlignLeft
+                icon = rememberFormatAlignLeft()
             )
         }
 
@@ -113,7 +111,7 @@ fun RichTextStyleRow(
                     )
                 },
                 isSelected = state.currentParagraphStyle.textAlign == TextAlign.Center,
-                icon = Icons.Outlined.FormatAlignCenter
+                icon = rememberFormatAlignCenter()
             )
         }
 
@@ -127,7 +125,7 @@ fun RichTextStyleRow(
                     )
                 },
                 isSelected = state.currentParagraphStyle.textAlign == TextAlign.Right,
-                icon = Icons.Outlined.FormatAlignRight
+                icon = rememberFormatAlignRight()
             )
         }
 
@@ -141,7 +139,7 @@ fun RichTextStyleRow(
                     )
                 },
                 isSelected = state.currentSpanStyle.fontWeight == FontWeight.Bold,
-                icon = Icons.Outlined.FormatBold
+                icon = rememberFormatBold()
             )
         }
 
@@ -155,7 +153,7 @@ fun RichTextStyleRow(
                     )
                 },
                 isSelected = state.currentSpanStyle.fontStyle == FontStyle.Italic,
-                icon = Icons.Outlined.FormatItalic
+                icon = rememberFormatItalic()
             )
         }
 
@@ -169,7 +167,7 @@ fun RichTextStyleRow(
                     )
                 },
                 isSelected = state.currentSpanStyle.textDecoration?.contains(TextDecoration.Underline) == true,
-                icon = Icons.Outlined.FormatUnderlined
+                icon = rememberFormatUnderlined()
             )
         }
 
@@ -183,7 +181,7 @@ fun RichTextStyleRow(
                     )
                 },
                 isSelected = state.currentSpanStyle.textDecoration?.contains(TextDecoration.LineThrough) == true,
-                icon = Icons.Outlined.FormatStrikethrough
+                icon = rememberFormatStrikethrough()
             )
         }
 
@@ -197,7 +195,7 @@ fun RichTextStyleRow(
                     )
                 },
                 isSelected = state.currentSpanStyle.fontSize == 28.sp,
-                icon = Icons.Outlined.FormatSize
+                icon = rememberFormatSize()
             )
         }
 
@@ -211,7 +209,7 @@ fun RichTextStyleRow(
                     )
                 },
                 isSelected = state.currentSpanStyle.color == Color.Red,
-                icon = Icons.Filled.Circle,
+                icon = rememberCircle(),
                 tint = Color.Red
             )
         }
@@ -226,7 +224,7 @@ fun RichTextStyleRow(
                     )
                 },
                 isSelected = state.currentSpanStyle.background == Color.Yellow,
-                icon = Icons.Outlined.Circle,
+                icon = rememberCircle(),
                 tint = Color.Yellow
             )
         }
@@ -246,7 +244,7 @@ fun RichTextStyleRow(
                     state.toggleUnorderedList()
                 },
                 isSelected = state.isUnorderedList,
-                icon = Icons.Outlined.FormatListBulleted,
+                icon = rememberFormatListBulleted(),
             )
         }
 
@@ -256,7 +254,7 @@ fun RichTextStyleRow(
                     state.toggleOrderedList()
                 },
                 isSelected = state.isOrderedList,
-                icon = Icons.Outlined.FormatListNumbered,
+                icon = rememberFormatListNumbered(),
             )
         }
 
@@ -277,7 +275,7 @@ fun RichTextStyleRow(
                     state.toggleCode()
                 },
                 isSelected = state.isCode,
-                icon = Icons.Outlined.Code,
+                icon = rememberCode(),
             )
         }
     }

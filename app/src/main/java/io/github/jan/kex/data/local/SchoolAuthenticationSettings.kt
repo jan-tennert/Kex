@@ -14,7 +14,10 @@ interface SchoolAuthenticationSettings {
     val password: Flow<String>
 
     suspend fun setUsername(username: String)
+
     suspend fun setPassword(password: String)
+
+    suspend fun reset()
 
 }
 
@@ -35,6 +38,13 @@ internal class SchoolAuthenticationSettingsImpl(
     override suspend fun setPassword(password: String) {
         withContext(Dispatchers.IO) {
             settings.putString("password", password)
+        }
+    }
+
+    override suspend fun reset() {
+        withContext(Dispatchers.IO) {
+            settings.remove("username")
+            settings.remove("password")
         }
     }
 

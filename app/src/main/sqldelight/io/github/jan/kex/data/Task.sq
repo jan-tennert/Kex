@@ -24,3 +24,6 @@ UPDATE localTask SET loading = CASE WHEN loading = 1 THEN 0 ELSE 1 END WHERE id 
 
 delete:
 DELETE FROM localTask WHERE id = ?;
+
+deleteAll:
+DELETE FROM localExam;

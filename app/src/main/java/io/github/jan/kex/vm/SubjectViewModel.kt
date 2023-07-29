@@ -62,4 +62,12 @@ class SubjectViewModel(
         }
     }
 
+    fun clearLocalEntries() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                subjectDataSource.clear()
+            }
+        }
+    }
+
 }

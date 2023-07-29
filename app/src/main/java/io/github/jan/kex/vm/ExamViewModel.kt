@@ -102,4 +102,12 @@ class ExamViewModel(
         }
     }
 
+    fun clearLocalEntries() {
+        viewModelScope.launch(Dispatchers.IO) {
+            kotlin.runCatching {
+                examDataSource.clear()
+            }
+        }
+    }
+
 }

@@ -21,6 +21,8 @@ interface TaskDataSource {
 
     suspend fun toggleLoading(id: Long)
 
+    suspend fun clear()
+
 }
 
 internal class TaskDataSourceImpl(
@@ -68,6 +70,12 @@ internal class TaskDataSourceImpl(
     override suspend fun toggleLoading(id: Long) {
         withContext(Dispatchers.IO) {
             queries.toggleLoading(id)
+        }
+    }
+
+    override suspend fun clear() {
+        withContext(Dispatchers.IO) {
+            queries.deleteAll()
         }
     }
 

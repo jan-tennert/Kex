@@ -16,3 +16,6 @@ UPDATE localSubject SET name = ? WHERE id = ?;
 
 delete:
 DELETE FROM localSubject WHERE id = ?;
+
+deleteAll:
+DELETE FROM localExam;

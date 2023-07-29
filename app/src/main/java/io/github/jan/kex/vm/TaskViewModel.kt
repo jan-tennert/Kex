@@ -73,4 +73,10 @@ class TaskViewModel(
         }
     }
 
+    fun clearLocalEntries() {
+        viewModelScope.launch {
+            taskDataSource.clear()
+        }
+    }
+
 }

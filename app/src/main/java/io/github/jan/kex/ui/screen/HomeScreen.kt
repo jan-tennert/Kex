@@ -2,6 +2,8 @@ package io.github.jan.kex.ui.screen
 
 import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -60,13 +63,14 @@ fun HomeScreen(
     }
     val context = LocalContext.current
     val windowSizeClass = calculateWindowSizeClass(context as Activity)
-    println(windowSizeClass)
     if(windowSizeClass.heightSizeClass == WindowHeightSizeClass.Medium) {
         Row {
             LazyColumn(
-                Modifier
+                modifier = Modifier
                     .fillMaxHeight()
-                    .fillMaxWidth(0.5f)) {
+                    .fillMaxWidth(0.5f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 examList(examsByDays) {
                     navController.navigate(NavigationTarget.Exams.Detail.destinationFormat.format(it.id))
                 }
@@ -75,15 +79,17 @@ fun HomeScreen(
                 Divider(Modifier.fillMaxHeight().width(1.dp))
             }
             LazyColumn(
-                Modifier
+                modifier = Modifier
                     .fillMaxHeight()
-                    .fillMaxWidth()) {
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 taskList(tasksByDays, taskVm::updateTask, taskVm::deleteTask)
             }
         }
     } else {
         Column {
-            LazyColumn(Modifier.fillMaxHeight(0.5f)) {
+            LazyColumn(Modifier.fillMaxHeight(0.5f).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 examList(examsByDays) {
                     navController.navigate(NavigationTarget.Exams.Detail.destinationFormat.format(it.id))
                 }
@@ -91,7 +97,7 @@ fun HomeScreen(
             Box(Modifier.padding(8.dp)) {
                 Divider(Modifier.fillMaxWidth().height(1.dp))
             }
-            LazyColumn(Modifier.fillMaxHeight()) {
+            LazyColumn(Modifier.fillMaxHeight().fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 taskList(tasksByDays, taskVm::updateTask, taskVm::deleteTask)
             }
         }

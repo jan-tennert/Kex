@@ -8,7 +8,7 @@ espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.2"
 compose-bom = "2023.06.01"
-supabase = "1.2.0-alpha-3"
+supabase = "1.2.0"
 koin = "3.4.2"
 koin-compose = "3.4.5"
 ksp = "1.9.0-1.0.11"
@@ -20,7 +20,7 @@ compose-navigation = "2.7.0-beta02"
 swipe-refresh = "0.31.5-beta"
 compose = "1.5.0-beta03"
 material3 = "1.1.1"
-compose-rich-editor = "1.0.0-alpha01"
+compose-rich-editor = "1.0.0-beta01"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }

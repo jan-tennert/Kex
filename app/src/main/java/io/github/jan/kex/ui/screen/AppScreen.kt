@@ -107,7 +107,7 @@ fun AppScreen(
                     }
                 }
                 composable(NavigationTarget.Settings.destination) {
-                    SettingsScreen()
+                    SettingsScreen(authVm, examVm, subjectVm, taskVm)
                 }
                 composable(NavigationTarget.Subjects.destination) {
                     SubjectScreen(subjectVm, taskVm, navController)

@@ -18,15 +18,18 @@ private const val ONE_TAP_CLIENT_ID = BuildConfig.GOOGLE_CLIENT_ID
 fun AuthScreen(
     loggingIn: Boolean = false,
     onLoginWithIdToken: (String) -> Unit = {},
+    updateLoading: (Boolean) -> Unit = {}
 ) {
-    val state = rememberOneTapSignInState()
+    val state    = rememberOneTapSignInState()
     OneTapSignInWithGoogle(
         state = state,
         clientId = ONE_TAP_CLIENT_ID,
         onTokenIdReceived = { tokenId ->
+            updateLoading(false)
             onLoginWithIdToken(tokenId)
         },
         onDialogDismissed = { message ->
+            updateLoading(false)
             Log.d("LOG", message)
         }
     )
@@ -35,6 +38,7 @@ fun AuthScreen(
             CircularProgressIndicator()
         } else {
             GoogleButton {
+                updateLoading(true)
                 state.open()
             }
         }

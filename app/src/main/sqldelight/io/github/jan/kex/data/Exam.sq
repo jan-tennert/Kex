@@ -19,3 +19,6 @@ UPDATE localExam SET id = ?, subject = ?, date = ?, points = ? WHERE id = ?;
 
 delete:
 DELETE FROM localExam WHERE id = ?;
+
+deleteAll:
+DELETE FROM localExam;

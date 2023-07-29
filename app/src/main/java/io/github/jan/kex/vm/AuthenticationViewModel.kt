@@ -45,6 +45,7 @@ class AuthenticationViewModel(
         viewModelScope.launch {
             kotlin.runCatching {
                 authenticationApi.logout()
+                schoolAuthenticationSettings.reset()
             }.onFailure {
                 Log.e("LOG", "Failed to logout", it)
             }

@@ -28,7 +28,9 @@ fun RootScreen(
             }
         }
         else -> {
-            AuthScreen(loggingIn, authVM::loginWithIdToken)
+            AuthScreen(loggingIn, authVM::loginWithIdToken) {
+                authVM.loggingIn.value = it
+            }
         }
     }
 }

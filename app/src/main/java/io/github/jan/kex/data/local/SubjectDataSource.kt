@@ -19,6 +19,8 @@ interface SubjectDataSource {
 
     suspend fun deleteSubjects(ids: List<Long>)
 
+    suspend fun clear()
+
 }
 
 internal class SubjectDataSourceImpl(
@@ -57,6 +59,12 @@ internal class SubjectDataSourceImpl(
                     )
                 }
             }
+        }
+    }
+
+    override suspend fun clear() {
+        withContext(Dispatchers.IO) {
+            queries.deleteAll()
         }
     }
 
