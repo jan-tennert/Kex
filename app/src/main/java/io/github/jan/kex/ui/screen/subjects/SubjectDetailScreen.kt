@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Task
@@ -47,15 +48,15 @@ fun SubjectDetailScreen(
     subjectViewModel: SubjectViewModel,
     navController: NavController
 ) {
-    val subjects by subjectViewModel.subjects.collectAsState(emptyList())
+    val subjects by subjectViewModel.subjects.collectAsStateWithLifecycle(emptyList())
     val subject = remember(subjects) { subjects.firstOrNull { it.id == subjectId } }
-    val tasks by taskViewModel.tasks.collectAsState(emptyList())
+    val tasks by taskViewModel.tasks.collectAsStateWithLifecycle(emptyList())
     val subjectTasks = remember(tasks, subject) {
         tasks.filter { it.subjectId == subjectId }.sortedBy { it.dueDate }
     }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showCreateTaskScreen by remember { mutableStateOf(false) }
-    val creatingTask by taskViewModel.creatingTask.collectAsState()
+    val creatingTask by taskViewModel.creatingTask.collectAsStateWithLifecycle()
     subject?.let {
         Column(
             modifier = Modifier

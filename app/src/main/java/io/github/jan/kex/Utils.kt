@@ -2,6 +2,7 @@ package io.github.jan.kex
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.annotation.StringRes
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -9,6 +10,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
+
+data class StringResource(@StringRes val id: Int, val args: List<Any> = emptyList())
 
 val LocalDate.localizedDateString
     @RequiresApi(Build.VERSION_CODES.O)

@@ -20,11 +20,15 @@
     <string name="type">Type</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="error">Error</string>
     <string name="delete_entry">Are you sure you want to delete this item?</string>
     <string name="delete_entries">Are you sure you want to delete all exams? Non custom entries will get re-added on refresh.</string>
     <string name="delete_subject">Are you sure you want to delete this subject? This will delete all your remaining tasks!</string>
     <string name="enter_school_credentials">"Please enter your school credentials"</string>
     <string name="sign_out_text">Are you sure you want to sign out?</string>
+    <string name="google_login_cancelled">Google Login cancelled</string>
+    <string name="google_login_error">Google Login failed. Reason: %s</string>
+    <string name="google_login_network_error">Google Login failed due to a network error. Reason: %s</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="sign_out">Sign out</string>

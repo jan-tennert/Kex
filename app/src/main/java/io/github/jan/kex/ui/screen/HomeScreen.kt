@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.data.remote.Task
@@ -54,10 +55,10 @@ fun HomeScreen(
     subjectVm: SubjectViewModel = getViewModel(),
     navController: NavController
 ) {
-    val exams by examVm.exams.collectAsState(emptyList())
+    val exams by examVm.exams.collectAsStateWithLifecycle(emptyList())
     val examsByDays = remember(exams) { exams.groupBy { it.daysUntil }.entries.sortedBy { it.key }.filter { it.key >= 0 }.take(3) }
-    val tasks by taskVm.tasks.collectAsState(emptyList())
-    val subjects by subjectVm.subjects.collectAsState(emptyList())
+    val tasks by taskVm.tasks.collectAsStateWithLifecycle(emptyList())
+    val subjects by subjectVm.subjects.collectAsStateWithLifecycle(emptyList())
     val tasksByDays = remember(tasks) {
         tasks.filter { it.doneDate == null }.groupBy { it.daysUntil }.entries.sortedBy { it.key }.filter { it.key >= 0 }.take(3)
     }

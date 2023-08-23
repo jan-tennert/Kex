@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
@@ -44,7 +45,7 @@ import io.github.jan.kex.vm.TaskViewModel
 @Suppress("Deprecation") //The alternative is not yet compatible with Material 3
 fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, navController: NavController) {
     val swipeRefreshState = rememberSwipeRefreshState(false)
-    val subjects by subjectVm.subjects.collectAsState(emptyList())
+    val subjects by subjectVm.subjects.collectAsStateWithLifecycle(emptyList())
     var showSubjectCreateDialog by remember { mutableStateOf(false) }
     SwipeRefresh(
         modifier = Modifier.fillMaxSize(),

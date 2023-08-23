@@ -24,6 +24,9 @@ import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
+import io.github.jan.supabase.compose.auth.ComposeAuth
+import io.github.jan.supabase.compose.auth.composable.rememberSignOut
+import org.koin.compose.koinInject
 
 @Composable
 fun SettingsScreen(
@@ -31,6 +34,7 @@ fun SettingsScreen(
     examVm: ExamViewModel,
     subjectVm: SubjectViewModel,
     taskVm: TaskViewModel,
+    composeAuth: ComposeAuth = koinInject()
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
     Column(
@@ -51,8 +55,10 @@ fun SettingsScreen(
     }
 
     if(showLogoutDialog) {
+        val logoutState = composeAuth.rememberSignOut()
         LogoutDialog(
             onLogout = {
+                logoutState.startFlow()
                 authVm.logout()
                 examVm.clearLocalEntries()
                 subjectVm.clearLocalEntries()

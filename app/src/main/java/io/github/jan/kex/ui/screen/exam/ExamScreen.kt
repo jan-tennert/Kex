@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
@@ -56,14 +57,14 @@ fun ExamScreen(
     authVm: AuthenticationViewModel = getViewModel(),
     navController: NavController
 ) {
-    val showPastExams by examVm.showPastExams.collectAsState()
-    val filteredExams by examVm.filteredExams.collectAsState(emptyList())
+    val showPastExams by examVm.showPastExams.collectAsStateWithLifecycle()
+    val filteredExams by examVm.filteredExams.collectAsStateWithLifecycle(emptyList())
     
-    val isLoading by examVm.isLoading.collectAsState()
+    val isLoading by examVm.isLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isLoading)
 
-    val username by authVm.schoolUsername.collectAsState("")
-    val password by authVm.schoolPassword.collectAsState("")
+    val username by authVm.schoolUsername.collectAsStateWithLifecycle("")
+    val password by authVm.schoolPassword.collectAsStateWithLifecycle("")
 
     val selectedExams = remember { mutableStateListOf<Exam>() }
 

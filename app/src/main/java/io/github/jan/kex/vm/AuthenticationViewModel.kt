@@ -3,6 +3,7 @@ package io.github.jan.kex.vm
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.jan.kex.StringResource
 import io.github.jan.kex.data.local.SchoolAuthenticationSettings
 import io.github.jan.kex.data.remote.AuthenticationApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +16,7 @@ class AuthenticationViewModel(
 
     val sessionStatus = authenticationApi.sessionStatus
     val loggingIn = MutableStateFlow(false)
+    val authError = MutableStateFlow<StringResource?>(null)
     val schoolUsername = schoolAuthenticationSettings.username
     val schoolPassword = schoolAuthenticationSettings.password
 
