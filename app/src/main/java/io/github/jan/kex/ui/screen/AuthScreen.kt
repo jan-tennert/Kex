@@ -16,7 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.jan.kex.R
 import io.github.jan.kex.StringResource
-import io.github.jan.kex.ui.components.GoogleButton
 import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.compose.auth.ComposeAuth

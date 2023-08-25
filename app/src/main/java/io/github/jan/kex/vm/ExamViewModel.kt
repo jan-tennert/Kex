@@ -2,11 +2,13 @@ package io.github.jan.kex.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.jan.kex.R
 import io.github.jan.kex.data.local.ExamDataSource
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.data.remote.ExamApi
 import io.github.jan.kex.data.remote.ExamData
 import io.github.jan.kex.data.remote.toExam
+import io.github.jan.supabase.exceptions.BadRequestRestException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +30,7 @@ class ExamViewModel(
         val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
         exams.filter { it.date > currentDate || showPastExams }.sortedBy { it.date }
     }
+    val error = MutableStateFlow<Int?>(null)
 
     fun refreshExams(username: String, password: String) {
         isLoading.value = true
@@ -44,6 +47,9 @@ class ExamViewModel(
             }.onSuccess {
                 examDataSource.insertExams(it)
             }.onFailure {
+                when(it) {
+                    is BadRequestRestException -> error.value = R.string.invalid_school_credentials
+                }
                 it.printStackTrace()
             }
             isLoading.value = false

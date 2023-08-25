@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -24,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import io.github.jan.kex.R
@@ -57,11 +60,26 @@ fun TaskCreateDialog(task: Task?, onDismiss: () -> Unit, onCreate: (task: String
                 }
             }
             Text(stringResource(R.string.create_task), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(bottom = 8.dp))
-            OutlinedTextField(value = newTask, onValueChange = { newTask = it }, label = {
-                Text(
-                    stringResource(R.string.task)
-                )
-            })
+            OutlinedTextField(
+                value = newTask,
+                onValueChange = { newTask = it },
+                label = {
+                    Text(
+                        stringResource(R.string.task)
+                    )
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    if(selectedDate != null && newTask.isNotBlank()) {
+                        onCreate(
+                            newTask,
+                            Instant.fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
+                        );
+                        onDismiss()
+                    }
+                })
+            )
             DatePickerField(selectedDate) { showDatePicker = true }
             Spacer(modifier = Modifier.height(8.dp))
             Button(onClick = {
@@ -69,7 +87,7 @@ fun TaskCreateDialog(task: Task?, onDismiss: () -> Unit, onCreate: (task: String
                     newTask,
                     Instant.fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
                 ); onDismiss()
-            }, enabled = selectedDate != null) {
+            }, enabled = selectedDate != null && newTask.isNotBlank()) {
                 Text(stringResource(R.string.save))
             }
             if (showDatePicker) {

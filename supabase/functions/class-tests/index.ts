@@ -35,6 +35,12 @@ serve(async (req) => {
   const parser = new DOMParser();
   const document = parser.parseFromString(await examResponse.text(), "text/html")!;
   const page1 = document.getElementById("page1")!;
+  if(page1 === null) {
+      return new Response(
+        JSON.stringify({ message: "Invalid credentials" }),
+        { headers: { "Content-Type": "application/json" }, status: 400 },
+      )
+  }
   const divlist = page1.getElementById("divlist")!;
   const trElements = divlist.querySelectorAll("tr");
 
@@ -45,7 +51,6 @@ serve(async (req) => {
         const string = element.textContent!;
         const dateStr = string.slice(0, 10);
         const subject = string.slice(10);
-        console.log(string)
         return {
             date: dateStr,
             subject: subject,

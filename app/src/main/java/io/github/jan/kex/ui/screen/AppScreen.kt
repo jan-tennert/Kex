@@ -11,11 +11,11 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -71,7 +71,7 @@ fun AppScreen(
                     ExamScreen(examVm, authVm, navController)
                 }
                 composable(NavigationTarget.Exams.Detail.destination, arguments = listOf(navArgument("examId") { type = NavType.StringType })) { entry ->
-                    val exams by examVm.exams.collectAsState(emptyList())
+                    val exams by examVm.exams.collectAsStateWithLifecycle(emptyList())
                     val examId = entry.arguments?.getString("examId") ?: error("No examId provided")
                     val selectedExam = remember(exams) { exams.firstOrNull { exam -> exam.id == examId } }
                     selectedExam?.let {
@@ -89,7 +89,7 @@ fun AppScreen(
                     }
                 }
                 composable(NavigationTarget.Exams.Edit.destination, arguments = listOf(navArgument("examId") { type = NavType.StringType})) { entry ->
-                    val exams by examVm.exams.collectAsState(emptyList())
+                    val exams by examVm.exams.collectAsStateWithLifecycle(emptyList())
                     val examId = entry.arguments?.getString("examId") ?: error("No examId provided")
                     val selectedExam = remember(exams) { exams.firstOrNull { exam -> exam.id == examId } }
                     selectedExam?.let {  exam ->

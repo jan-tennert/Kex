@@ -12,6 +12,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.supabase.compose.auth.ComposeAuth
 import io.github.jan.supabase.gotrue.SessionStatus
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.getViewModel
 import org.koin.compose.koinInject
 
@@ -22,6 +24,7 @@ fun RootScreen(
     val sessionStatus by authVM.sessionStatus.collectAsStateWithLifecycle()
     when(sessionStatus) {
         is SessionStatus.Authenticated -> {
+            println(Json.encodeToString((sessionStatus as SessionStatus.Authenticated).session))
             AppScreen(authVm = authVM)
         }
         SessionStatus.LoadingFromStorage -> {

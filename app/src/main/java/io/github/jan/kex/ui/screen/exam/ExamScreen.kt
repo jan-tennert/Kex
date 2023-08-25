@@ -13,18 +13,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,6 +62,7 @@ fun ExamScreen(
 ) {
     val showPastExams by examVm.showPastExams.collectAsStateWithLifecycle()
     val filteredExams by examVm.filteredExams.collectAsStateWithLifecycle(emptyList())
+    val ignoreSchoolLogin by authVm.ignoreSchoolLogin.collectAsStateWithLifecycle()
     
     val isLoading by examVm.isLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isLoading)
@@ -69,10 +73,15 @@ fun ExamScreen(
     val selectedExams = remember { mutableStateListOf<Exam>() }
 
     var showDeleteDialog by remember { mutableStateOf(false) }
-    if(username.isBlank() || password.isBlank()) {
-        SchoolLoginDialog(login = { username, password ->
-            authVm.setSchoolCredentials(username, password)
-        })
+
+    val error: Int? by examVm.error.collectAsStateWithLifecycle()
+    if((username.isBlank() || password.isBlank()) && !ignoreSchoolLogin) {
+        SchoolLoginDialog(
+            login = { username, password ->
+                authVm.setSchoolCredentials(username, password)
+            },
+            onDismiss = { authVm.ignoreSchoolLogin.value = true }
+        )
     } else {
         SwipeRefresh(
             modifier = Modifier.fillMaxSize(),
@@ -116,7 +125,11 @@ fun ExamScreen(
                                                 it
                                             )
                                         } else {
-                                            navController.navigate(NavigationTarget.Exams.Detail.destinationFormat.format(it.id))
+                                            navController.navigate(
+                                                NavigationTarget.Exams.Detail.destinationFormat.format(
+                                                    it.id
+                                                )
+                                            )
                                         }
                                     }
                                 )
@@ -176,6 +189,24 @@ fun ExamScreen(
                 examVm.deleteExams(selectedExams.map { it.id })
                 selectedExams.clear()
                 showDeleteDialog = false
+            }
+        )
+    }
+
+    if(error != null) {
+        AlertDialog(
+            onDismissRequest = { examVm.error.value = null },
+            title = { Text(stringResource(R.string.error)) },
+            text = { Text(stringResource(error!!)) },
+            dismissButton = {
+                TextButton(onClick = { examVm.error.value = null }) {
+                    Text("Ok")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { navController.navigate(NavigationTarget.Settings.destinationFormat) }) {
+                    Text(stringResource(R.string.switch_to_settings))
+                }
             }
         )
     }
