@@ -38,9 +38,9 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("String", "SUPABASE_URL", secretsProperties["SUPABASE_URL"] as String)
-        buildConfigField("String", "SUPABASE_KEY", secretsProperties["SUPABASE_KEY"] as String)
-        buildConfigField("String", "GOOGLE_CLIENT_ID", secretsProperties["GOOGLE_CLIENT_ID"] as String)
+        buildConfigField("String", "SUPABASE_URL", (secretsProperties["SUPABASE_URL"] as? String) ?: "")
+        buildConfigField("String", "SUPABASE_KEY", (secretsProperties["SUPABASE_KEY"] as? String) ?: "")
+        buildConfigField("String", "GOOGLE_CLIENT_ID", (secretsProperties["GOOGLE_CLIENT_ID"] as? String) ?: "")
     }
 
     buildTypes {
