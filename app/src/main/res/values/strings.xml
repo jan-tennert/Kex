@@ -2,7 +2,7 @@
     <string name="app_name">Kex</string>
     <string name="past_exams">Show past exams</string>
     <string name="score">Grade/Score</string>
-    <string name="theme">Theme</string>
+    <string name="theme">Topics</string>
     <string name="save">Save</string>
     <string name="login_google">Login with Google</string>
     <string name="no_theme">No theme set</string>
