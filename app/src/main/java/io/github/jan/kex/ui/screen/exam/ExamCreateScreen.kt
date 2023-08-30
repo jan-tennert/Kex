@@ -1,5 +1,9 @@
 package io.github.jan.kex.ui.screen.exam
 
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +18,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mohamedrejeb.richeditor.model.RichTextState
@@ -37,9 +43,13 @@ import io.github.jan.kex.ui.components.DropDownField
 import io.github.jan.kex.ui.components.RichTextStyleRow
 import io.github.jan.kex.ui.icons.rememberDone
 import io.github.jan.kex.ui.icons.rememberTypeSpecimen
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +72,29 @@ fun ExamCreateScreen(
                 "${date.dayOfMonth}.${date.monthNumber}.${date.year}"
             }
         }
+
+        //date picker field animation stuff
+        val animationLengthMillis = 200
+        val animationPauseMillis = 500
+        val animationExpandWidth = 20.dp
+        val outlinedTextboxDefaultWidth = 280.dp //I didn't find a way to get it procedurally sorry :( //but 280 seems to be right
+
+        var datePickerFieldIsAnimated by remember { mutableStateOf(false) }
+        val datePickerFieldTransition = updateTransition(targetState = datePickerFieldIsAnimated, label = "transition")
+
+        val datePickerFieldOutlineColor by datePickerFieldTransition.animateColor(transitionSpec = {
+            tween(animationLengthMillis)
+        }, "") { animated ->
+            if (animated) Color.Red else MaterialTheme.colorScheme.outline
+        }
+
+        val datePickerFieldWidth by datePickerFieldTransition.animateDp(transitionSpec = {
+            tween(animationLengthMillis)
+        }, "") { animated ->
+            if (animated) outlinedTextboxDefaultWidth + animationExpandWidth else outlinedTextboxDefaultWidth
+        }
+
+
         var type by remember {
             mutableStateOf(Exam.Type.EXAM)
         }
@@ -83,7 +116,11 @@ fun ExamCreateScreen(
                 DropdownMenuItem(text = { Text(stringResource(it.nameId))}, onClick = { type = it; expandTypeField = false })
             }
         }
-        DatePickerField(selectedDate = selectedDate, onClick = { showDatePicker = true })
+        DatePickerField(
+            selectedDate = selectedDate,
+            borderColor = datePickerFieldOutlineColor,
+            modifier = Modifier.width(datePickerFieldWidth),
+            onClick = { showDatePicker = true})
         RichTextStyleRow(state = theme)
         OutlinedRichTextEditor(
             state = theme,
@@ -108,7 +145,17 @@ fun ExamCreateScreen(
             }
         }
         Button(
-            onClick = { onCreate(subject, selectedDate!!, theme.toHtml(), type)},
+            onClick = {
+                if (selectedDate != null)
+                    onCreate(subject, selectedDate, theme.toHtml(), type)
+                else {
+                    GlobalScope.launch { //Prompt the user to enter a date with a Super cool animation!!!
+                        datePickerFieldIsAnimated = true
+                        delay((animationLengthMillis + animationPauseMillis).toLong())
+                        datePickerFieldIsAnimated = false
+                    }
+                }
+            },
             modifier = Modifier
                 .padding(12.dp)
         ) {

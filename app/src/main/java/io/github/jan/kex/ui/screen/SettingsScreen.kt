@@ -62,11 +62,9 @@ fun SettingsScreen(
             leadingIcon = { Icon(rememberMail(), contentDescription = null) },
             singleLine = true,
         )
-        Spacer(modifier = Modifier.height(6.dp))
         OutlinedPasswordField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(text = stringResource(R.string.password)) },
             mandatory = false
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -88,8 +86,7 @@ fun SettingsScreen(
         LogoutDialog(
             onLogout = {
                 logoutState.startFlow()
-                //authVm.logout() not neccessary as invoked by compose auth
-                authVm.clearSchoolCredentials()
+                authVm.logout()
                 examVm.clearLocalEntries()
                 subjectVm.clearLocalEntries()
                 taskVm.clearLocalEntries()

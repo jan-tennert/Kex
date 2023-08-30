@@ -64,6 +64,7 @@ sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", v
 sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }
 
 compose-rich-editor = { group = "com.mohamedrejeb.richeditor", name = "richeditor-compose", version.ref = "compose-rich-editor" }
+material = { group = "com.google.android.material", name = "material", version = "1.9.0" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

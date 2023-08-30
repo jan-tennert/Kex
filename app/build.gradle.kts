@@ -12,15 +12,7 @@ plugins {
 
 val secretsFile = rootProject.file("secrets.properties");
 val secretsProperties = Properties()
-if(secretsFile.exists()) {
-    secretsProperties.load(FileInputStream(secretsFile))
-} else {
-    println("""
-    No secrets.properties file found. Pattern:
-    TODO
-    """)
-}
-
+secretsProperties.load(FileInputStream(secretsFile))
 
 android {
     namespace = "io.github.jan.kex"
@@ -38,9 +30,9 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("String", "SUPABASE_URL", (secretsProperties["SUPABASE_URL"] as? String) ?: "\"\"")
-        buildConfigField("String", "SUPABASE_KEY", (secretsProperties["SUPABASE_KEY"] as? String) ?: "\"\"")
-        buildConfigField("String", "GOOGLE_CLIENT_ID", (secretsProperties["GOOGLE_CLIENT_ID"] as? String) ?: "\"\"")
+        buildConfigField("String", "SUPABASE_URL", secretsProperties["SUPABASE_URL"] as String)
+        buildConfigField("String", "SUPABASE_KEY", secretsProperties["SUPABASE_KEY"] as String)
+        buildConfigField("String", "GOOGLE_CLIENT_ID", secretsProperties["GOOGLE_CLIENT_ID"] as String)
     }
 
     buildTypes {
@@ -109,6 +101,7 @@ dependencies {
     implementation(libs.compose.rich.editor)
   //  ksp(libs.compose.destinations.ksp)
     implementation(libs.swipe.refresh)
+    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
