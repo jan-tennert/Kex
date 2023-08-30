@@ -12,7 +12,15 @@ plugins {
 
 val secretsFile = rootProject.file("secrets.properties");
 val secretsProperties = Properties()
-secretsProperties.load(FileInputStream(secretsFile))
+if(secretsFile.exists()) {
+    secretsProperties.load(FileInputStream(secretsFile))
+} else {
+    println("""
+    No secrets.properties file found. Pattern:
+    TODO
+    """)
+}
+
 
 android {
     namespace = "io.github.jan.kex"
