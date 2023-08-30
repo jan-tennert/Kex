@@ -87,6 +87,7 @@ fun SettingsScreen(
             onLogout = {
                 logoutState.startFlow()
                 //authVm.logout() not neccessary as invoked by compose auth
+                authVm.clearSchoolCredentials()
                 examVm.clearLocalEntries()
                 subjectVm.clearLocalEntries()
                 taskVm.clearLocalEntries()
