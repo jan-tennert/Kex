@@ -16,7 +16,7 @@ import io.github.jan.supabase.serializer.KotlinXSerializer
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
-private val GOOGLE_SERVER_ID = BuildConfig.GOOGLE_CLIENT_ID
+private const val GOOGLE_SERVER_ID = BuildConfig.GOOGLE_CLIENT_ID
 
 val supabaseModule = module {
     single {
