@@ -29,5 +29,5 @@ jobs:
           key: ${{ runner.os }}-gradle-v3-${{ hashFiles('gradle.properties', 'gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-v3-
-      - name: Analyze code using detekt
+      - name: Build project
         run: ./gradlew build --stacktrace
