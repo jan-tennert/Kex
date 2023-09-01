@@ -46,9 +46,9 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("String", "SUPABASE_URL", (secretsProperties["SUPABASE_URL"] as? String) ?: System.getenv("SUPABASE_URL") ?: "\"\"")
-        buildConfigField("String", "SUPABASE_KEY", (secretsProperties["SUPABASE_KEY"] as? String) ?: System.getenv("SUPABASE_KEY") ?: "\"\"")
-        buildConfigField("String", "GOOGLE_CLIENT_ID", (secretsProperties["GOOGLE_CLIENT_ID"] as? String) ?: System.getenv("GOOGLE_CLIENT_ID") ?: "\"\"")
+        buildConfigField("String", "SUPABASE_URL", (secretsProperties["SUPABASE_URL"] as? String) ?: "\"${System.getenv("SUPABASE_URL")}\"" ?: "\"\"")
+        buildConfigField("String", "SUPABASE_KEY", (secretsProperties["SUPABASE_KEY"] as? String) ?: "\"${System.getenv("SUPABASE_KEY")}\"" ?: "\"\"")
+        buildConfigField("String", "GOOGLE_CLIENT_ID", (secretsProperties["GOOGLE_CLIENT_ID"] as? String) ?: "\"${System.getenv("GOOGLE_CLIENT_ID")}\"" ?: "\"\"")
     }
 
     buildTypes {
