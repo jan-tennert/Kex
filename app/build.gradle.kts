@@ -26,6 +26,14 @@ android {
     namespace = "io.github.jan.kex"
     compileSdk = 34
 
+    signingConfigs {
+        register("release") {
+            storeFile = File("keystore/android_keystore.keystore")
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+        }
+    }
     defaultConfig {
         applicationId = "io.github.jan.kex"
         minSdk = 24
@@ -38,9 +46,9 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("String", "SUPABASE_URL", (secretsProperties["SUPABASE_URL"] as? String) ?: "\"\"")
-        buildConfigField("String", "SUPABASE_KEY", (secretsProperties["SUPABASE_KEY"] as? String) ?: "\"\"")
-        buildConfigField("String", "GOOGLE_CLIENT_ID", (secretsProperties["GOOGLE_CLIENT_ID"] as? String) ?: "\"\"")
+        buildConfigField("String", "SUPABASE_URL", (secretsProperties["SUPABASE_URL"] as? String) ?: System.getenv("SUPABASE_URL") ?: "\"\"")
+        buildConfigField("String", "SUPABASE_KEY", (secretsProperties["SUPABASE_KEY"] as? String) ?: System.getenv("SUPABASE_KEY") ?: "\"\"")
+        buildConfigField("String", "GOOGLE_CLIENT_ID", (secretsProperties["GOOGLE_CLIENT_ID"] as? String) ?: System.getenv("GOOGLE_CLIENT_ID") ?: "\"\"")
     }
 
     buildTypes {
@@ -48,8 +56,8 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+                "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
