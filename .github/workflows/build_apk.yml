@@ -106,11 +106,9 @@ jobs:
            echo 'PRERELEASE=--prerelease') >> $GITHUB_ENV 
           gh release delete prerelease --yes || true 
           git push origin :prerelease || true
-      - name: echo env
-        run: echo $TAG_NAME $PRERELEASE
       - name: Upload Release APK
         id: upload_release_asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: | 
-         gh release create $TAG_NAME $PRERELEASE --title "$TAG_NAME" --target apk/app-release.apk
+         gh release create $TAG_NAME $PRERELEASE --title "$TAG_NAME" --target $GITHUB_SHA apk/app-release.apk
