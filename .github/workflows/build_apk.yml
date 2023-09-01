@@ -61,7 +61,7 @@ jobs:
         uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'android_keystore.keystore'
-          fileDir: '/home/runner/work/Kex/Kex/app/keystore/'
+          fileDir: 'keystore'
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Build APK
         run: bash ./gradlew assembleRelease --stacktrace
