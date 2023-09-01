@@ -1,12 +1,6 @@
 name: Build app
 
 on:
-  push:
-    branches:
-   #   - 'master'
-  pull_request:
-    branches:
-   #   - '*'
 
 jobs:
   build: # possibly publish apks after building
