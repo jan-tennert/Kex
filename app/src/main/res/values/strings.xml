@@ -25,7 +25,7 @@
     <string name="delete_entry">Are you sure you want to delete this item?</string>
     <string name="delete_entries">Are you sure you want to delete all exams? Non custom entries will get re-added on refresh.</string>
     <string name="delete_subject">Are you sure you want to delete this subject? This will delete all your remaining tasks!</string>
-    <string name="enter_school_credentials">"Add school credentials to import exams"</string>
+    <string name="enter_school_credentials">"Import exams from school"</string>
     <string name="invalid_school_credentials">Invalid school credentials</string>
     <string name="switch_to_settings">Go to settings</string>
     <string name="sign_out_text">Are you sure you want to sign out?</string>
