@@ -75,107 +75,98 @@ fun ExamScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     val error: Int? by examVm.error.collectAsStateWithLifecycle()
-    if((username.isBlank() || password.isBlank()) && !ignoreSchoolLogin) {
-        SchoolLoginDialog(
-            login = { username, password ->
-                authVm.setSchoolCredentials(username, password)
-            },
-            onDismiss = { authVm.ignoreSchoolLogin.value = true }
-        )
-    } else {
-        SwipeRefresh(
-            modifier = Modifier.fillMaxSize(),
-            state = swipeRefreshState,
-            onRefresh = { examVm.refreshExams(username, password) },
-            indicator = { state, refreshTrigger ->
-                SwipeRefreshIndicator(
-                    state = state,
-                    refreshTriggerDistance = refreshTrigger,
-                    backgroundColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                )
-            }
+    SwipeRefresh(
+        modifier = Modifier.fillMaxSize(),
+        state = swipeRefreshState,
+        onRefresh = { examVm.refreshExams(username, password) },
+        indicator = { state, refreshTrigger ->
+            SwipeRefreshIndicator(
+                state = state,
+                refreshTriggerDistance = refreshTrigger,
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
+            // TopBar(showPastExams = showPastExams, onShowPastExamsChange = { examVm.showPastExams.value = !showPastExams })
+            LazyVerticalGrid(
+                GridCells.Adaptive(128.dp), modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
             ) {
-                // TopBar(showPastExams = showPastExams, onShowPastExamsChange = { examVm.showPastExams.value = !showPastExams })
-                LazyVerticalGrid(
-                    GridCells.Adaptive(128.dp), modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f)
-                ) {
-                    items(filteredExams, { it.id }) {
-                        ExamCard(
-                            exam = it,
-                            selected = it in selectedExams,
-                            showSelection = selectedExams.isNotEmpty(),
-                            modifier = Modifier
-                                .size(128.dp)
-                                .padding(8.dp)
-                                .combinedClickable(
-                                    onLongClick = {
+                items(filteredExams, { it.id }) {
+                    ExamCard(
+                        exam = it,
+                        selected = it in selectedExams,
+                        showSelection = selectedExams.isNotEmpty(),
+                        modifier = Modifier
+                            .size(128.dp)
+                            .padding(8.dp)
+                            .combinedClickable(
+                                onLongClick = {
+                                    if (it in selectedExams) selectedExams.remove(it) else selectedExams.add(
+                                        it
+                                    )
+                                },
+                                onClick = {
+                                    if (selectedExams.isNotEmpty()) {
                                         if (it in selectedExams) selectedExams.remove(it) else selectedExams.add(
                                             it
                                         )
-                                    },
-                                    onClick = {
-                                        if (selectedExams.isNotEmpty()) {
-                                            if (it in selectedExams) selectedExams.remove(it) else selectedExams.add(
-                                                it
+                                    } else {
+                                        navController.navigate(
+                                            NavigationTarget.Exams.Detail.destinationFormat.format(
+                                                it.id
                                             )
-                                        } else {
-                                            navController.navigate(
-                                                NavigationTarget.Exams.Detail.destinationFormat.format(
-                                                    it.id
-                                                )
-                                            )
-                                        }
+                                        )
                                     }
-                                )
-                                .animateItemPlacement()
-                        )
-                    }
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    if(selectedExams.isNotEmpty()) {
-                        FloatingActionButton(
-                            onClick = { showDeleteDialog = true },
-                            containerColor = MaterialTheme.colorScheme.errorContainer
-                        ) {
-                            Icon(rememberDelete(), contentDescription = null)
-                        }
-                        Spacer(Modifier.weight(1f))
-                        FloatingActionButton(
-                            onClick = {
-                                if(selectedExams.size == filteredExams.size) {
-                                    selectedExams.clear()
-                                } else {
-                                    selectedExams.clear()
-                                    selectedExams.addAll(filteredExams)
                                 }
-                            }
-                        ) {
-                            Icon(if(selectedExams.size == filteredExams.size) rememberDeselect() else rememberSelectAll(), contentDescription = null)
-                        }
-                    } else {
-                        Switch(
-                            checked = showPastExams,
-                            onCheckedChange = { examVm.showPastExams.value = !showPastExams })
-                        Spacer(modifier = Modifier.size(12.dp))
-                        Text(stringResource(R.string.past_exams), modifier = Modifier.weight(1f))
-                        ExtendedFloatingActionButton(
-                            onClick = { navController.navigate(NavigationTarget.Exams.Create.destinationFormat) },
-                            text = { Text(stringResource(R.string.create)) },
-                            icon = { Icon(EditIcon, contentDescription = null) }
-                        )
+                            )
+                            .animateItemPlacement()
+                    )
+                }
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                if(selectedExams.isNotEmpty()) {
+                    FloatingActionButton(
+                        onClick = { showDeleteDialog = true },
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ) {
+                        Icon(rememberDelete(), contentDescription = null)
                     }
+                    Spacer(Modifier.weight(1f))
+                    FloatingActionButton(
+                        onClick = {
+                            if(selectedExams.size == filteredExams.size) {
+                                selectedExams.clear()
+                            } else {
+                                selectedExams.clear()
+                                selectedExams.addAll(filteredExams)
+                            }
+                        }
+                    ) {
+                        Icon(if(selectedExams.size == filteredExams.size) rememberDeselect() else rememberSelectAll(), contentDescription = null)
+                    }
+                } else {
+                    Switch(
+                        checked = showPastExams,
+                        onCheckedChange = { examVm.showPastExams.value = !showPastExams })
+                    Spacer(modifier = Modifier.size(12.dp))
+                    Text(stringResource(R.string.past_exams), modifier = Modifier.weight(1f))
+                    ExtendedFloatingActionButton(
+                        onClick = { navController.navigate(NavigationTarget.Exams.Create.destinationFormat) },
+                        text = { Text(stringResource(R.string.create)) },
+                        icon = { Icon(EditIcon, contentDescription = null) }
+                    )
                 }
             }
         }
@@ -190,6 +181,14 @@ fun ExamScreen(
                 selectedExams.clear()
                 showDeleteDialog = false
             }
+        )
+    }
+    if((username.isBlank() || password.isBlank()) && !ignoreSchoolLogin) {
+        SchoolLoginDialog(
+            login = { username, password ->
+                authVm.setSchoolCredentials(username, password)
+            },
+            onDismiss = { authVm.ignoreSchoolLogin.value = true }
         )
     }
 
