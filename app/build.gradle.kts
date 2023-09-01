@@ -28,7 +28,7 @@ android {
 
     signingConfigs {
         register("release") {
-            storeFile = File("keystore/android_keystore.keystore")
+            storeFile = File("/home/runner/work/Kex/Kex/app/keystore/android_keystore.keystore")
             storePassword = System.getenv("SIGNING_STORE_PASSWORD")
             keyAlias = System.getenv("SIGNING_KEY_ALIAS")
             keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
