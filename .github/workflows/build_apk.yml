@@ -106,6 +106,8 @@ jobs:
            echo 'PRERELEASE=--prerelease') >> $GITHUB_ENV 
           gh release delete prerelease --yes || true 
           git push origin :prerelease || true
+      - name: echo env
+        run: echo $TAG_NAME $PRERELEASE
       - name: Upload Release APK
         id: upload_release_asset
         env:
