@@ -59,6 +59,9 @@ android {
                 "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
         }
+        named("debug") {
+            signingConfig = signingConfigs.getByName("release")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
