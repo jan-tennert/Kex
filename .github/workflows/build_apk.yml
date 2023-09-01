@@ -1,6 +1,12 @@
 name: Minimal Android CI Workflow
 
 on:
+  workflow_dispatch: 
+    inputs: 
+      tag_name: 
+        description: 'Tag name for release' 
+        required: false 
+        default: prerelease
   push:
     branches:
       - master
@@ -75,31 +81,29 @@ jobs:
           name: apk
           path: app/build/outputs/apk/release/app-release.apk 
   release:
-    name: Release APK to prelease
+    name: Publish
     needs: apk
    # if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Download APK from build
         uses: actions/download-artifact@v1
         with:
           name: apk  
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }} 
-          prerelease: true
+      - if: github.event_name == 'workflow_dispatch' 
+        run: echo "TAG_NAME=${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
+      - if: github.event_name == 'push'
+        run: echo 'TAG_NAME=prerelease' >> $GITHUB_ENV 
+      - if: env.TAG_NAME == 'prerelease' 
+        run: | 
+          (echo 'SUBJECT=Kex prerelease'; 
+           echo 'PRERELEASE=--prerelease') >> $GITHUB_ENV 
+          gh release delete prerelease --yes || true 
+          git push origin :prerelease || true
       - name: Upload Release APK
         id: upload_release_asset
-        uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: apk/app-release.apk
-          asset_name: Kex.apk
-          asset_content_type: application/zip
+        run: | 
+         gh release create $TAG_NAME $PRERELEASE --title "$TAG_NAME" --target apk/app-release.apk
