@@ -205,7 +205,7 @@ fun ExamScreen(
                 }
             },
             confirmButton = {
-                TextButton(onClick = { navController.navigate(NavigationTarget.Settings.destinationFormat); error = null }) {
+                TextButton(onClick = { navController.navigate(NavigationTarget.Settings.destinationFormat); examVm.error.value = null }) {
                     Text(stringResource(R.string.switch_to_settings))
                 }
             }
