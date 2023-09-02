@@ -62,10 +62,14 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro")
-            if(isCI) signingConfig = signingConfigs.getByName("release")
+            if(isCI) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
         named("debug") {
-            if(isCI) signingConfig = signingConfigs.getByName("release")
+            if(isCI) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {
