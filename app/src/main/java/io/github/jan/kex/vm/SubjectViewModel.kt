@@ -6,6 +6,7 @@ import io.github.jan.kex.data.local.SubjectDataSource
 import io.github.jan.kex.data.remote.Subject
 import io.github.jan.kex.data.remote.SubjectApi
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class SubjectViewModel(
     private val subjectApi: SubjectApi,
@@ -13,8 +14,10 @@ class SubjectViewModel(
 ): ViewModel() {
 
     val subjects = subjectDataSource.getSubjectsAsFlow()
+    val refreshing = MutableStateFlow(false)
 
     fun refreshSubjects() {
+        refreshing.value = true
         viewModelScope.launch {
             kotlin.runCatching {
                 subjectApi.retrieveSubjects()
@@ -23,6 +26,7 @@ class SubjectViewModel(
             }.onFailure {
                 it.printStackTrace()
             }
+            refreshing.value = false
         }
     }
 

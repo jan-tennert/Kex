@@ -44,7 +44,10 @@ import io.github.jan.kex.vm.TaskViewModel
 @Composable
 @Suppress("Deprecation") //The alternative is not yet compatible with Material 3
 fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, navController: NavController) {
-    val swipeRefreshState = rememberSwipeRefreshState(false)
+    val subjectsRefreshing by subjectVm.refreshing.collectAsStateWithLifecycle()
+    val tasksRefreshing by taskViewModel.refreshing.collectAsStateWithLifecycle()
+    val refreshing = subjectsRefreshing || tasksRefreshing
+    val swipeRefreshState = rememberSwipeRefreshState(refreshing)
     val subjects by subjectVm.subjects.collectAsStateWithLifecycle(emptyList())
     var showSubjectCreateDialog by remember { mutableStateOf(false) }
     SwipeRefresh(

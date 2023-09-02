@@ -19,8 +19,10 @@ class TaskViewModel(
 
     val tasks = taskDataSource.getTasksAsFlow()
     val creatingTask = MutableStateFlow(false)
+    val refreshing = MutableStateFlow(false)
 
     fun refreshTasks() {
+        refreshing.value = true
         viewModelScope.launch {
             kotlin.runCatching {
                 tasksApi.retrieveTasks()
@@ -29,6 +31,7 @@ class TaskViewModel(
             }.onFailure {
                 it.printStackTrace()
             }
+            refreshing.value = false
         }
     }
 
