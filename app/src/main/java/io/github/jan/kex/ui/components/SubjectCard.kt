@@ -28,8 +28,10 @@ import io.github.jan.kex.data.remote.Task
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
-enum class TaskImportance(val color: Color) {
-    LOW(Color.Green), MEDIUM(Color.Yellow), HIGH(Color.Red)
+object SubjectCardDefaults {
+
+    val SIZE = 200.dp
+
 }
 
 @Composable

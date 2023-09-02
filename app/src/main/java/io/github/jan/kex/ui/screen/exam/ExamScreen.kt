@@ -41,6 +41,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.ui.components.ExamCard
+import io.github.jan.kex.ui.components.ExamCardDefaults
 import io.github.jan.kex.ui.dialog.DeleteDialog
 import io.github.jan.kex.ui.dialog.SchoolLoginDialog
 import io.github.jan.kex.ui.icons.EditIcon
@@ -93,7 +94,7 @@ fun ExamScreen(
         ) {
             // TopBar(showPastExams = showPastExams, onShowPastExamsChange = { examVm.showPastExams.value = !showPastExams })
             LazyVerticalGrid(
-                GridCells.Adaptive(128.dp), modifier = Modifier
+                GridCells.Adaptive(ExamCardDefaults.SIZE), modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
             ) {
@@ -103,7 +104,7 @@ fun ExamScreen(
                         selected = it in selectedExams,
                         showSelection = selectedExams.isNotEmpty(),
                         modifier = Modifier
-                            .size(128.dp)
+                            .size(ExamCardDefaults.SIZE)
                             .padding(8.dp)
                             .combinedClickable(
                                 onLongClick = {

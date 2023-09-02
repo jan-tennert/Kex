@@ -25,6 +25,12 @@ import io.github.jan.kex.localizedDateString
 import java.time.format.TextStyle
 import java.util.Locale
 
+object ExamCardDefaults {
+
+    val SIZE = 128.dp
+
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExamCard(exam: Exam, selected: Boolean, showSelection: Boolean, modifier: Modifier = Modifier) {

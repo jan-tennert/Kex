@@ -34,6 +34,7 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import io.github.jan.kex.R
 import io.github.jan.kex.ui.components.SubjectCard
+import io.github.jan.kex.ui.components.SubjectCardDefaults
 import io.github.jan.kex.ui.dialog.SubjectCreateDialog
 import io.github.jan.kex.ui.icons.EditIcon
 import io.github.jan.kex.ui.nav.NavigationTarget
@@ -68,7 +69,7 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
         ) {
             // TopBar(showPastExams = showPastExams, onShowPastExamsChange = { examVm.showPastExams.value = !showPastExams })
             LazyVerticalGrid(
-                GridCells.Adaptive(200.dp), modifier = Modifier
+                GridCells.Adaptive(SubjectCardDefaults.SIZE), modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
             ) {
@@ -76,7 +77,7 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
                     SubjectCard(
                         subject = it,
                         modifier = Modifier
-                            .size(200.dp)
+                            .size(SubjectCardDefaults.SIZE)
                             .padding(8.dp)
                             .clickable {
                                 navController.navigate(NavigationTarget.Subjects.Detail.destinationFormat.format(it.id))
