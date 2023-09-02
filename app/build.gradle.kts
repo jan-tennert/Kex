@@ -15,6 +15,7 @@ val secretsProperties = Properties()
 if(secretsFile.exists()) {
     secretsProperties.load(FileInputStream(secretsFile))
 } else {
+    //this is temporary, there should be a check for either the secrets file or env variables
     println("""
     No secrets.properties file found. Pattern:
     TODO
