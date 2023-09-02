@@ -72,6 +72,7 @@ class TaskViewModel(
             }.onFailure {
                 taskDataSource.toggleLoading(oldTask.id)
                 it.printStackTrace()
+                    taskDataSource.insertTask(listOf(oldTask.copy(task = it.localizedMessage, dueDate = dueDate, doneDate = doneDate, loading = false)))
             }
         }
     }
