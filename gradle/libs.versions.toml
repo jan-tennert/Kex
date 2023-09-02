@@ -8,11 +8,9 @@ espresso-core = "3.5.1"
 lifecycle = "2.6.1"
 activity-compose = "1.7.2"
 compose-bom = "2023.06.01"
-supabase = "1.3.0-beta-2"
+supabase = "1.3.0"
 koin = "3.4.2"
 koin-compose = "3.4.6"
-ksp = "1.9.0-1.0.11"
-compose-destinations = "1.9.42-beta"
 compose-onetap = "1.0.3"
 ktor = "2.3.2"
 sqldelight = "2.0.0-rc02"
@@ -53,9 +51,6 @@ koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin"
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin-compose" }
 
-compose-destinations = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "compose-destinations" }
-compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "compose-destinations" }
-
 compose-onetap = { group = "com.github.stevdza-san", name = "OneTapCompose", version.ref = "compose-onetap" }
 
 ktor-cio = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
@@ -68,7 +63,6 @@ compose-rich-editor = { group = "com.mohamedrejeb.richeditor", name = "richedito
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "org-jetbrains-kotlin-android" }
 
