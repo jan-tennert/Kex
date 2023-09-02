@@ -65,7 +65,7 @@ jobs:
           fileDir: '/home/runner/work/Kex/Kex/app/keystore/'
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Build APK
-        run: bash ./gradlew assembleDebug --stacktrace
+        run: bash ./gradlew assembleRelease --stacktrace
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
@@ -74,12 +74,12 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
       - name: Verify Signature
-        run: $ANDROID_SDK_ROOT/build-tools/33.0.1/apksigner verify --print-certs app/build/outputs/apk/debug/app-debug.apk
+        run: $ANDROID_SDK_ROOT/build-tools/33.0.1/apksigner verify --print-certs app/build/outputs/apk/release/app-release.apk
       - name: Upload APK
         uses: actions/upload-artifact@v1
         with:
           name: apk
-          path: app/build/outputs/apk/debug/app-debug.apk 
+          path: app/build/outputs/apk/release/app-release.apk 
   release:
     name: Publish
     needs: apk
@@ -110,4 +110,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: | 
-         gh release create $TAG_NAME $PRERELEASE --title "$TAG_NAME" --target $GITHUB_SHA apk/app-debug.apk
+         gh release create $TAG_NAME $PRERELEASE --title "$TAG_NAME" --target $GITHUB_SHA apk/app-release.apk
