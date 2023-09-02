@@ -21,17 +21,22 @@ if(secretsFile.exists()) {
     """)
 }
 
+val keystoreFile = File("/home/runner/work/Kex/Kex/app/keystore/android_keystore.keystore")
+val isCI = keystoreFile.exists()
+
 
 android {
     namespace = "io.github.jan.kex"
     compileSdk = 34
 
     signingConfigs {
-        register("release") {
-            storeFile = File("/home/runner/work/Kex/Kex/app/keystore/android_keystore.keystore")
-            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
-            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+        if(isCI) {
+            register("release") {
+                storeFile = keystoreFile
+                storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+                keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+                keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            }
         }
     }
     defaultConfig {
@@ -57,10 +62,10 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("release")
+            if(isCI) signingConfig = signingConfigs.getByName("release")
         }
         named("debug") {
-            signingConfig = signingConfigs.getByName("release")
+            if(isCI) signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
