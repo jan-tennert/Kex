@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
 }
 
-
 val secretsFile = rootProject.file("secrets.properties");
 val secretsProperties = Properties()
 if(secretsFile.exists()) {
@@ -24,7 +23,8 @@ if(secretsFile.exists()) {
 
 val keystoreFile = File("/home/runner/work/Kex/Kex/app/keystore/android_keystore.keystore")
 val isCI = keystoreFile.exists()
-
+val appVersion = project.properties["app.versionName"] as String
+val appVersionCode = project.properties["app.versionCode"] as Int
 
 android {
     namespace = "io.github.jan.kex"
@@ -44,8 +44,8 @@ android {
         applicationId = "io.github.jan.kex"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -85,7 +85,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0-dev-k1.9.0-6a60475e07f"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
