@@ -32,11 +32,11 @@ class ExamViewModel(
     }
     val error = MutableStateFlow<Int?>(null)
 
-    fun refreshExams(username: String, password: String) {
+    fun refreshExams(username: String?, password: String?) {
         isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
-                val schoolExams = examApi.retrieveExamsFromSchool(username, password)
+                val schoolExams = if(username != null && password != null) examApi.retrieveExamsFromSchool(username, password) else emptyList()
                 val examData = examApi.retrieveExamData().map {
                     if(!it.custom) {
                         if(schoolExams.none { exam -> exam.id == it.id }) it.copy(custom = true) else it
