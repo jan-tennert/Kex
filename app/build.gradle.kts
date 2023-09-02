@@ -121,7 +121,7 @@ dependencies {
    // implementation(libs.compose.destinations)
     api(libs.compose.navigation)
     implementation(libs.bundles.koin)
-    implementation(libs.compose.onetap)
+    //implementation(libs.compose.onetap)
     implementation(libs.compose.rich.editor)
   //  ksp(libs.compose.destinations.ksp)
     implementation(libs.swipe.refresh)
