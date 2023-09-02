@@ -67,8 +67,8 @@ fun ExamScreen(
     val isLoading by examVm.isLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isLoading)
 
-    val username by authVm.schoolUsername.collectAsStateWithLifecycle("")
-    val password by authVm.schoolPassword.collectAsStateWithLifecycle("")
+    val username by authVm.schoolUsername.collectAsStateWithLifecycle()
+    val password by authVm.schoolPassword.collectAsStateWithLifecycle()
 
     val selectedExams = remember { mutableStateListOf<Exam>() }
 
@@ -183,7 +183,7 @@ fun ExamScreen(
             }
         )
     }
-    if((username.isBlank() || password.isBlank()) && !ignoreSchoolLogin) {
+    if(username != null && password != null && (username.isBlank() || password.isBlank()) && !ignoreSchoolLogin) {
         SchoolLoginDialog(
             login = { username, password ->
                 authVm.setSchoolCredentials(username, password)

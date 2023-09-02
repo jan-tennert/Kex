@@ -47,8 +47,8 @@ fun SettingsScreen(
     var showLogoutDialog by remember { mutableStateOf(false) }
     val oldUsername by authVm.schoolUsername.collectAsStateWithLifecycle()
     val oldPassword by authVm.schoolPassword.collectAsStateWithLifecycle()
-    var username by remember(oldUsername) { mutableStateOf(oldUsername) }
-    var password by remember(oldPassword) { mutableStateOf(oldPassword) }
+    var username by remember(oldUsername) { mutableStateOf(oldUsername ?: "") }
+    var password by remember(oldPassword) { mutableStateOf(oldPassword ?: "") }
     Column(
         modifier = Modifier
             .fillMaxSize()

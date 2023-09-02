@@ -19,8 +19,8 @@ class AuthenticationViewModel(
     val sessionStatus = authenticationApi.sessionStatus
     val loggingIn = MutableStateFlow(false)
     val authError = MutableStateFlow<StringResource?>(null)
-    val schoolUsername = schoolAuthenticationSettings.username.stateIn(viewModelScope, SharingStarted.Eagerly, "")
-    val schoolPassword = schoolAuthenticationSettings.password.stateIn(viewModelScope, SharingStarted.Eagerly, "")
+    val schoolUsername = schoolAuthenticationSettings.username.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val schoolPassword = schoolAuthenticationSettings.password.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val ignoreSchoolLogin = MutableStateFlow(false)
 
     fun loginWithIdToken(idToken: String) {
@@ -49,6 +49,8 @@ class AuthenticationViewModel(
     fun clearSchoolCredentials() {
         viewModelScope.launch {
             kotlin.runCatching {
+                schoolUsername.value = null
+                schoolPassword = null
                 schoolAuthenticationSettings.reset()
             }.onFailure {
                 Log.e("LOG", "Failed to logout", it)
