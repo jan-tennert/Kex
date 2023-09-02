@@ -13,21 +13,16 @@ val secretsFile = rootProject.file("secrets.properties");
 val secretsProperties = Properties()
 if(secretsFile.exists()) {
     secretsProperties.load(FileInputStream(secretsFile))
-} else {
-    //this is temporary, there should be a check for either the secrets file or env variables
-    println("""
-    No secrets.properties file found. Pattern:
-    TODO
-    """)
 }
 
 val keystoreFile = File("/home/runner/work/Kex/Kex/app/keystore/android_keystore.keystore")
 val isCI = keystoreFile.exists()
 val appVersionName = project.properties["app.versionName"] as String
 val appVersionCode = (project.properties["app.versionCode"] as String).toInt()
+val packageName = "io.github.jan.kex"
 
 android {
-    namespace = "io.github.jan.kex"
+    namespace = packageName
     compileSdk = 34
 
     signingConfigs {
@@ -41,7 +36,7 @@ android {
         }
     }
     defaultConfig {
-        applicationId = "io.github.jan.kex"
+        applicationId = packageName
         minSdk = 24
         targetSdk = 34
         versionCode = appVersionCode
