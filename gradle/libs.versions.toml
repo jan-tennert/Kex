@@ -17,7 +17,6 @@ sqldelight = "2.0.0-rc02"
 compose-navigation = "2.7.1"
 compose = "1.6.0-alpha04"
 swipe-refresh = "0.33.1-alpha"
-compose = "1.5.0"
 material3 = "1.2.0-alpha06"
 compose-rich-editor = "1.0.0-beta02"
 
