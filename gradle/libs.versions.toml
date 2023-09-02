@@ -58,7 +58,7 @@ compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations",
 
 compose-onetap = { group = "com.github.stevdza-san", name = "OneTapCompose", version.ref = "compose-onetap" }
 
-ktor-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-cio = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 
 sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }
