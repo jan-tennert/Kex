@@ -50,7 +50,7 @@ class AuthenticationViewModel(
         viewModelScope.launch {
             kotlin.runCatching {
                 schoolUsername.value = null
-                schoolPassword = null
+                schoolPassword.value = null
                 schoolAuthenticationSettings.reset()
             }.onFailure {
                 Log.e("LOG", "Failed to logout", it)
