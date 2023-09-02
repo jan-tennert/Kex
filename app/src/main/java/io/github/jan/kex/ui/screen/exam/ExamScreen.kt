@@ -183,13 +183,15 @@ fun ExamScreen(
             }
         )
     }
-    if(username != null && password != null && (username.isBlank() || password.isBlank()) && !ignoreSchoolLogin) {
-        SchoolLoginDialog(
-            login = { username, password ->
-                authVm.setSchoolCredentials(username, password)
-            },
-            onDismiss = { authVm.ignoreSchoolLogin.value = true }
-        )
+    if(username != null && password != null && !ignoreSchoolLogin) {
+        if((username as String).isBlank() || (password as String).isBlank()) {        
+            SchoolLoginDialog(
+                login = { username, password ->
+                    authVm.setSchoolCredentials(username, password)
+                },
+                onDismiss = { authVm.ignoreSchoolLogin.value = true }
+            )
+        }
     }
 
     if(error != null) {
