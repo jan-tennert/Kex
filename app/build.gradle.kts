@@ -23,7 +23,7 @@ if(secretsFile.exists()) {
 
 val keystoreFile = File("/home/runner/work/Kex/Kex/app/keystore/android_keystore.keystore")
 val isCI = keystoreFile.exists()
-val appVersion = project.properties["app.versionName"] as String
+val appVersionName = project.properties["app.versionName"] as String
 val appVersionCode = project.properties["app.versionCode"] as Int
 
 android {
