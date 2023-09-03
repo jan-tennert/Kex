@@ -14,7 +14,6 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -22,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,9 +34,12 @@ import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.ui.components.DatePickerField
 import io.github.jan.kex.ui.components.DropDownField
+import io.github.jan.kex.ui.components.ErrorOutLinedTextField
 import io.github.jan.kex.ui.components.RichTextStyleRow
 import io.github.jan.kex.ui.icons.rememberDone
 import io.github.jan.kex.ui.icons.rememberTypeSpecimen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -66,12 +69,16 @@ fun ExamCreateScreen(
             mutableStateOf(Exam.Type.EXAM)
         }
         var expandTypeField by remember { mutableStateOf(false) }
-        OutlinedTextField(
+        var isError by remember { mutableStateOf(false) }
+        val errorScope = rememberCoroutineScope()
+        ErrorOutLinedTextField(
             value = subject,
             onValueChange = { subject = it },
             label = { Text(stringResource(R.string.subject)) },
             leadingIcon = { Icon(rememberTypeSpecimen(), contentDescription = null) },
-            singleLine = true
+            singleLine = true,
+            errorDisplayDelay = 150,
+            displayError = isError && subject.isBlank(),
         )
         DropDownField(
             expanded = expandTypeField,
@@ -83,7 +90,11 @@ fun ExamCreateScreen(
                 DropdownMenuItem(text = { Text(stringResource(it.nameId))}, onClick = { type = it; expandTypeField = false })
             }
         }
-        DatePickerField(selectedDate = selectedDate, onClick = { showDatePicker = true })
+        DatePickerField(
+            selectedDate = selectedDate,
+            onClick = { showDatePicker = true },
+            displayError = isError && selectedDate == null
+        )
         RichTextStyleRow(state = theme)
         OutlinedRichTextEditor(
             state = theme,
@@ -108,7 +119,19 @@ fun ExamCreateScreen(
             }
         }
         Button(
-            onClick = { onCreate(subject, selectedDate!!, theme.toHtml(), type)},
+            onClick = {
+                if (selectedDate != null && subject.isNotBlank()) {
+                    onCreate(subject, selectedDate, theme.toHtml(), type)
+                }
+                else {
+                    errorScope.launch {
+                        isError = true
+                        delay(500)
+                        isError =false
+                    }
+
+                }
+            },
             modifier = Modifier
                 .padding(12.dp)
         ) {
