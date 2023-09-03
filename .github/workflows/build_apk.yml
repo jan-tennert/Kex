@@ -12,6 +12,9 @@ on:
       - master
     tags:
       - 'v*'
+  pull_request:
+    branches:
+      - master
 
 jobs:
   test:
@@ -83,7 +86,7 @@ jobs:
   release:
     name: Publish
     needs: apk
-   # if: startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     env: 
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
