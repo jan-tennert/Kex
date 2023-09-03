@@ -9,25 +9,20 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
 }
 
-
 val secretsFile = rootProject.file("secrets.properties");
 val secretsProperties = Properties()
 if(secretsFile.exists()) {
     secretsProperties.load(FileInputStream(secretsFile))
-} else {
-    //this is temporary, there should be a check for either the secrets file or env variables
-    println("""
-    No secrets.properties file found. Pattern:
-    TODO
-    """)
 }
 
 val keystoreFile = File("/home/runner/work/Kex/Kex/app/keystore/android_keystore.keystore")
 val isCI = keystoreFile.exists()
-
+val appVersionName = project.properties["app.versionName"] as String
+val appVersionCode = (project.properties["app.versionCode"] as String).toInt()
+val packageName = "io.github.jan.kex"
 
 android {
-    namespace = "io.github.jan.kex"
+    namespace = packageName
     compileSdk = 34
 
     signingConfigs {
@@ -41,11 +36,11 @@ android {
         }
     }
     defaultConfig {
-        applicationId = "io.github.jan.kex"
+        applicationId = packageName
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -59,7 +54,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro")
@@ -85,7 +80,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0-dev-k1.9.0-6a60475e07f"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
@@ -126,7 +121,7 @@ dependencies {
    // implementation(libs.compose.destinations)
     api(libs.compose.navigation)
     implementation(libs.bundles.koin)
-    implementation(libs.compose.onetap)
+    //implementation(libs.compose.onetap)
     implementation(libs.compose.rich.editor)
   //  ksp(libs.compose.destinations.ksp)
     implementation(libs.swipe.refresh)
