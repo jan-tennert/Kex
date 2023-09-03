@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.jan.kex.ui.theme.customColorScheme
 
 @Composable
 fun ErrorOutLinedTextField(
@@ -31,9 +32,9 @@ fun ErrorOutLinedTextField(
     singleLine: Boolean = false,
 
     defaultWidth: Dp = OutlinedTextFieldDefaults.MinWidth,
-    errorExpandWidth: Dp = 320.dp,
-    defaultColor: Color =MaterialTheme.colorScheme.outline,
-    errorColor: Color = Color.Red,
+    errorExpandWidth: Dp = 30.dp,
+    defaultColor: Color = MaterialTheme.colorScheme.outline,
+    errorColor: Color = customColorScheme.error,
     errorDisplayTime: Int = 200,
     errorDisplayDelay: Int = 0,
     displayError: Boolean = false
@@ -44,7 +45,7 @@ fun ErrorOutLinedTextField(
     val widthOverride by transition.animateDp(transitionSpec = {
         tween(errorDisplayTime, errorDisplayDelay)
     }, "") { animated ->
-        if (animated) errorExpandWidth else defaultWidth
+        if (animated) errorExpandWidth + defaultWidth else defaultWidth
     }
     val colorOverride by transition.animateColor(transitionSpec = {
         tween(errorDisplayTime /*errorDisplayDelay*/)
