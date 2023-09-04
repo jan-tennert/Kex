@@ -28,7 +28,6 @@ fun ErrorOutLinedTextField(
     label: @Composable (() -> Unit)?,
     leadingIcon: @Composable (() -> Unit)?,
     singleLine: Boolean = false,
-
     defaultWidth: Dp = OutlinedTextFieldDefaults.MinWidth,
     errorExpandWidth: Dp = 30.dp,
     defaultColor: Color = MaterialTheme.colorScheme.outline,
