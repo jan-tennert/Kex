@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.jan.kex.R
 import io.github.jan.kex.data.local.ExamDataSource
+import io.github.jan.kex.data.local.SubjectSuggestionDataSource
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.data.remote.ExamApi
 import io.github.jan.kex.data.remote.ExamData
@@ -20,7 +21,8 @@ import kotlinx.datetime.toLocalDateTime
 
 class ExamViewModel(
     private val examApi: ExamApi,
-    private val examDataSource: ExamDataSource
+    private val examDataSource: ExamDataSource,
+    private val subjectSuggestionDataSource: SubjectSuggestionDataSource
 ): ViewModel() {
 
     val exams: Flow<List<Exam>> = examDataSource.getExamsAsFlow()
@@ -31,6 +33,7 @@ class ExamViewModel(
         exams.filter { it.date > currentDate || showPastExams }.sortedBy { it.date }
     }
     val error = MutableStateFlow<Int?>(null)
+    val subjectSuggestions: Flow<List<String>> = subjectSuggestionDataSource.getSuggestionsAsFlow()
 
     fun refreshExams(username: String?, password: String?) {
         isLoading.value = true
@@ -58,6 +61,7 @@ class ExamViewModel(
 
     fun updateExam(exam: Exam, subject: String, theme: String?, points: Long?) {
         viewModelScope.launch(Dispatchers.IO) {
+            subjectSuggestionDataSource.insert(exam.subject)
             kotlin.runCatching {
                 examApi.updateExam(exam, subject, theme, points)
             }.onSuccess {
@@ -70,6 +74,7 @@ class ExamViewModel(
 
     fun createExam(subject: String, date: String, theme: String, type: Exam.Type) {
         viewModelScope.launch(Dispatchers.IO) {
+            subjectSuggestionDataSource.insert(subject)
             kotlin.runCatching {
                 examApi.createExam(subject, date, theme, type)
             }.onSuccess {

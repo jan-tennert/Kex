@@ -11,6 +11,8 @@ import io.github.jan.kex.data.local.SchoolAuthenticationSettings
 import io.github.jan.kex.data.local.SchoolAuthenticationSettingsImpl
 import io.github.jan.kex.data.local.SubjectDataSource
 import io.github.jan.kex.data.local.SubjectDataSourceImpl
+import io.github.jan.kex.data.local.SubjectSuggestionDataSource
+import io.github.jan.kex.data.local.SubjectSuggestionDataSourceImpl
 import io.github.jan.kex.data.local.TaskDataSource
 import io.github.jan.kex.data.local.TaskDataSourceImpl
 import io.github.jan.kex.data.local.sqldelight.InstantAdapter
@@ -35,5 +37,8 @@ val localModule = module {
     }
     single<TaskDataSource> {
         TaskDataSourceImpl(get())
+    }
+    single<SubjectSuggestionDataSource> {
+        SubjectSuggestionDataSourceImpl(get())
     }
 }
