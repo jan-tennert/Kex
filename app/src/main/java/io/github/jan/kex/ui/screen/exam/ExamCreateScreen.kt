@@ -34,7 +34,7 @@ import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.ui.components.DatePickerField
 import io.github.jan.kex.ui.components.DropDownField
-import io.github.jan.kex.ui.components.ErrorOutLinedTextField
+import io.github.jan.kex.ui.components.ErrorOutlinedTextField
 import io.github.jan.kex.ui.components.RichTextStyleRow
 import io.github.jan.kex.ui.icons.rememberDone
 import io.github.jan.kex.ui.icons.rememberTypeSpecimen
@@ -72,7 +72,7 @@ fun ExamCreateScreen(
         var expandTypeField by remember { mutableStateOf(false) }
         var isError by remember { mutableStateOf(false) }
         val errorScope = rememberCoroutineScope()
-        ErrorOutLinedTextField(
+        ErrorOutlinedTextField(
             value = subject,
             onValueChange = { subject = it },
             label = { Text(stringResource(R.string.subject)) },

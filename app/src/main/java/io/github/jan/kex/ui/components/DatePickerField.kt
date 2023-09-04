@@ -17,7 +17,7 @@ fun DatePickerField(
     displayError: Boolean = false,
     onClick: () -> Unit,
 ) {
-    ErrorOutLinedTextField(
+    ErrorOutlinedTextField(
         value = selectedDate ?: "",
         label = { Text(stringResource(R.string.date)) },
         modifier = Modifier.noRippleClickable(onClick),
