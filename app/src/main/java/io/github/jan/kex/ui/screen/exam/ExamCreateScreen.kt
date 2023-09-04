@@ -14,6 +14,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -79,7 +80,7 @@ fun ExamCreateScreen(
             leadingIcon = { Icon(rememberTypeSpecimen(), contentDescription = null) },
             singleLine = true,
             errorDisplayDelay = 150.milliseconds,
-            displayError = isError && subject.isBlank(),
+            displayError = isError && subject.isBlank()
         )
         DropDownField(
             expanded = expandTypeField,

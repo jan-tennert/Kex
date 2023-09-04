@@ -37,11 +37,10 @@ fun ErrorOutlinedTextField(
     errorDisplayDelay: Duration = 0.milliseconds,
     displayError: Boolean = false
 ) {
-    var isAnimated by remember { mutableStateOf(false) }
-    val transition = updateTransition(targetState = isAnimated, label = "transition")
+    val transition = updateTransition(targetState = displayError, label = "transition")
 
     val widthOverride by transition.animateDp(transitionSpec = {
-        tween(errorDisplayTime.toInt(DurationUnit.MILLISECONDS), errorDisplayDelay.toInt(DurationUnit.MILLISECONDS))
+        tween(errorDisplayTime.inWholeMilliseconds.toInt(), errorDisplayDelay.inWholeMilliseconds.toInt())
     }, "") { animated ->
         if (animated) errorExpandWidth + defaultWidth else defaultWidth
     }
@@ -50,8 +49,6 @@ fun ErrorOutlinedTextField(
 //    }, "") { animated ->
 //        if (animated) errorColor else defaultColor
 //    }
-
-    isAnimated = displayError
 
     OutlinedTextField(
         value = value,

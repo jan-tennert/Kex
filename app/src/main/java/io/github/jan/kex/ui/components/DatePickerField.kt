@@ -26,7 +26,7 @@ fun DatePickerField(
         enabled = false,
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = MaterialTheme.colorScheme.onSurface,
-//            disabledBorderColor = MaterialTheme.colorScheme.outline,
+            disabledBorderColor = MaterialTheme.colorScheme.outline,
             disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
             disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
             disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
