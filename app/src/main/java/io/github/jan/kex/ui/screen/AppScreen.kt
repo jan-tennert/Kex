@@ -83,7 +83,8 @@ fun AppScreen(
                     }
                 }
                 composable(NavigationTarget.Exams.Create.destination) {
-                    ExamCreateScreen { subject, date, theme, type ->
+                    val subjectSuggestions by examVm.subjectSuggestions.collectAsStateWithLifecycle()
+                    ExamCreateScreen(subjectSuggestions) { subject, date, theme, type ->
                         examVm.createExam(subject, date, theme, type)
                         navController.navigate(NavigationTarget.Exams.destination)
                     }

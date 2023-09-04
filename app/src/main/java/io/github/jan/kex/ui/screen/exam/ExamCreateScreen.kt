@@ -49,6 +49,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExamCreateScreen(
+    suggestions: List<String>,
     onCreate: (subject: String, date: String, theme: String, type: Exam.Type) -> Unit,
 ) {
     Column(
@@ -56,6 +57,9 @@ fun ExamCreateScreen(
         verticalArrangement = Arrangement.Center
     ) {
         var subject by remember { mutableStateOf("") }
+        val filteredSuggestions by remember(subject, suggestions) {
+            suggestions.filter { it.contains(subject) }.take(2)
+        }
         val datePickerState = rememberDatePickerState()
         var showDatePicker by remember { mutableStateOf(false) }
         val theme by remember { mutableStateOf(RichTextState()) }

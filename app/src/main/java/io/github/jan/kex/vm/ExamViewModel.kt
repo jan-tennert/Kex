@@ -12,6 +12,8 @@ import io.github.jan.kex.data.remote.toExam
 import io.github.jan.supabase.exceptions.BadRequestRestException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -33,7 +35,7 @@ class ExamViewModel(
         exams.filter { it.date > currentDate || showPastExams }.sortedBy { it.date }
     }
     val error = MutableStateFlow<Int?>(null)
-    val subjectSuggestions: Flow<List<String>> = subjectSuggestionDataSource.getSuggestionsAsFlow()
+    val subjectSuggestions: Flow<List<String>> = subjectSuggestionDataSource.getSuggestionsAsFlow().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun refreshExams(username: String?, password: String?) {
         isLoading.value = true
