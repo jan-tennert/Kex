@@ -1,3 +1,5 @@
+package io.github.jan.kex.data.local
+
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import kotlinx.coroutines.Dispatchers
