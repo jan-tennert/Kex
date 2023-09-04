@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,7 +78,7 @@ fun ExamCreateScreen(
             label = { Text(stringResource(R.string.subject)) },
             leadingIcon = { Icon(rememberTypeSpecimen(), contentDescription = null) },
             singleLine = true,
-            errorDisplayDelay = 150,
+            errorDisplayDelay = 150.milliseconds,
             displayError = isError && subject.isBlank(),
         )
         DropDownField(
