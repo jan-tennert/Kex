@@ -12,8 +12,8 @@ val appModule = module {
     viewModel {
         AuthenticationViewModel(get(), get())
     }
-    viewModel {
-        ExamViewModel(get(), get())
+    viewModel { 
+        ExamViewModel(get(), get(), get())
     }
     viewModel {
         SubjectViewModel(get(), get())
