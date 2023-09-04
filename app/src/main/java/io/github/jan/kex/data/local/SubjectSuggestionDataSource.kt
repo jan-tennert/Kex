@@ -24,7 +24,7 @@ internal class SubjectSuggestionDataSourceImpl(
     private val queries = appDatabase.subjectSuggestionQueries
 
     override fun getSuggestionsAsFlow(): Flow<List<String>> {
-        return queries.selectAll().asFlow().mapToList(Dispatchers.Default).map { it.map { suggestion -> suggestion.name } }
+        return queries.selectAll().asFlow().mapToList(Dispatchers.Default)
     }
 
     override suspend fun insert(name: String) {
