@@ -37,10 +37,6 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
-//val customColorScheme = darkColorScheme(
-//    error = Color.Red
-//)
-
 @Composable
 fun KexTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

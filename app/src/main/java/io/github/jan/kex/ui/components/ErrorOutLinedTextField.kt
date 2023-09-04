@@ -9,15 +9,11 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.DurationUnit
 
 @Composable
 fun ErrorOutlinedTextField(
@@ -31,8 +27,6 @@ fun ErrorOutlinedTextField(
     singleLine: Boolean = false,
     defaultWidth: Dp = OutlinedTextFieldDefaults.MinWidth,
     errorExpandWidth: Dp = 30.dp,
-//    defaultColor: Color = MaterialTheme.colorScheme.outline,
-//    errorColor: Color = MaterialTheme.colorScheme.errorContainer,
     errorDisplayTime: Duration = 200.milliseconds,
     errorDisplayDelay: Duration = 0.milliseconds,
     displayError: Boolean = false
@@ -44,11 +38,6 @@ fun ErrorOutlinedTextField(
     }, "") { animated ->
         if (animated) errorExpandWidth + defaultWidth else defaultWidth
     }
-//    val colorOverride by transition.animateColor(transitionSpec = {
-//        tween(errorDisplayTime.toInt(DurationUnit.MILLISECONDS) /*errorDisplayDelay*/)
-//    }, "") { animated ->
-//        if (animated) errorColor else defaultColor
-//    }
 
     OutlinedTextField(
         value = value,
