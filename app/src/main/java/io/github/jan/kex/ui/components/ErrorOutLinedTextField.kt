@@ -25,8 +25,6 @@ fun ErrorOutLinedTextField(
     value: String,
     onValueChange: (String) -> Unit = {},
     enabled: Boolean = true,
-    //
-    //
     label: @Composable (() -> Unit)?,
     leadingIcon: @Composable (() -> Unit)?,
     singleLine: Boolean = false,
