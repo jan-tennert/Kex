@@ -1,6 +1,8 @@
 package io.github.jan.kex.ui.components
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,6 +23,15 @@ fun DatePickerField(
         modifier = Modifier.noRippleClickable(onClick),
         leadingIcon = { Icon(rememberDateRange(), contentDescription = null) },
         displayError = displayError,
-        enabled = false
+        enabled = false,
+        colors = OutlinedTextFieldDefaults.colors(
+            disabledTextColor = MaterialTheme.colorScheme.onSurface,
+//            disabledBorderColor = MaterialTheme.colorScheme.outline,
+            disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            //For Icons
+            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
     )
 }
