@@ -2,7 +2,6 @@ package io.github.jan.kex.ui.components
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,14 +12,18 @@ import io.github.jan.kex.ui.icons.rememberDateRange
 import io.github.jan.kex.ui.screen.exam.noRippleClickable
 
 @Composable
-fun DatePickerField(selectedDate: String?, onClick: () -> Unit) {
-    OutlinedTextField(
+fun DatePickerField(
+    selectedDate: String?,
+    displayError: Boolean = false,
+    onClick: () -> Unit,
+) {
+    ErrorOutlinedTextField(
         value = selectedDate ?: "",
-        onValueChange = {},
-        enabled = false,
         label = { Text(stringResource(R.string.date)) },
         modifier = Modifier.noRippleClickable(onClick),
         leadingIcon = { Icon(rememberDateRange(), contentDescription = null) },
+        displayError = displayError,
+        enabled = false,
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = MaterialTheme.colorScheme.onSurface,
             disabledBorderColor = MaterialTheme.colorScheme.outline,
@@ -29,6 +32,6 @@ fun DatePickerField(selectedDate: String?, onClick: () -> Unit) {
             disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
             //For Icons
             disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+        ),
     )
 }
