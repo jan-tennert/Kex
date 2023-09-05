@@ -18,6 +18,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -82,6 +84,7 @@ fun ExamCreateScreen(
             onExpandedChange = {},
         ) {
             ErrorOutlinedTextField(
+                modifier = Modifier.menuAnchor(),
                 value = subject,
                 onValueChange = { subject = it },
                 label = { Text(stringResource(R.string.subject)) },
