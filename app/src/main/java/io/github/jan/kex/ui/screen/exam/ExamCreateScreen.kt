@@ -57,8 +57,8 @@ fun ExamCreateScreen(
         verticalArrangement = Arrangement.Center
     ) {
         var subject by remember { mutableStateOf("") }
-        val filteredSuggestions by remember(subject, suggestions) {
-            suggestions.filter { it.contains(subject) }.take(2)
+        val filteredSuggestions = remember(subject, suggestions) {
+            if(subject.isNotBlank()) suggestions.filter { it.contains(subject) }.take(2) else emptyList()
         }
         val datePickerState = rememberDatePickerState()
         var showDatePicker by remember { mutableStateOf(false) }
@@ -77,15 +77,20 @@ fun ExamCreateScreen(
         var expandTypeField by remember { mutableStateOf(false) }
         var isError by remember { mutableStateOf(false) }
         val errorScope = rememberCoroutineScope()
-        ErrorOutlinedTextField(
-            value = subject,
-            onValueChange = { subject = it },
-            label = { Text(stringResource(R.string.subject)) },
-            leadingIcon = { Icon(rememberTypeSpecimen(), contentDescription = null) },
-            singleLine = true,
-            errorDisplayDelay = 150.milliseconds,
-            displayError = isError && subject.isBlank()
-        )
+        ExposedDropdownMenuBox(
+            expanded = filteredSuggestions.isNotEmpty(),
+            onExpandedChange = {},
+        ) {
+            ErrorOutlinedTextField(
+                value = subject,
+                onValueChange = { subject = it },
+                label = { Text(stringResource(R.string.subject)) },
+                leadingIcon = { Icon(rememberTypeSpecimen(), contentDescription = null) },
+                singleLine = true,
+                errorDisplayDelay = 150.milliseconds,
+                displayError = isError && subject.isBlank()
+            )
+        }
         DropDownField(
             expanded = expandTypeField,
             value = stringResource(type.nameId),
