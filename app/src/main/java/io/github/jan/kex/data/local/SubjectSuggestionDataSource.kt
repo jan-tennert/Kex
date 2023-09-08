@@ -4,7 +4,6 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 interface SubjectSuggestionDataSource {
@@ -12,6 +11,8 @@ interface SubjectSuggestionDataSource {
     fun getSuggestionsAsFlow(): Flow<List<String>>
 
     suspend fun insert(name: String)
+
+    suspend fun insertAll(names: List<String>)
 
     suspend fun clear()
 
@@ -30,6 +31,14 @@ internal class SubjectSuggestionDataSourceImpl(
     override suspend fun insert(name: String) {
         withContext(Dispatchers.IO) {
             queries.insert(name)
+        }
+    }
+
+    override suspend fun insertAll(names: List<String>) {
+        withContext(Dispatchers.IO) {
+            queries.transaction {
+                names.forEach { queries.insert(it) }
+            }
         }
     }
 
