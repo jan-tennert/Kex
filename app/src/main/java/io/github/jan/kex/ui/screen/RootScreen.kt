@@ -54,7 +54,6 @@ fun VersionCheck(
     if(latestVersion != null && latestVersion!! > currentVersion && !ignoreUpdate) {
         UpdateDialog(latestVersion!!, updateVm = updateVm)
     }
-    println("hallo $latestVersion")
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
