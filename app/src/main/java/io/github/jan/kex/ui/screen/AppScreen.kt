@@ -38,6 +38,7 @@ import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
+import io.github.jan.kex.vm.UpdateViewModel
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -45,7 +46,8 @@ fun AppScreen(
     examVm: ExamViewModel = getViewModel(),
     authVm: AuthenticationViewModel = getViewModel(),
     subjectVm: SubjectViewModel = getViewModel(),
-    taskVm: TaskViewModel = getViewModel()
+    taskVm: TaskViewModel = getViewModel(),
+    updateVm: UpdateViewModel = getViewModel()
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -121,7 +123,7 @@ fun AppScreen(
                     }
                 }
                 composable(NavigationTarget.Settings.destination) {
-                    SettingsScreen(authVm, examVm, subjectVm, taskVm)
+                    SettingsScreen(authVm, examVm, subjectVm, taskVm, updateVm)
                 }
                 composable(NavigationTarget.Subjects.destination) {
                     SubjectScreen(subjectVm, taskVm, navController)

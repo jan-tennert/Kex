@@ -30,7 +30,7 @@ fun RootScreen(
     val sessionStatus by authVM.sessionStatus.collectAsStateWithLifecycle()
     when(sessionStatus) {
         is SessionStatus.Authenticated -> {
-            AppScreen(authVm = authVM)
+            AppScreen(authVm = authVM, updateVm = updateVm)
         }
         SessionStatus.LoadingFromStorage -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -51,7 +51,7 @@ fun VersionCheck(
     val latestVersion by updateVm.latestVersion.collectAsState()
     val currentVersion = remember { Version.parse(BuildConfig.VERSION_NAME) }
     val ignoreUpdate by updateVm.ignoreUpdate.collectAsState()
-    if(latestVersion != null && latestVersion!! < currentVersion && !ignoreUpdate) {
+    if(latestVersion != null && latestVersion!! > currentVersion && !ignoreUpdate) {
         UpdateDialog(latestVersion!!, updateVm = updateVm)
     }
     println("hallo $latestVersion")

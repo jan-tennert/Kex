@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.jan.kex.BuildConfig
 import io.github.jan.kex.R
 import io.github.jan.kex.ui.components.SettingsCard
 import io.github.jan.kex.ui.dialog.LogoutDialog
@@ -37,6 +39,7 @@ import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
+import io.github.jan.kex.vm.UpdateViewModel
 import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.compose.auth.ComposeAuth
 import io.github.jan.supabase.compose.auth.composable.rememberSignOut
@@ -52,6 +55,7 @@ fun SettingsScreen(
     examVm: ExamViewModel,
     subjectVm: SubjectViewModel,
     taskVm: TaskViewModel,
+    updateVm: UpdateViewModel,
     composeAuth: ComposeAuth = koinInject()
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -107,6 +111,15 @@ fun SettingsScreen(
                         }
                         SettingsEntry.OpenAiCredentials -> {
 
+                        }
+                        SettingsEntry.Information -> {
+                            Column {
+                                Text(stringResource(R.string.current_version, BuildConfig.VERSION_NAME))
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Button(onClick = { updateVm.ignoreUpdate.value = false; updateVm.checkForUpdates() }) {
+                                    Text(stringResource(R.string.check_for_updates))
+                                }
+                            }
                         }
                     }
                 }

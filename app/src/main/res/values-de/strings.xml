@@ -52,4 +52,12 @@
     <string name="in_days">In %s Tagen</string>
     <string name="no_exams">Keine Klassenarbeiten verfügbar</string>
     <string name="no_tasks">Keine Hausaufgaben verfügbar</string>
+    <string name="install">Installieren</string>
+    <string name="download">Herunterladen</string>
+    <string name="update_downloaded">Update heruntergeladen! Jetzt installieren?</string>
+    <string name="update_available">Neues Update verfügbar: %s</string>
+    <string name="ignore">Ignorieren</string>
+    <string name="information">Informationen</string>
+    <string name="current_version">Aktuelle Version: %s</string>
+    <string name="check_for_updates">Auf Updates prüfen</string>
 </resources>

@@ -47,6 +47,7 @@ class UpdateViewModel(
 
     fun installLatestVersion() {
         downloadStatus.value = null
+        ignoreUpdate.value = true
         viewModelScope.launch {
             runCatching {
                 updateManager.installLatestVersion()

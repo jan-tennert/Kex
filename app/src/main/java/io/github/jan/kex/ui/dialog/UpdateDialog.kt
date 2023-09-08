@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.UpdateDownloadEvent
 import io.github.jan.kex.vm.UpdateViewModel
 import io.github.z4kn4fein.semver.Version
@@ -26,15 +28,15 @@ fun UpdateDialog(version: Version, updateVm: UpdateViewModel) {
         UpdateDownloadEvent.Finished -> {
             AlertDialog(
                 onDismissRequest = {},
-                text = { Text(text = "Update downloaded! Install it now?") },
+                text = { Text(stringResource(R.string.update_downloaded)) },
                 confirmButton = {
                     TextButton(onClick = { updateVm.installLatestVersion() }) {
-                        Text("Install")
+                        Text(stringResource(id = R.string.install))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { updateVm.ignoreUpdate.value = true }) {
-                        Text("Ignore")
+                        Text(stringResource(id = R.string.ignore))
                     }
                 }
             )
@@ -49,15 +51,15 @@ fun UpdateDialog(version: Version, updateVm: UpdateViewModel) {
         null -> {
             AlertDialog(
                 onDismissRequest = {},
-                text = { Text(text = "New Update available: $version") },
+                text = { Text(stringResource(R.string.update_available, version.toString())) },
                 confirmButton = {
                     TextButton(onClick = { updateVm.downloadLatestVersion() }) {
-                        Text("Download")
+                        Text(stringResource(id = R.string.download))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { updateVm.ignoreUpdate.value = true }) {
-                        Text("Ignore")
+                        Text(stringResource(id = R.string.ignore))
                     }
                 }
             )
