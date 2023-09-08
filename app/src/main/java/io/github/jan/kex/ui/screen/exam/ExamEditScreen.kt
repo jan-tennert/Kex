@@ -29,7 +29,7 @@ import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.ui.components.RichTextStyleRow
 import io.github.jan.kex.ui.components.SubjectField
-import io.github.jan.kex.ui.icons.rememberNumbers
+import io.github.jan.kex.ui.icons.rememberNumbersIcon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -65,7 +65,7 @@ fun ExamEditScreen(
             label = { Text(stringResource(R.string.score)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             singleLine = true,
-            leadingIcon = { Icon(rememberNumbers(), null) }
+            leadingIcon = { Icon(rememberNumbersIcon(), null) }
         )
         RichTextStyleRow(state = theme)
         OutlinedRichTextEditor(

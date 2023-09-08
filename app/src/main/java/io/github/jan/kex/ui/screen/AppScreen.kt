@@ -31,6 +31,7 @@ import io.github.jan.kex.ui.screen.exam.ExamCreateScreen
 import io.github.jan.kex.ui.screen.exam.ExamDetailScreen
 import io.github.jan.kex.ui.screen.exam.ExamEditScreen
 import io.github.jan.kex.ui.screen.exam.ExamScreen
+import io.github.jan.kex.ui.screen.settings.SettingsScreen
 import io.github.jan.kex.ui.screen.subjects.SubjectDetailScreen
 import io.github.jan.kex.ui.screen.subjects.SubjectScreen
 import io.github.jan.kex.vm.AuthenticationViewModel
@@ -49,7 +50,12 @@ fun AppScreen(
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = remember(navBackStackEntry) { NavigationTarget.entries.firstOrNull { it.destination == navBackStackEntry?.destination?.route } }
-    AutoRefresh()
+    AutoRefresh(
+        examVm = examVm,
+        authVm = authVm,
+        subjectVm = subjectVm,
+        taskVm = taskVm
+    )
     Scaffold(
         topBar = {
             AppTopBar(currentDestination)

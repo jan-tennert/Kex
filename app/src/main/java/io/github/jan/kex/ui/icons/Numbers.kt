@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun rememberNumbers(): ImageVector {
+fun rememberNumbersIcon(): ImageVector {
     return remember {
         ImageVector.Builder(
             name = "numbers",
