@@ -2,26 +2,22 @@ package io.github.jan.kex.ui.screen
 
 import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,7 +31,6 @@ import androidx.navigation.NavController
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.data.remote.Task
 import io.github.jan.kex.localizedDay
-import io.github.jan.kex.ui.components.ExamCard
 import io.github.jan.kex.ui.components.ExamHomeCard
 import io.github.jan.kex.ui.components.TaskCard
 import io.github.jan.kex.ui.components.daysUntil
@@ -77,7 +72,7 @@ fun HomeScreen(
                 }
             }
             Box(Modifier.padding(8.dp)) {
-                Divider(Modifier.fillMaxHeight().width(1.dp))
+                HorizontalDivider(Modifier.fillMaxWidth())
             }
             LazyColumn(
                 modifier = Modifier
@@ -96,7 +91,7 @@ fun HomeScreen(
                 }
             }
             Box(Modifier.padding(8.dp)) {
-                Divider(Modifier.fillMaxWidth().height(1.dp))
+                VerticalDivider(Modifier.fillMaxHeight())
             }
             LazyColumn(Modifier.fillMaxHeight().fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 taskList(tasksByDays, taskVm::updateTask, taskVm::deleteTask)

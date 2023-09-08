@@ -51,4 +51,12 @@
     <string name="in_days">In %s days</string>
     <string name="no_exams">No exams available</string>
     <string name="no_tasks">No tasks available</string>
+    <string name="install">Install</string>
+    <string name="download">Download</string>
+    <string name="update_downloaded">Update downloaded! Install it now?</string>
+    <string name="update_available">New Update available: %s</string>
+    <string name="ignore">Ignore</string>
+    <string name="information">Information</string>
+    <string name="current_version">Current version: %s</string>
+    <string name="check_for_updates">Check for updates</string>
 </resources>
