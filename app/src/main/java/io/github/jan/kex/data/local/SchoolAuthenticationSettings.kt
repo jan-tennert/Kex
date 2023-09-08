@@ -2,7 +2,6 @@ package io.github.jan.kex.data.local
 
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ObservableSettings
-import com.russhwolf.settings.Settings
 import com.russhwolf.settings.coroutines.getStringFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -13,9 +12,9 @@ interface SchoolAuthenticationSettings {
     val username: Flow<String>
     val password: Flow<String>
 
-    suspend fun setUsername(username: String)
+    suspend fun setUsername(username: String?)
 
-    suspend fun setPassword(password: String)
+    suspend fun setPassword(password: String?)
 
     suspend fun reset()
 
@@ -29,15 +28,23 @@ internal class SchoolAuthenticationSettingsImpl(
     override val username: Flow<String> = settings.getStringFlow("username", "")
     override val password: Flow<String> = settings.getStringFlow("password", "")
 
-    override suspend fun setUsername(username: String) {
+    override suspend fun setUsername(username: String?) {
         withContext(Dispatchers.IO) {
-            settings.putString("username", username)
+            if(username == null) {
+                settings.remove("username")
+            } else {
+                settings.putString("username", username)
+            }
         }
     }
 
-    override suspend fun setPassword(password: String) {
+    override suspend fun setPassword(password: String?) {
         withContext(Dispatchers.IO) {
-            settings.putString("password", password)
+            if(password == null) {
+                settings.remove("password")
+            } else {
+                settings.putString("password", password)
+            }
         }
     }
 

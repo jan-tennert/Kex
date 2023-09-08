@@ -8,6 +8,7 @@ import io.github.jan.kex.data.local.SchoolAuthenticationSettings
 import io.github.jan.kex.data.remote.AuthenticationApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -19,8 +20,8 @@ class AuthenticationViewModel(
     val sessionStatus = authenticationApi.sessionStatus
     val loggingIn = MutableStateFlow(false)
     val authError = MutableStateFlow<StringResource?>(null)
-    val schoolUsername = schoolAuthenticationSettings.username.stateIn(viewModelScope, SharingStarted.Eagerly, null)
-    val schoolPassword = schoolAuthenticationSettings.password.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val schoolUsername = schoolAuthenticationSettings.username.map { it.ifBlank { null } }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val schoolPassword = schoolAuthenticationSettings.password.map { it.ifBlank { null } }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val ignoreSchoolLogin = MutableStateFlow(false)
 
     fun loginWithIdToken(idToken: String) {
@@ -35,7 +36,7 @@ class AuthenticationViewModel(
         }
     }
 
-    fun setSchoolCredentials(username: String, password: String) {
+    fun setSchoolCredentials(username: String?, password: String?) {
         viewModelScope.launch {
             kotlin.runCatching {
                 schoolAuthenticationSettings.setUsername(username)

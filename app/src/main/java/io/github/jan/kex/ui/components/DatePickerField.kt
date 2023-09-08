@@ -19,6 +19,7 @@ fun DatePickerField(
 ) {
     ErrorOutlinedTextField(
         value = selectedDate ?: "",
+        onValueChange = {},
         label = { Text(stringResource(R.string.date)) },
         modifier = Modifier.noRippleClickable(onClick),
         leadingIcon = { Icon(rememberDateRange(), contentDescription = null) },

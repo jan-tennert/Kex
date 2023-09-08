@@ -22,12 +22,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -184,15 +182,13 @@ fun ExamScreen(
             }
         )
     }
-    if(username != null && password != null && !ignoreSchoolLogin) {
-        if((username as String).isBlank() || (password as String).isBlank()) {        
-            SchoolLoginDialog(
-                login = { username, password ->
-                    authVm.setSchoolCredentials(username, password)
-                },
-                onDismiss = { authVm.ignoreSchoolLogin.value = true }
-            )
-        }
+    if(username == null && password == null && !ignoreSchoolLogin) {
+        SchoolLoginDialog(
+            login = { username, password ->
+                authVm.setSchoolCredentials(username, password)
+            },
+            onDismiss = { authVm.ignoreSchoolLogin.value = true }
+        )
     }
 
     if(error != null) {

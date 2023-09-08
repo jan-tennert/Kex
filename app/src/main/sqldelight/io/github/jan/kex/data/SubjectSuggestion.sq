@@ -1,0 +1,12 @@
+CREATE TABLE localSubjectSuggestion(
+    name TEXT PRIMARY KEY NOT NULL
+);
+
+selectAll:
+SELECT * FROM localSubjectSuggestion;
+
+insert:
+INSERT OR REPLACE INTO localSubjectSuggestion (name) VALUES (?);
+
+deleteAll:
+DELETE FROM localSubjectSuggestion;

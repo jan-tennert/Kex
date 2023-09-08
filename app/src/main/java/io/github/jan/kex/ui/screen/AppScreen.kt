@@ -11,10 +11,14 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -27,6 +31,7 @@ import io.github.jan.kex.ui.screen.exam.ExamCreateScreen
 import io.github.jan.kex.ui.screen.exam.ExamDetailScreen
 import io.github.jan.kex.ui.screen.exam.ExamEditScreen
 import io.github.jan.kex.ui.screen.exam.ExamScreen
+import io.github.jan.kex.ui.screen.settings.SettingsScreen
 import io.github.jan.kex.ui.screen.subjects.SubjectDetailScreen
 import io.github.jan.kex.ui.screen.subjects.SubjectScreen
 import io.github.jan.kex.vm.AuthenticationViewModel
@@ -45,6 +50,12 @@ fun AppScreen(
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = remember(navBackStackEntry) { NavigationTarget.entries.firstOrNull { it.destination == navBackStackEntry?.destination?.route } }
+    AutoRefresh(
+        examVm = examVm,
+        authVm = authVm,
+        subjectVm = subjectVm,
+        taskVm = taskVm
+    )
     Scaffold(
         topBar = {
             AppTopBar(currentDestination)
@@ -83,7 +94,8 @@ fun AppScreen(
                     }
                 }
                 composable(NavigationTarget.Exams.Create.destination) {
-                    ExamCreateScreen { subject, date, theme, type ->
+                    val subjectSuggestions by examVm.subjectSuggestions.collectAsStateWithLifecycle()
+                    ExamCreateScreen(subjectSuggestions) { subject, date, theme, type ->
                         examVm.createExam(subject, date, theme, type)
                         navController.navigate(NavigationTarget.Exams.destination)
                     }
@@ -92,9 +104,11 @@ fun AppScreen(
                     val exams by examVm.exams.collectAsStateWithLifecycle(emptyList())
                     val examId = entry.arguments?.getString("examId") ?: error("No examId provided")
                     val selectedExam = remember(exams) { exams.firstOrNull { exam -> exam.id == examId } }
+                    val subjectSuggestions by examVm.subjectSuggestions.collectAsStateWithLifecycle()
                     selectedExam?.let {  exam ->
                         ExamEditScreen(
                             exam = exam,
+                            suggestions = subjectSuggestions,
                             onEdit = { subject, theme, points ->
                                 examVm.updateExam(
                                     selectedExam,
@@ -153,6 +167,31 @@ fun AppNavigationRail(
                         contentDescription = null
                     )
                 })
+        }
+    }
+}
+
+@Composable
+fun AutoRefresh(
+    examVm: ExamViewModel = getViewModel(),
+    authVm: AuthenticationViewModel = getViewModel(),
+    subjectVm: SubjectViewModel = getViewModel(),
+    taskVm: TaskViewModel = getViewModel()
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_START) {
+                examVm.refreshExams(authVm.schoolUsername.value, authVm.schoolPassword.value)
+                subjectVm.refreshSubjects()
+                taskVm.refreshTasks()
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 }
