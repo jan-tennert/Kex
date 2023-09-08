@@ -7,6 +7,8 @@ import io.github.jan.kex.data.LocalTask
 import io.github.jan.kex.data.local.AppDatabase
 import io.github.jan.kex.data.local.ExamDataSource
 import io.github.jan.kex.data.local.ExamDataSourceImpl
+import io.github.jan.kex.data.local.KexSettings
+import io.github.jan.kex.data.local.KexSettingsImpl
 import io.github.jan.kex.data.local.SchoolAuthenticationSettings
 import io.github.jan.kex.data.local.SchoolAuthenticationSettingsImpl
 import io.github.jan.kex.data.local.SubjectDataSource
@@ -40,5 +42,8 @@ val localModule = module {
     }
     single<SubjectSuggestionDataSource> {
         SubjectSuggestionDataSourceImpl(get())
+    }
+    single<KexSettings> {
+        KexSettingsImpl(get())
     }
 }

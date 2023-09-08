@@ -2,6 +2,7 @@ package io.github.jan.kex.di
 
 import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
+import io.github.jan.kex.vm.SettingsViewModel
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
 import io.github.jan.kex.vm.UpdateViewModel
@@ -23,5 +24,8 @@ val appModule = module {
     }
     viewModel {
         UpdateViewModel(get(), get())
+    }
+    viewModel {
+        SettingsViewModel(get())
     }
 }

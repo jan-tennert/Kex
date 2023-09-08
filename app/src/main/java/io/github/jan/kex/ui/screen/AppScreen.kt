@@ -36,6 +36,7 @@ import io.github.jan.kex.ui.screen.subjects.SubjectDetailScreen
 import io.github.jan.kex.ui.screen.subjects.SubjectScreen
 import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
+import io.github.jan.kex.vm.SettingsViewModel
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
 import io.github.jan.kex.vm.UpdateViewModel
@@ -47,7 +48,8 @@ fun AppScreen(
     authVm: AuthenticationViewModel = getViewModel(),
     subjectVm: SubjectViewModel = getViewModel(),
     taskVm: TaskViewModel = getViewModel(),
-    updateVm: UpdateViewModel = getViewModel()
+    updateVm: UpdateViewModel = getViewModel(),
+    settingsVm: SettingsViewModel = getViewModel()
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -123,7 +125,7 @@ fun AppScreen(
                     }
                 }
                 composable(NavigationTarget.Settings.destination) {
-                    SettingsScreen(authVm, examVm, subjectVm, taskVm, updateVm)
+                    SettingsScreen(authVm, examVm, subjectVm, taskVm, updateVm, settingsVm)
                 }
                 composable(NavigationTarget.Subjects.destination) {
                     SubjectScreen(subjectVm, taskVm, navController)

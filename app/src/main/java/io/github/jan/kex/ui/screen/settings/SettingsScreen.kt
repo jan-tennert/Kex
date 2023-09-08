@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -37,6 +39,7 @@ import io.github.jan.kex.ui.icons.rememberLogout
 import io.github.jan.kex.ui.icons.rememberMail
 import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
+import io.github.jan.kex.vm.SettingsViewModel
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
 import io.github.jan.kex.vm.UpdateViewModel
@@ -56,6 +59,7 @@ fun SettingsScreen(
     subjectVm: SubjectViewModel,
     taskVm: TaskViewModel,
     updateVm: UpdateViewModel,
+    settingsVm: SettingsViewModel,
     composeAuth: ComposeAuth = koinInject()
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -118,6 +122,19 @@ fun SettingsScreen(
                                 Spacer(modifier = Modifier.height(6.dp))
                                 Button(onClick = { updateVm.ignoreUpdate.value = false; updateVm.checkForUpdates() }) {
                                     Text(stringResource(R.string.check_for_updates))
+                                }
+                            }
+                        }
+                        SettingsEntry.Theme -> {
+                            val themes = remember { KexTheme.entries }
+                            val currentTheme = LocalKexTheme.current
+                            Column {
+                                themes.forEach { theme ->
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        RadioButton(selected = currentTheme == theme, onClick = { settingsVm.setTheme(theme) })
+                                     //   Icon(theme.icon(), contentDescription = null)
+                                        Text(stringResource(theme.title))
+                                    }
                                 }
                             }
                         }

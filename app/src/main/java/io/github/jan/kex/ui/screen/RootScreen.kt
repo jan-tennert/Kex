@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,7 +17,9 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.jan.kex.BuildConfig
 import io.github.jan.kex.ui.dialog.UpdateDialog
+import io.github.jan.kex.ui.screen.settings.LocalKexTheme
 import io.github.jan.kex.vm.AuthenticationViewModel
+import io.github.jan.kex.vm.SettingsViewModel
 import io.github.jan.kex.vm.UpdateViewModel
 import io.github.jan.supabase.gotrue.SessionStatus
 import io.github.z4kn4fein.semver.Version
@@ -25,23 +28,27 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun RootScreen(
     authVM: AuthenticationViewModel = getViewModel(),
-    updateVm: UpdateViewModel = getViewModel()
+    updateVm: UpdateViewModel = getViewModel(),
+    settingsVm: SettingsViewModel = getViewModel()
 ) {
     val sessionStatus by authVM.sessionStatus.collectAsStateWithLifecycle()
-    when(sessionStatus) {
-        is SessionStatus.Authenticated -> {
-            AppScreen(authVm = authVM, updateVm = updateVm)
-        }
-        SessionStatus.LoadingFromStorage -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+    val currentTheme by settingsVm.currentTheme.collectAsState()
+    CompositionLocalProvider(LocalKexTheme provides currentTheme) {
+        when(sessionStatus) {
+            is SessionStatus.Authenticated -> {
+                AppScreen(authVm = authVM, updateVm = updateVm, settingsVm = settingsVm)
+            }
+            SessionStatus.LoadingFromStorage -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+            else -> {
+                AuthScreen(authVM = authVM)
             }
         }
-        else -> {
-            AuthScreen(authVM = authVM)
-        }
+        VersionCheck(updateVm)
     }
-    VersionCheck(updateVm)
 }
 
 @Composable

@@ -34,7 +34,7 @@
     <string name="google_login_error">Google Login fehlgeschlagen. Grund: %s</string>
     <string name="google_login_network_error">Google Login wegen eines Netzwerkfehlers fehlgeschlagen. Grund: %s</string>
     <string name="settings_school_credentials">Schul-Anmeldedaten</string>
-    <string name="settings_openai">OpenAI Einstellungen</string>
+    <string name="settings_openai">OpenAI</string>
     <string name="username">Benutzername</string>
     <string name="not_set">Nicht festgelegt</string>
     <string name="password">Passwort</string>
@@ -60,4 +60,8 @@
     <string name="information">Informationen</string>
     <string name="current_version">Aktuelle Version: %s</string>
     <string name="check_for_updates">Auf Updates prüfen</string>
+    <string name="kex_theme">Darstellung</string>
+    <string name="dark">Dunkel</string>
+    <string name="light">Hell</string>
+    <string name="system">System</string>
 </resources>

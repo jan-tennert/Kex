@@ -33,7 +33,7 @@
     <string name="google_login_error">Google Login failed. Reason: %s</string>
     <string name="google_login_network_error">Google Login failed due to a network error. Reason: %s</string>
     <string name="settings_school_credentials">School Login Credentials</string>
-    <string name="settings_openai">OpenAI Settings</string>
+    <string name="settings_openai">OpenAI</string>
     <string name="username">Username</string>
     <string name="not_set">Not set</string>
     <string name="password">Password</string>
@@ -59,4 +59,8 @@
     <string name="information">Information</string>
     <string name="current_version">Current version: %s</string>
     <string name="check_for_updates">Check for updates</string>
+    <string name="kex_theme">Theme</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+    <string name="system">System</string>
 </resources>
