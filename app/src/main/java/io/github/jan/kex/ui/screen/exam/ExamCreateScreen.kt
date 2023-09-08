@@ -56,7 +56,7 @@ fun ExamCreateScreen(
     ) {
         var subject by remember { mutableStateOf(TextFieldValue()) }
         val filteredSuggestions = remember(subject, suggestions) {
-            if(subject.text.isNotBlank()) suggestions.filter { it.contains(subject.text) }.take(2) else emptyList()
+            if(subject.text.isNotBlank()) suggestions.filter { it.contains(subject.text, ignoreCase = true) }.take(2) else emptyList()
         }
         var expandSuggestions by remember { mutableStateOf(false) }
         val datePickerState = rememberDatePickerState()
