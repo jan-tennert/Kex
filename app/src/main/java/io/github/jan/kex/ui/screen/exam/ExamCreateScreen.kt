@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -14,10 +15,15 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +37,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
+import com.mohamedrejeb.richeditor.ui.material3.RichText
 import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.ui.components.DatePickerField
@@ -56,12 +63,17 @@ fun ExamCreateScreen(
     ) {
         var subject by remember { mutableStateOf(TextFieldValue()) }
         val filteredSuggestions = remember(subject, suggestions) {
-            if(subject.text.isNotBlank()) suggestions.filter { it.contains(subject.text, ignoreCase = true) }.take(2) else emptyList()
+            if (subject.text.isNotBlank()) suggestions.filter {
+                it.contains(
+                    subject.text,
+                    ignoreCase = true
+                )
+            }.take(2) else emptyList()
         }
         var expandSuggestions by remember { mutableStateOf(false) }
         val datePickerState = rememberDatePickerState()
         var showDatePicker by remember { mutableStateOf(false) }
-        val theme by remember { mutableStateOf(RichTextState()) }
+        val theme: SubjectTopicValue<*> by remember { mutableStateOf(SubjectTopicValue.RichText()) }
         val selectedDate = remember(datePickerState, showDatePicker) {
             datePickerState.selectedDateMillis?.let {
                 val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(
@@ -75,8 +87,17 @@ fun ExamCreateScreen(
         }
         var expandTypeField by remember { mutableStateOf(false) }
         var isError by remember { mutableStateOf(false) }
+        var selectedTopicModeIndex by remember { mutableStateOf(0) }
+        val subjectTopicModes = remember {
+            SubjectTopicMode.entries
+        }
         val errorScope = rememberCoroutineScope()
-        SubjectField(subject = subject, onSubjectChange = { subject = it }, isError = isError, suggestions = filteredSuggestions)
+        SubjectField(
+            subject = subject,
+            onSubjectChange = { subject = it },
+            isError = isError,
+            suggestions = filteredSuggestions
+        )
         DropDownField(
             expanded = expandTypeField,
             value = stringResource(type.nameId),
@@ -84,7 +105,9 @@ fun ExamCreateScreen(
             label = { Text(stringResource(R.string.type)) },
         ) {
             Exam.Type.entries.forEach {
-                DropdownMenuItem(text = { Text(stringResource(it.nameId))}, onClick = { type = it; expandTypeField = false })
+                DropdownMenuItem(
+                    text = { Text(stringResource(it.nameId)) },
+                    onClick = { type = it; expandTypeField = false })
             }
         }
         DatePickerField(
@@ -92,15 +115,75 @@ fun ExamCreateScreen(
             onClick = { showDatePicker = true },
             displayError = isError && selectedDate == null
         )
-        RichTextStyleRow(state = theme)
-        OutlinedRichTextEditor(
-            state = theme,
-            label = { Text(stringResource(R.string.theme)) },
-            //     leadingIcon = { Icon(rememberSubject(), null)},
+        when(subjectTopicModes[selectedTopicModeIndex]) {
+            SubjectTopicMode.VISUAL -> {
+                RichTextStyleRow(state = theme.value as RichTextState)
+                OutlinedRichTextEditor(
+                    state = theme.value as RichTextState,
+                    label = { Text(stringResource(R.string.theme)) },
+                    //     leadingIcon = { Icon(rememberSubject(), null)},
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+            SubjectTopicMode.MARKDOWN -> {
+                val theme by theme.value as MutableState<TextFieldValue>
+                OutlinedTextField(
+                    value = (theme.value as MutableTextFieldValue),
+                    onValueChange = { theme.value = it },
+                    label = { Text(stringResource(R.string.theme)) },
+                    //     leadingIcon = { Icon(rememberSubject(), null)},
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+            SubjectTopicMode.PREVIEW -> {
+                RichText(
+                    state = theme,
+             //       label = { Text(stringResource(R.string.theme)) },
+                    //     leadingIcon = { Icon(rememberSubject(), null)},
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        SingleChoiceSegmentedButtonRow {
+            subjectTopicModes.forEachIndexed { index, option ->
+                SegmentedButton(
+                    selected = selectedTopicModeIndex == index,
+                    onClick = { selectedTopicModeIndex = index },
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = subjectTopicModes.size)
+                ) {
+                    Text(option.title)
+                }
+            }
+        }
+        Button(
+            onClick = {
+                if (selectedDate != null && subject.text.isNotBlank()) {
+                    onCreate(subject.text, selectedDate, theme.toHtml(), type)
+                } else {
+                    errorScope.launch {
+                        isError = true
+                        delay(500)
+                        isError = false
+                    }
+                }
+            },
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 4.dp)        )
+                .padding(12.dp)
+        ) {
+            Icon(rememberDone(), contentDescription = null)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(stringResource(R.string.save))
+        }
         if (showDatePicker) {
             DatePickerDialog(
                 onDismissRequest = { showDatePicker = false },
@@ -114,25 +197,6 @@ fun ExamCreateScreen(
                     state = datePickerState
                 )
             }
-        }
-        Button(
-            onClick = {
-                if (selectedDate != null && subject.text.isNotBlank()) {
-                    onCreate(subject.text, selectedDate, theme.toHtml(), type)
-                } else {
-                    errorScope.launch {
-                        isError = true
-                        delay(500)
-                        isError =false
-                    }
-                }
-            },
-            modifier = Modifier
-                .padding(12.dp)
-        ) {
-            Icon(rememberDone(), contentDescription = null)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.save))
         }
     }
 }
