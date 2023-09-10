@@ -72,7 +72,7 @@ fun HomeScreen(
                 }
             }
             Box(Modifier.padding(8.dp)) {
-                VerticalDivider(Modifier.fillMaxWidth())
+                VerticalDivider(Modifier.fillMaxHeight())
             }
             LazyColumn(
                 modifier = Modifier
@@ -91,7 +91,7 @@ fun HomeScreen(
                 }
             }
             Box(Modifier.padding(8.dp)) {
-                HorizontalDivider(Modifier.fillMaxHeight())
+                HorizontalDivider(Modifier.fillMaxWidth())
             }
             LazyColumn(Modifier.fillMaxHeight().fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 taskList(tasksByDays, taskVm::updateTask, taskVm::deleteTask)
