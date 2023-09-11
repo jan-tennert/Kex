@@ -1,5 +1,6 @@
 package io.github.jan.kex.ui.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,12 +9,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +33,7 @@ import com.mohamedrejeb.richeditor.ui.material3.RichText
 import io.github.jan.kex.R
 import io.github.jan.kex.ui.dialog.AddLinkDialog
 import io.github.jan.kex.ui.screen.exam.SubjectTopicMode
+import io.github.jan.kex.ui.screen.settings.LocalKexTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +45,12 @@ fun ColumnScope.ThemeEditor(
     onTopicModeChange: (Int) -> Unit
 ) {
     var showAddLinkDialog by remember { mutableStateOf(false) }
+    val primaryColor = MaterialTheme.colorScheme.primary
+    LaunchedEffect(LocalKexTheme.current, isSystemInDarkTheme()) {
+        richTheme.setConfig(
+            linkColor = primaryColor
+        )
+    }
     when(subjectTopicModes[selectedTopicModeIndex]) {
         SubjectTopicMode.VISUAL -> {
             RichTextStyleRow(state = richTheme) {
@@ -67,7 +77,11 @@ fun ColumnScope.ThemeEditor(
             )
         }
         SubjectTopicMode.PREVIEW -> {
-            ElevatedCard(Modifier.weight(1f).fillMaxWidth().padding(8.dp)) {
+            ElevatedCard(
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(8.dp)) {
                 RichText(
                     state = richTheme,
                     modifier = Modifier
