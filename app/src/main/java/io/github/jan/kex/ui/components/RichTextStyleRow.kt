@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mohamedrejeb.richeditor.model.RichTextState
+import io.github.jan.kex.ui.icons.rememberAddLinkIcon
 import io.github.jan.kex.ui.icons.rememberCircle
 import io.github.jan.kex.ui.icons.rememberCode
 import io.github.jan.kex.ui.icons.rememberFormatAlignCenter
@@ -82,6 +83,7 @@ fun RichTextStyleButton(
 fun RichTextStyleRow(
     modifier: Modifier = Modifier,
     state: RichTextState,
+    showLinkDialog: () -> Unit,
 ) {
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
@@ -196,6 +198,14 @@ fun RichTextStyleRow(
                 },
                 isSelected = state.currentSpanStyle.fontSize == 28.sp,
                 icon = rememberFormatSize()
+            )
+        }
+
+        item {
+            RichTextStyleButton(
+                onClick = showLinkDialog,
+                isSelected = state.isLink,
+                icon = rememberAddLinkIcon(),
             )
         }
 
