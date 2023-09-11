@@ -2,7 +2,6 @@ package io.github.jan.kex.ui.screen.exam
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -24,11 +23,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mohamedrejeb.richeditor.model.RichTextState
-import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
-import io.github.jan.kex.ui.components.RichTextStyleRow
 import io.github.jan.kex.ui.components.SubjectField
+import io.github.jan.kex.ui.components.ThemeEditor
 import io.github.jan.kex.ui.icons.rememberNumbersIcon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -47,15 +45,20 @@ fun ExamEditScreen(
         Text(exam.subject, fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(8.dp))
         var points by remember { mutableStateOf(exam.points?.toString() ?: "") }
-        val theme by remember { mutableStateOf(RichTextState().apply {
-            exam.theme?.let { setHtml(it) }
-        }) }
         var subject by remember { mutableStateOf(TextFieldValue(exam.subject)) }
         val filteredSuggestions = remember(subject, suggestions) {
             if(subject.text.isNotBlank()) suggestions.filter { it.contains(subject.text) }.take(2) else emptyList()
         }
         var isError by remember { mutableStateOf(false) }
         val errorScope = rememberCoroutineScope()
+        var selectedTopicModeIndex by remember { mutableStateOf(0) }
+        val subjectTopicModes = remember {
+            SubjectTopicMode.entries
+        }
+        val richTheme by remember { mutableStateOf(RichTextState().apply {
+            exam.theme?.let { setHtml(it) }
+        }) }
+        val markdownTheme = remember { mutableStateOf(TextFieldValue(richTheme.toMarkdown())) }
         SubjectField(subject = subject, onSubjectChange = { subject = it }, isError = isError, suggestions = filteredSuggestions)
         OutlinedTextField(
             value = points,
@@ -67,20 +70,17 @@ fun ExamEditScreen(
             singleLine = true,
             leadingIcon = { Icon(rememberNumbersIcon(), null) }
         )
-        RichTextStyleRow(state = theme)
-        OutlinedRichTextEditor(
-            state = theme,
-            label = { Text(stringResource(R.string.theme)) },
-            //     leadingIcon = { Icon(rememberSubject(), null)},
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+        ThemeEditor(
+            richTheme = richTheme,
+            markdownTheme = markdownTheme,
+            subjectTopicModes = subjectTopicModes,
+            selectedTopicModeIndex = selectedTopicModeIndex,
+            onTopicModeChange = { selectedTopicModeIndex = it }
         )
         Button(
             onClick = {
                 if (subject.text.isNotBlank()) {
-                    onEdit(subject.text, theme.toHtml().ifBlank { null }, points.ifBlank { null })
+                    onEdit(subject.text, richTheme.toHtml().ifBlank { null }, points.ifBlank { null })
                 } else {
                     errorScope.launch {
                         isError = true
