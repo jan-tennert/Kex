@@ -1,6 +1,8 @@
 package io.github.jan.kex.ui.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -51,43 +53,46 @@ fun ColumnScope.ThemeEditor(
             linkColor = primaryColor
         )
     }
-    when(subjectTopicModes[selectedTopicModeIndex]) {
-        SubjectTopicMode.VISUAL -> {
-            RichTextStyleRow(state = richTheme) {
-                showAddLinkDialog = true
+    AnimatedContent(
+        selectedTopicModeIndex,
+        label = "Theme Editor",
+        modifier = Modifier
+            .weight(1f)
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) { index ->
+        when (subjectTopicModes[index]) {
+            SubjectTopicMode.VISUAL -> {
+                Column {
+                    RichTextStyleRow(state = richTheme) {
+                        showAddLinkDialog = true
+                    }
+                    OutlinedRichTextEditor(
+                        state = richTheme,
+                        label = { Text(stringResource(R.string.theme)) },
+                        modifier = Modifier.weight(1f).fillMaxWidth()
+                    )
+                }
             }
-            OutlinedRichTextEditor(
-                state = richTheme,
-                label = { Text(stringResource(R.string.theme)) },
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            )
-        }
-        SubjectTopicMode.MARKDOWN -> {
-            OutlinedTextField(
-                value = markdownTheme.value,
-                onValueChange = { markdownTheme.value = it },
-                label = { Text(stringResource(R.string.theme)) },
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            )
-        }
-        SubjectTopicMode.PREVIEW -> {
-            ElevatedCard(
-                Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(8.dp)) {
-                RichText(
-                    state = richTheme,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp)
+
+            SubjectTopicMode.MARKDOWN -> {
+                OutlinedTextField(
+                    value = markdownTheme.value,
+                    onValueChange = { markdownTheme.value = it },
+                    label = { Text(stringResource(R.string.theme)) },
+                    modifier = Modifier.weight(1f).fillMaxWidth()
                 )
+            }
+
+            SubjectTopicMode.PREVIEW -> {
+                ElevatedCard{
+                    RichText(
+                        state = richTheme,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
+                    )
+                }
             }
         }
     }
@@ -101,17 +106,23 @@ fun ColumnScope.ThemeEditor(
                     if (current == SubjectTopicMode.MARKDOWN) {
                         richTheme.setMarkdown(markdownTheme.value.text)
                     } else if (option == SubjectTopicMode.MARKDOWN) {
-                        markdownTheme.value = TextFieldValue(richTheme.toMarkdown(), TextRange(richTheme.toMarkdown().length))
+                        markdownTheme.value = TextFieldValue(
+                            richTheme.toMarkdown(),
+                            TextRange(richTheme.toMarkdown().length)
+                        )
                     }
                     onTopicModeChange(index)
                 },
-                shape = SegmentedButtonDefaults.itemShape(index = index, count = subjectTopicModes.size)
+                shape = SegmentedButtonDefaults.itemShape(
+                    index = index,
+                    count = subjectTopicModes.size
+                )
             ) {
                 Text(option.title)
             }
         }
     }
-    if(showAddLinkDialog) {
+    if (showAddLinkDialog) {
         AddLinkDialog(
             onClose = {
                 showAddLinkDialog = false

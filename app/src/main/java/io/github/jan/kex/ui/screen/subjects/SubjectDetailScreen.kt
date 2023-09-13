@@ -16,12 +16,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import io.github.jan.kex.R
-import io.github.jan.kex.data.remote.Task
 import io.github.jan.kex.ui.components.TaskCard
 import io.github.jan.kex.ui.dialog.DeleteDialog
 import io.github.jan.kex.ui.dialog.TaskCreateDialog
@@ -71,6 +68,7 @@ fun SubjectDetailScreen(
                 items(subjectTasks, { it.id }) {
                     TaskCard(
                         task = it,
+                        subject = null,
                         modifier = Modifier.padding(8.dp).animateItemPlacement(),
                         onUpdate = { done, task, dueDate ->
                             taskViewModel.updateTask(

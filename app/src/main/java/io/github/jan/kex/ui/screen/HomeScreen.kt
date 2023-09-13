@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import io.github.jan.kex.data.remote.Exam
+import io.github.jan.kex.data.remote.Subject
 import io.github.jan.kex.data.remote.Task
 import io.github.jan.kex.localizedDay
 import io.github.jan.kex.ui.components.ExamHomeCard
@@ -80,7 +81,7 @@ fun HomeScreen(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                taskList(tasksByDays, taskVm::updateTask, taskVm::deleteTask)
+                taskList(tasksByDays, subjects, taskVm::updateTask, taskVm::deleteTask)
             }
         }
     } else {
@@ -94,7 +95,7 @@ fun HomeScreen(
                 HorizontalDivider(Modifier.fillMaxWidth())
             }
             LazyColumn(Modifier.fillMaxHeight().fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                taskList(tasksByDays, taskVm::updateTask, taskVm::deleteTask)
+                taskList(tasksByDays, subjects, taskVm::updateTask, taskVm::deleteTask)
             }
         }
     }
@@ -116,7 +117,7 @@ private fun LazyListScope.examList(examsByDay: List<Map.Entry<Int, List<Exam>>>,
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-private fun LazyListScope.taskList(tasksByDay: List<Map.Entry<Long, List<Task>>>, updateTask: (Task, String, Instant, Instant?) -> Unit, delete: (Long) -> Unit) {
+private fun LazyListScope.taskList(tasksByDay: List<Map.Entry<Long, List<Task>>>, subjects: List<Subject>, updateTask: (Task, String, Instant, Instant?) -> Unit, delete: (Long) -> Unit) {
     item {
         Text("Anstehende Hausaufgaben", fontSize = 25.sp)
     }
@@ -125,6 +126,7 @@ private fun LazyListScope.taskList(tasksByDay: List<Map.Entry<Long, List<Task>>>
             Text(stringResource(days.toInt().localizedDay, days), fontSize = 20.sp)
         }
         items(tasks) {
+            val subject = remember { subjects.find { subject -> subject.id == it.subjectId } }
             TaskCard(
                 task = it,
                 onUpdate = { done, task, dueDate ->
@@ -136,7 +138,8 @@ private fun LazyListScope.taskList(tasksByDay: List<Map.Entry<Long, List<Task>>>
                     )
                 },
                 onDelete = { delete(it.id) },
-                modifier = Modifier.padding(8.dp).animateItemPlacement()
+                modifier = Modifier.padding(8.dp).animateItemPlacement(),
+                subject = subject?.name
             )
         }
     }
