@@ -66,7 +66,7 @@ fun VersionCheck(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
-                updateVm.checkForUpdates()
+                updateVm.checkForUpdates(true)
             }
         }
 

@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -60,7 +61,7 @@ fun HomeScreen(
     }
     val context = LocalContext.current
     val windowSizeClass = calculateWindowSizeClass(context as Activity)
-    if(windowSizeClass.heightSizeClass == WindowHeightSizeClass.Medium) {
+    if(windowSizeClass.heightSizeClass == WindowHeightSizeClass.Medium && windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
         Row {
             LazyColumn(
                 modifier = Modifier
@@ -84,7 +85,7 @@ fun HomeScreen(
                 taskList(tasksByDays, subjects, taskVm::updateTask, taskVm::deleteTask)
             }
         }
-    } else {
+    } else if(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
         Column {
             LazyColumn(Modifier.fillMaxHeight(0.5f).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 examList(examsByDays) {

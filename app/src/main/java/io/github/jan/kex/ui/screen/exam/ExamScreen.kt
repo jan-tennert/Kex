@@ -41,7 +41,6 @@ import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.ui.components.ExamCard
 import io.github.jan.kex.ui.components.ExamCardDefaults
 import io.github.jan.kex.ui.dialog.DeleteDialog
-import io.github.jan.kex.ui.dialog.SchoolLoginDialog
 import io.github.jan.kex.ui.icons.EditIcon
 import io.github.jan.kex.ui.icons.rememberDelete
 import io.github.jan.kex.ui.icons.rememberDeselect
@@ -182,14 +181,14 @@ fun ExamScreen(
             }
         )
     }
-    if(username == null && password == null && !ignoreSchoolLogin) {
+    /*if(username == null && password == null && !ignoreSchoolLogin) { //ignore this dialog for now
         SchoolLoginDialog(
             login = { username, password ->
                 authVm.setSchoolCredentials(username, password)
             },
             onDismiss = { authVm.ignoreSchoolLogin.value = true }
         )
-    }
+    }*/
 
     if(error != null) {
         AlertDialog(

@@ -1,20 +1,27 @@
 package io.github.jan.kex.ui.screen
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
@@ -42,6 +49,7 @@ import io.github.jan.kex.vm.TaskViewModel
 import io.github.jan.kex.vm.UpdateViewModel
 import org.koin.androidx.compose.getViewModel
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun AppScreen(
     examVm: ExamViewModel = getViewModel(),
@@ -54,6 +62,8 @@ fun AppScreen(
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = remember(navBackStackEntry) { NavigationTarget.entries.firstOrNull { it.destination == navBackStackEntry?.destination?.route } }
+    val context = LocalContext.current
+    val windowSizeClass = calculateWindowSizeClass(context as Activity)
     AutoRefresh(
         examVm = examVm,
         authVm = authVm,
@@ -63,18 +73,30 @@ fun AppScreen(
     Scaffold(
         topBar = {
             AppTopBar(currentDestination)
+        },
+        bottomBar = {
+            if(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+                AppNavigationBar(
+                    currentDestination = currentDestination?.destination,
+                    navigate = { direction ->
+                        navController.navigate(direction)
+                    }
+                )
+            }
         }
     ) {
         Row(
             Modifier
                 .fillMaxSize()
                 .padding(it)) {
-            AppNavigationRail(
-                currentDestination = currentDestination?.destination,
-                navigate = { direction ->
-                    navController.navigate(direction)
-                }
-            )
+            if(windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
+                AppNavigationRail(
+                    currentDestination = currentDestination?.destination,
+                    navigate = { direction ->
+                        navController.navigate(direction)
+                    }
+                )
+            }
             NavHost(
                 navController = navController,
                 startDestination = NavigationTarget.Home.destination
@@ -155,6 +177,28 @@ fun AppTopBar(currentTarget: NavigationTarget?) {
     )
 }
 
+//For phones
+@Composable
+fun AppNavigationBar(
+    currentDestination: String?,
+    navigate: (String) -> Unit
+) {
+    NavigationBar {
+        NavigationTarget.Main.entries.forEach {
+            NavigationBarItem(
+                selected = it.destination == currentDestination,
+                onClick = { navigate(it.destination) },
+                icon = {
+                    Icon(
+                        imageVector = it.icon,
+                        contentDescription = null
+                    )
+                })
+        }
+    }
+}
+
+//For tablets
 @Composable
 fun AppNavigationRail(
     currentDestination: String?,

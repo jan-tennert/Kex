@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -20,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -67,7 +69,7 @@ fun SettingsScreen(
     val oldPassword by authVm.schoolPassword.collectAsStateWithLifecycle()
     var username by remember(oldUsername) { mutableStateOf(oldUsername ?: "") }
     var password by remember(oldPassword) { mutableStateOf(oldPassword ?: "") }
-
+    val versionCheckResult by updateVm.versionDialogResult.collectAsStateWithLifecycle()
     val settingsEntries = remember { SettingsEntry.entries }
     LazyColumn(
         modifier = Modifier
@@ -120,7 +122,7 @@ fun SettingsScreen(
                             Column {
                                 Text(stringResource(R.string.current_version, BuildConfig.VERSION_NAME))
                                 Spacer(modifier = Modifier.height(6.dp))
-                                Button(onClick = { updateVm.ignoreUpdate.value = false; updateVm.checkForUpdates() }) {
+                                Button(onClick = { updateVm.ignoreUpdate.value = false; updateVm.checkForUpdates(false) }) {
                                     Text(stringResource(R.string.check_for_updates))
                                 }
                             }
@@ -166,6 +168,21 @@ fun SettingsScreen(
                 taskVm.clearLocalEntries()
             },
             onClose = { showLogoutDialog = false }
+        )
+    }
+
+    if(versionCheckResult != null) {
+        AlertDialog(
+            onDismissRequest = { updateVm.versionDialogResult.value = null },
+            text = {
+                Text(stringResource(versionCheckResult!!))
+            },
+            confirmButton = {
+                TextButton(onClick = { updateVm.versionDialogResult.value = null }) {
+                    Text("Ok")
+                }
+            }
+
         )
     }
 

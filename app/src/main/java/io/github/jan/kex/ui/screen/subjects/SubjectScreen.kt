@@ -1,5 +1,6 @@
 package io.github.jan.kex.ui.screen.subjects
 
+import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,14 +18,17 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,7 +45,7 @@ import io.github.jan.kex.ui.nav.NavigationTarget
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 @Suppress("Deprecation") //The alternative is not yet compatible with Material 3
 fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, navController: NavController) {
@@ -51,6 +55,9 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
     val swipeRefreshState = rememberSwipeRefreshState(refreshing)
     val subjects by subjectVm.subjects.collectAsStateWithLifecycle(emptyList())
     var showSubjectCreateDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val windowSizeClass = calculateWindowSizeClass(context as Activity)
+    val subjectCardSize = if(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) SubjectCardDefaults.PHONE_SIZE else SubjectCardDefaults.TABLET_SIZE
     SwipeRefresh(
         modifier = Modifier.fillMaxSize(),
         state = swipeRefreshState,
@@ -69,7 +76,7 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
         ) {
             // TopBar(showPastExams = showPastExams, onShowPastExamsChange = { examVm.showPastExams.value = !showPastExams })
             LazyVerticalGrid(
-                GridCells.Adaptive(SubjectCardDefaults.SIZE), modifier = Modifier
+                GridCells.Adaptive(subjectCardSize), modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
             ) {
@@ -77,7 +84,7 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
                     SubjectCard(
                         subject = it,
                         modifier = Modifier
-                            .size(SubjectCardDefaults.SIZE)
+                            .size(subjectCardSize)
                             .padding(8.dp)
                             .clickable {
                                 navController.navigate(NavigationTarget.Subjects.Detail.destinationFormat.format(it.id))

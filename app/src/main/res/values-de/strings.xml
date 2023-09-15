@@ -64,4 +64,6 @@
     <string name="dark">Dunkel</string>
     <string name="light">Hell</string>
     <string name="system">System</string>
+    <string name="newest_version_installed">Neuste Version schon installiert!</string>
+    <string name="version_check_network_failure">Konnte die neuste Version nicht abrufen. Bitte überprüfe deine Internetverbindung!</string>
 </resources>

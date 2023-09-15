@@ -2,6 +2,8 @@ package io.github.jan.kex.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.jan.kex.BuildConfig
+import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.GithubApi
 import io.github.jan.kex.data.remote.UpdateDownloadEvent
 import io.github.jan.kex.data.remote.UpdateManager
@@ -17,10 +19,11 @@ class UpdateViewModel(
 ): ViewModel() {
 
     val latestVersion = MutableStateFlow<Version?>(null)
+    val versionDialogResult = MutableStateFlow<Int?>(null)
     val downloadStatus = MutableStateFlow<UpdateDownloadEvent?>(null)
     val ignoreUpdate = MutableStateFlow(false)
 
-    fun checkForUpdates() {
+    fun checkForUpdates(silent: Boolean) {
         viewModelScope.launch {
             runCatching {
                 githubApi.retrieveLatestVersion()
@@ -29,6 +32,12 @@ class UpdateViewModel(
             }.onFailure {
                 it.printStackTrace()
                 latestVersion.value = null
+                if(!silent) {
+                    versionDialogResult.value = R.string.version_check_network_failure
+                }
+            }
+            if(!silent && latestVersion.value.toString() == BuildConfig.VERSION_NAME) {
+                versionDialogResult.value = R.string.newest_version_installed
             }
         }
     }
