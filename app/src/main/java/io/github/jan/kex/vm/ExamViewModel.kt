@@ -8,8 +8,11 @@ import io.github.jan.kex.data.local.SubjectSuggestionDataSource
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.data.remote.ExamApi
 import io.github.jan.kex.data.remote.ExamData
+import io.github.jan.kex.data.remote.toCustomLocalDate
+import io.github.jan.kex.data.remote.toCustomString
 import io.github.jan.kex.data.remote.toExam
 import io.github.jan.supabase.exceptions.BadRequestRestException
+import io.github.jan.supabase.exceptions.HttpRequestException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,28 +41,45 @@ class ExamViewModel(
     val error = MutableStateFlow<Int?>(null)
     val subjectSuggestions: StateFlow<List<String>> = subjectSuggestionDataSource.getSuggestionsAsFlow().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-    fun refreshExams(username: String?, password: String?) {
+    private suspend fun refreshExams(username: String?, password: String?) {
         isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            kotlin.runCatching {
-                val schoolExams = if(username != null && password != null) examApi.retrieveExamsFromSchool(username, password) else emptyList()
-                val examData = examApi.retrieveExamData().map {
-                    if(!it.custom) {
-                        if(schoolExams.none { exam -> exam.id == it.id }) it.copy(custom = true) else it
-                    } else it
-                }
-                val newExams = schoolExams.filter { examData.none { data -> it.id == data.id } }.map(ExamData::toExam)
-                examData + newExams
-            }.onSuccess {
-                examDataSource.insertExams(it)
-                subjectSuggestionDataSource.insertAll(it.map(Exam::subject))
-            }.onFailure {
-                when(it) {
-                    is BadRequestRestException -> error.value = R.string.invalid_school_credentials
-                }
-                it.printStackTrace()
+        kotlin.runCatching {
+            val schoolExams = if(username != null && password != null) examApi.retrieveExamsFromSchool(username, password) else emptyList()
+            val examData = examApi.retrieveExamData().map {
+                if(!it.custom) {
+                    if(schoolExams.none { exam -> exam.id == it.id }) it.copy(custom = true) else it
+                } else it
             }
-            isLoading.value = false
+            val newExams = schoolExams.filter { examData.none { data -> it.id == data.id } }.map(ExamData::toExam)
+            examData + newExams
+        }.onSuccess {
+            examDataSource.insertExams(it)
+            subjectSuggestionDataSource.insertAll(it.map(Exam::subject))
+        }.onFailure {
+            when(it) {
+                is BadRequestRestException -> error.value = R.string.invalid_school_credentials
+            }
+            it.printStackTrace()
+        }
+        isLoading.value = false
+    }
+
+    fun syncExams(username: String?, password: String?) {
+        viewModelScope.launch {
+            val tasks = examDataSource.getExams()
+            val offlineCreated = tasks.filter { it.offlineCreated }
+            println(offlineCreated)
+            offlineCreated.forEach { exam ->
+                kotlin.runCatching {
+                    examApi.createExam(exam.subject, exam.date.toCustomString(), exam.theme!!, exam.type)
+                }.onSuccess {
+                    examDataSource.updateOfflineCreated(it.id, false, it.id)
+                }.onFailure {
+                    //delete the exam if it was created offline and there is a RestException
+                    it.printStackTrace()
+                }
+            }
+            refreshExams(username, password)
         }
     }
 
@@ -84,6 +104,20 @@ class ExamViewModel(
             }.onSuccess {
                 examDataSource.insertExams(listOf(it))
             }.onFailure {
+                when(it) {
+                    is HttpRequestException -> {
+                        examDataSource.insertExams(listOf(Exam(
+                            id = subject + date,
+                            subject = subject,
+                            date = date.toCustomLocalDate(),
+                            theme = theme,
+                            type = type,
+                            points = null,
+                            offlineCreated = true,
+                            custom = true
+                        )))
+                    }
+                }
                 it.printStackTrace()
             }
         }
@@ -92,7 +126,9 @@ class ExamViewModel(
     fun deleteExam(exam: Exam, custom: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
-                examApi.deleteExam(exam.id)
+                if(!exam.offlineCreated) {
+                    examApi.deleteExam(exam.id)
+                }
             }.onSuccess {
                 if(custom) {
                     examDataSource.deleteExam(exam.id)

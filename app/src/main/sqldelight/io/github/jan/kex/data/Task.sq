@@ -2,22 +2,26 @@ import kotlinx.datetime.Instant;
 import kotlin.Boolean;
 
 CREATE TABLE localTask(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     dueDate INTEGER AS Instant NOT NULL,
     task TEXT NOT NULL,
     subjectId INTEGER NOT NULL REFERENCES localSubject(id) ON DELETE CASCADE,
     doneDate INTEGER AS Instant,
-    loading INTEGER AS Boolean NOT NULL DEFAULT 0
+    loading INTEGER AS Boolean NOT NULL DEFAULT 0,
+    offlineCreated INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
 selectAll:
 SELECT * FROM localTask;
 
 insert:
-INSERT OR REPLACE INTO localTask (id, dueDate, task, subjectId, doneDate) VALUES ( ?, ?, ?,?, ?);
+INSERT OR REPLACE INTO localTask (id, dueDate, task, subjectId, doneDate, offlineCreated) VALUES ( ?, ?, ?,?, ?, ?);
 
 update:
-UPDATE localTask SET dueDate = ?, task = ?, doneDate = ?, loading = ? WHERE id = ?;
+UPDATE localTask SET dueDate = ?, task = ?, doneDate = ?, loading = ?, offlineCreated = ? WHERE id = ?;
+
+updateOfflineCreated:
+UPDATE localTask SET offlineCreated = ?, id = ? WHERE id = ?;
 
 toggleLoading:
 UPDATE localTask SET loading = CASE WHEN loading = 1 THEN 0 ELSE 1 END WHERE id = ?;

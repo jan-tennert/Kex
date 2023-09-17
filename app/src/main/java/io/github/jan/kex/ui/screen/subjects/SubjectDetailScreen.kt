@@ -1,11 +1,12 @@
 package io.github.jan.kex.ui.screen.subjects
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -78,30 +80,36 @@ fun SubjectDetailScreen(
                                 if (done) Clock.System.now() else null
                             )
                         }) {
-                        taskViewModel.deleteTask(it.id)
+                        taskViewModel.deleteTask(it.id, it.offlineCreated)
                     }
                 }
             }
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
+        }
+    }
+    Box(
+        contentAlignment = Alignment.BottomStart,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            FloatingActionButton(
+                onClick = { showDeleteDialog = true },
+                containerColor = MaterialTheme.colorScheme.errorContainer
             ) {
-                FloatingActionButton(
-                    onClick = { showDeleteDialog = true },
-                    containerColor = MaterialTheme.colorScheme.errorContainer
-                ) {
-                    Icon(rememberDelete(), contentDescription = null)
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                ExtendedFloatingActionButton(
-                    onClick = { showCreateTaskScreen = true },
-                    text = { Text(stringResource(R.string.create)) },
-                    icon = {
-                        Icon(EditIcon, contentDescription = null)
-                    }
-                )
+                Icon(rememberDelete(), contentDescription = null)
             }
+            Spacer(modifier = Modifier.weight(1f))
+            ExtendedFloatingActionButton(
+                onClick = { showCreateTaskScreen = true },
+                text = { Text(stringResource(R.string.create)) },
+                icon = {
+                    Icon(EditIcon, contentDescription = null)
+                }
+            )
         }
     }
     if (showCreateTaskScreen) {

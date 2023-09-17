@@ -1,4 +1,4 @@
-import kotlinx.datetime.Instant;
+import kotlin.Boolean;
 
 CREATE TABLE localSubject(
     id INTEGER PRIMARY KEY NOT NULL,

@@ -65,4 +65,7 @@
     <string name="system">System</string>
     <string name="newest_version_installed">Newest version already installed!</string>
     <string name="version_check_network_failure">Couldn\'t check the newest version. Please check you internet connection!</string>
+    <string name="edit_task">Edit Task</string>
+    <string name="create_subject">Create Subject</string>
+    <string name="edit_subject">Edit Subject</string>
 </resources>

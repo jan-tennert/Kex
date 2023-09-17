@@ -32,7 +32,6 @@ import androidx.compose.ui.window.Dialog
 import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Task
 import io.github.jan.kex.ui.components.DatePickerField
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -59,7 +58,7 @@ fun TaskCreateDialog(task: Task?, onDismiss: () -> Unit, onCreate: (task: String
                     "${date.dayOfMonth}.${date.monthNumber}.${date.year}"
                 }
             }
-            Text(stringResource(R.string.create_task), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(bottom = 8.dp))
+            Text(stringResource(if(task != null) R.string.edit_task else R.string.create_task), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(bottom = 8.dp))
             OutlinedTextField(
                 value = newTask,
                 onValueChange = { newTask = it },

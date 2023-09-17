@@ -66,4 +66,7 @@
     <string name="system">System</string>
     <string name="newest_version_installed">Neuste Version schon installiert!</string>
     <string name="version_check_network_failure">Konnte die neuste Version nicht abrufen. Bitte überprüfe deine Internetverbindung!</string>
+    <string name="edit_task">Hausaufgabe bearbeiten</string>
+    <string name="create_subject">Schulfach erstellen</string>
+    <string name="edit_subject">Schulfach bearbeiten</string>
 </resources>

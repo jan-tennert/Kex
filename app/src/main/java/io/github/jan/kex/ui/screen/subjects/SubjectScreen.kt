@@ -2,18 +2,19 @@ package io.github.jan.kex.ui.screen.subjects
 
 import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,10 +39,11 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import io.github.jan.kex.R
+import io.github.jan.kex.data.remote.Subject
 import io.github.jan.kex.ui.components.SubjectCard
 import io.github.jan.kex.ui.components.SubjectCardDefaults
 import io.github.jan.kex.ui.dialog.SubjectCreateDialog
-import io.github.jan.kex.ui.icons.EditIcon
+import io.github.jan.kex.ui.icons.rememberAddIcon
 import io.github.jan.kex.ui.nav.NavigationTarget
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
@@ -58,10 +61,13 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
     val context = LocalContext.current
     val windowSizeClass = calculateWindowSizeClass(context as Activity)
     val subjectCardSize = if(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) SubjectCardDefaults.PHONE_SIZE else SubjectCardDefaults.TABLET_SIZE
+    val gridState = rememberLazyGridState()
+    val expandCreateButton by remember { derivedStateOf { gridState.firstVisibleItemIndex == 0 } }
+    var showSubjectEditDialog by remember { mutableStateOf<Subject?>(null) }
     SwipeRefresh(
         modifier = Modifier.fillMaxSize(),
         state = swipeRefreshState,
-        onRefresh = { subjectVm.refreshSubjects(); taskViewModel.refreshTasks() },
+        onRefresh = { subjectVm.refreshSubjects(); taskViewModel.syncTasks() },
         indicator = { state, refreshTrigger ->
             SwipeRefreshIndicator(
                 state = state,
@@ -76,9 +82,9 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
         ) {
             // TopBar(showPastExams = showPastExams, onShowPastExamsChange = { examVm.showPastExams.value = !showPastExams })
             LazyVerticalGrid(
-                GridCells.Adaptive(subjectCardSize), modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
+                columns = GridCells.Adaptive(subjectCardSize),
+                modifier = Modifier.fillMaxSize(),
+                state = gridState
             ) {
                 items(subjects, { it.id }) {
                     SubjectCard(
@@ -86,34 +92,59 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
                         modifier = Modifier
                             .size(subjectCardSize)
                             .padding(8.dp)
-                            .clickable {
-                                navController.navigate(NavigationTarget.Subjects.Detail.destinationFormat.format(it.id))
+                            .combinedClickable(
+                                onLongClick = {
+                                    showSubjectEditDialog = it
+                                },
+                            ) {
+                                navController.navigate(
+                                    NavigationTarget.Subjects.Detail.destinationFormat.format(
+                                        it.id
+                                    )
+                                )
                             }
                             .animateItemPlacement()
                     )
                 }
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-                ExtendedFloatingActionButton(
-                    onClick = { showSubjectCreateDialog = true },
-                    text = { Text(stringResource(R.string.create)) },
-                    icon = { Icon(EditIcon, contentDescription = null) },
-                )
-            }
+        }
+    }
+
+    Box(
+        contentAlignment = Alignment.BottomStart,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+            ExtendedFloatingActionButton(
+                onClick = { showSubjectCreateDialog = true },
+                text = { Text(stringResource(R.string.create)) },
+                icon = { Icon(rememberAddIcon(), contentDescription = null) },
+                expanded = expandCreateButton,
+            )
         }
     }
 
     if(showSubjectCreateDialog) {
         SubjectCreateDialog(
+            oldSubject = null,
             onClose = { showSubjectCreateDialog = false },
             onCreate = subjectVm::createSubject
+        )
+    }
+
+    if(showSubjectEditDialog != null) {
+        SubjectCreateDialog(
+            oldSubject = showSubjectEditDialog!!.name,
+            onClose = { showSubjectEditDialog = null },
+            onCreate = {
+                subjectVm.updateSubject(showSubjectEditDialog!!, it)
+            }
         )
     }
 }

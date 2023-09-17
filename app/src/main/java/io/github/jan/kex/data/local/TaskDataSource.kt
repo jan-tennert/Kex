@@ -13,13 +13,17 @@ interface TaskDataSource {
 
     fun getTasksAsFlow(): Flow<List<Task>>
 
-    suspend fun insertTask(exams: List<Task>)
+    suspend fun getTasks(): List<Task>
+
+    suspend fun insertTask(tasks: List<Task>)
 
     suspend fun deleteTask(id: Long)
 
     suspend fun deleteTasks(ids: List<Long>)
 
     suspend fun toggleLoading(id: Long)
+
+    suspend fun updateOfflineCreated(id: Long, offlineCreated: Boolean, newId: Long)
 
     suspend fun clear()
 
@@ -51,16 +55,23 @@ internal class TaskDataSourceImpl(
         return queries.selectAll().asFlow().mapToList(Dispatchers.Default).map { it.map(LocalTask::toTask) }
     }
 
-    override suspend fun insertTask(exams: List<Task>) {
+    override suspend fun getTasks(): List<Task> {
+        return withContext(Dispatchers.IO) {
+            queries.selectAll().executeAsList().map(LocalTask::toTask)
+        }
+    }
+
+    override suspend fun insertTask(tasks: List<Task>) {
         withContext(Dispatchers.IO) {
             queries.transaction {
-                exams.forEach { exam ->
+                tasks.forEach { task ->
                     queries.insert(
-                        id = exam.id,
-                        task = exam.task,
-                        subjectId = exam.subjectId,
-                        dueDate = exam.dueDate,
-                        doneDate = exam.doneDate
+                        id = if(task.id == -1L) null else task.id,
+                        task = task.task,
+                        subjectId = task.subjectId,
+                        dueDate = task.dueDate,
+                        doneDate = task.doneDate,
+                        offlineCreated = task.offlineCreated,
                     )
                 }
             }
@@ -79,6 +90,12 @@ internal class TaskDataSourceImpl(
         }
     }
 
+    override suspend fun updateOfflineCreated(id: Long, offlineCreated: Boolean, newId: Long) {
+        withContext(Dispatchers.IO) {
+            queries.updateOfflineCreated(offlineCreated, id, newId)
+        }
+    }
+
 }
 
 fun LocalTask.toTask() = Task(
@@ -87,5 +104,6 @@ fun LocalTask.toTask() = Task(
     subjectId = subjectId,
     dueDate = dueDate,
     doneDate = doneDate,
-    loading = loading
+    loading = loading,
+    offlineCreated = offlineCreated,
 )

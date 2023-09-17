@@ -27,7 +27,8 @@ import androidx.compose.ui.window.Dialog
 import io.github.jan.kex.R
 
 @Composable
-fun SubjectCreateDialog(onClose: () -> Unit, onCreate: (String) -> Unit) {
+fun SubjectCreateDialog(oldSubject: String?, onClose: () -> Unit, onCreate: (String) -> Unit) {
+    var name by remember { mutableStateOf(oldSubject ?: "") }
     Dialog(onDismissRequest = onClose) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -36,7 +37,7 @@ fun SubjectCreateDialog(onClose: () -> Unit, onCreate: (String) -> Unit) {
                 .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10))
                 .padding(16.dp)
         ) {
-            var name by remember { mutableStateOf("") }
+            Text(stringResource(if(oldSubject != null) R.string.edit_subject else R.string.create_subject), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(bottom = 8.dp))
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },

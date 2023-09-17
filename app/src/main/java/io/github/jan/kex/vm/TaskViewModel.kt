@@ -2,12 +2,10 @@ package io.github.jan.kex.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.jan.kex.data.local.SubjectDataSource
 import io.github.jan.kex.data.local.TaskDataSource
-import io.github.jan.kex.data.remote.Subject
-import io.github.jan.kex.data.remote.SubjectApi
 import io.github.jan.kex.data.remote.Task
 import io.github.jan.kex.data.remote.TaskApi
+import io.github.jan.supabase.exceptions.HttpRequestException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
@@ -21,25 +19,42 @@ class TaskViewModel(
     val creatingTask = MutableStateFlow(false)
     val refreshing = MutableStateFlow(false)
 
-    fun refreshTasks() {
+    private suspend fun refreshTasks() {
         refreshing.value = true
+        kotlin.runCatching {
+            tasksApi.retrieveTasks()
+        }.onSuccess {
+            taskDataSource.insertTask(it)
+        }.onFailure {
+            it.printStackTrace()
+        }
+        refreshing.value = false
+    }
+
+    fun syncTasks() {
         viewModelScope.launch {
-            kotlin.runCatching {
-                tasksApi.retrieveTasks()
-            }.onSuccess {
-                taskDataSource.insertTask(it)
-            }.onFailure {
-                it.printStackTrace()
+            val tasks = taskDataSource.getTasks()
+            val offlineCreated = tasks.filter { it.offlineCreated }
+            offlineCreated.forEach { task ->
+                kotlin.runCatching {
+                    tasksApi.createTask(task.subjectId, task.task, task.dueDate)
+                }.onSuccess {
+                    taskDataSource.updateOfflineCreated(task.id, false, it.id)
+                }.onFailure {
+                    it.printStackTrace()
+                }
             }
-            refreshing.value = false
+            refreshTasks()
         }
     }
 
-    fun deleteTask(id: Long) {
+    fun deleteTask(id: Long, offlineCreated: Boolean) {
         viewModelScope.launch {
             taskDataSource.toggleLoading(id)
             kotlin.runCatching {
-                tasksApi.deleteTask(id)
+                if(!offlineCreated) {
+                    tasksApi.deleteTask(id)
+                }
             }.onSuccess {
                 taskDataSource.deleteTask(id)
             }.onFailure {
@@ -56,6 +71,18 @@ class TaskViewModel(
             }.onSuccess {
                 taskDataSource.insertTask(listOf(it))
             }.onFailure {
+                when(it) {
+                    is HttpRequestException -> {
+                        taskDataSource.insertTask(listOf(Task(
+                            id = -1,
+                            task = task,
+                            dueDate = dueDate,
+                            subjectId = subjectId,
+                            loading = false,
+                            offlineCreated = true
+                        )))
+                    }
+                }
                 it.printStackTrace()
             }
             creatingTask.value = false

@@ -85,7 +85,7 @@ fun HomeScreen(
                 taskList(tasksByDays, subjects, taskVm::updateTask, taskVm::deleteTask)
             }
         }
-    } else if(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+    } else {
         Column {
             LazyColumn(Modifier.fillMaxHeight(0.5f).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 examList(examsByDays) {
@@ -118,7 +118,7 @@ private fun LazyListScope.examList(examsByDay: List<Map.Entry<Int, List<Exam>>>,
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-private fun LazyListScope.taskList(tasksByDay: List<Map.Entry<Long, List<Task>>>, subjects: List<Subject>, updateTask: (Task, String, Instant, Instant?) -> Unit, delete: (Long) -> Unit) {
+private fun LazyListScope.taskList(tasksByDay: List<Map.Entry<Long, List<Task>>>, subjects: List<Subject>, updateTask: (Task, String, Instant, Instant?) -> Unit, delete: (Long, Boolean) -> Unit) {
     item {
         Text("Anstehende Hausaufgaben", fontSize = 25.sp)
     }
@@ -138,7 +138,7 @@ private fun LazyListScope.taskList(tasksByDay: List<Map.Entry<Long, List<Task>>>
                         if (done) Clock.System.now() else null
                     )
                 },
-                onDelete = { delete(it.id) },
+                onDelete = { delete(it.id, it.offlineCreated) },
                 modifier = Modifier.padding(8.dp).animateItemPlacement(),
                 subject = subject?.name
             )

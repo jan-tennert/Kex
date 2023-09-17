@@ -14,7 +14,11 @@ interface ExamDataSource {
 
     fun getExamsAsFlow(): Flow<List<Exam>>
 
+    suspend fun getExams(): List<Exam>
+
     suspend fun insertExams(exams: List<Exam>)
+
+    suspend fun updateOfflineCreated(id: String, offlineCreated: Boolean, newId: String)
 
     suspend fun deleteExam(id: String)
 
@@ -34,6 +38,12 @@ internal class ExamDataSourceImpl(
         return queries.selectAll().asFlow().mapToList(Dispatchers.Default).map { it.map(LocalExam::toExam) }
     }
 
+    override suspend fun getExams(): List<Exam> {
+        return withContext(Dispatchers.IO) {
+            queries.selectAll().executeAsList().map(LocalExam::toExam)
+        }
+    }
+
     override suspend fun insertExams(exams: List<Exam>) {
         withContext(Dispatchers.IO) {
             queries.transaction {
@@ -45,7 +55,8 @@ internal class ExamDataSourceImpl(
                         theme = exam.theme,
                         type = exam.type.name,
                         custom = if (exam.custom) 1L else 0L,
-                        points = exam.points
+                        points = exam.points,
+                        offlineCreated = exam.offlineCreated
                     )
                 }
             }
@@ -74,6 +85,12 @@ internal class ExamDataSourceImpl(
         }
     }
 
+    override suspend fun updateOfflineCreated(id: String, offlineCreated: Boolean, newId: String) {
+        withContext(Dispatchers.IO) {
+            queries.updateOfflineCreated(offlineCreated, id, newId)
+        }
+    }
+
 }
 
 fun LocalExam.toExam(): Exam {
@@ -84,6 +101,7 @@ fun LocalExam.toExam(): Exam {
         theme = theme,
         type = Exam.Type.valueOf(type),
         custom = custom == 1L,
-        points = points
+        points = points,
+        offlineCreated = offlineCreated
     )
 }

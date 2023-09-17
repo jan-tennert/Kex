@@ -1,3 +1,5 @@
+import kotlin.Boolean;
+
 CREATE TABLE localExam(
     id TEXT PRIMARY KEY NOT NULL,
     subject TEXT NOT NULL,
@@ -5,17 +7,21 @@ CREATE TABLE localExam(
     date TEXT NOT NULL,
     points INTEGER,
     type TEXT NOT NULL,
-    custom INTEGER NOT NULL
+    custom INTEGER NOT NULL,
+    offlineCreated INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
 selectAll:
 SELECT * FROM localExam;
 
 insert:
-INSERT OR REPLACE INTO localExam (id, subject, theme, date, points, type, custom) VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO localExam (id, subject, theme, date, points, type, custom, offlineCreated) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 update:
-UPDATE localExam SET id = ?, subject = ?, date = ?, points = ? WHERE id = ?;
+UPDATE localExam SET id = ?, subject = ?, date = ?, points = ?, offlineCreated = ? WHERE id = ?;
+
+updateOfflineCreated:
+UPDATE localExam SET offlineCreated = ?, id = ? WHERE id = ?;
 
 delete:
 DELETE FROM localExam WHERE id = ?;

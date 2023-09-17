@@ -1,6 +1,8 @@
 package io.github.jan.kex.ui.screen
 
 import android.app.Activity
+import android.net.ConnectivityManager
+import android.net.Network
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -227,19 +229,31 @@ fun AutoRefresh(
     taskVm: TaskViewModel = getViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
+    val context = LocalContext.current
+    DisposableEffect(lifecycleOwner, context) {
+        val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
-                examVm.refreshExams(authVm.schoolUsername.value, authVm.schoolPassword.value)
+                examVm.syncExams(authVm.schoolUsername.value, authVm.schoolPassword.value)
                 subjectVm.refreshSubjects()
-                taskVm.refreshTasks()
+
+                taskVm.syncTasks()
+            }
+        }
+
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                taskVm.syncTasks()
+                examVm.syncExams(authVm.schoolUsername.value, authVm.schoolPassword.value)
             }
         }
 
         lifecycleOwner.lifecycle.addObserver(observer)
+        connectivityManager?.registerDefaultNetworkCallback(networkCallback)
 
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
+            connectivityManager?.unregisterNetworkCallback(networkCallback)
         }
     }
 }

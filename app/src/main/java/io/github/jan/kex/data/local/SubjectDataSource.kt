@@ -72,5 +72,5 @@ internal class SubjectDataSourceImpl(
 
 fun LocalSubject.toSubject() = Subject(
     id = id,
-    name = name,
+    name = name
 )

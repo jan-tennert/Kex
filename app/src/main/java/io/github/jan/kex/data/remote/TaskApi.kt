@@ -31,7 +31,9 @@ data class Task(
     @SerialName("done_date")
     val doneDate: Instant? = null,
     @Transient
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    @Transient
+    val offlineCreated: Boolean = false
 )
 
 interface TaskApi {
