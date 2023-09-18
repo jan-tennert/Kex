@@ -13,10 +13,17 @@ class SettingsViewModel(
 ): ViewModel() {
 
     val currentTheme = kexSettings.theme.stateIn(viewModelScope, SharingStarted.Eagerly, KexTheme.SYSTEM)
+    val showedNotificationDialog = kexSettings.showedNotificationDialog.stateIn(viewModelScope, SharingStarted.Eagerly, false).stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     fun setTheme(theme: KexTheme) {
         viewModelScope.launch {
             kexSettings.setTheme(theme)
+        }
+    }
+
+    fun setShowedNotificationDialog(showed: Boolean) {
+        viewModelScope.launch {
+            kexSettings.setShowedNotificationDialog(showed)
         }
     }
 

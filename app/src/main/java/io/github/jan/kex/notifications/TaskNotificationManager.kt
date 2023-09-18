@@ -5,11 +5,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import io.github.jan.kex.data.remote.Task
 import io.github.jan.kex.toDate
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Duration.Companion.days
 
 interface TaskNotificationManager {
 
@@ -17,6 +17,8 @@ interface TaskNotificationManager {
     fun scheduleNotifications(date: Instant, amount: Int, subjects: List<String>)
 
     fun cancelNotification(date: Instant)
+
+    fun cancelNotifications(dates: List<Instant>)
 
 }
 
@@ -41,7 +43,7 @@ internal class TaskNotificationManagerImpl(
         )
 
         // Schedule the notification 1 day before the new due date
-        val notificationTime = (date - 1.days).toEpochMilliseconds()
+        val notificationTime = (date - Task.NOTIFICATION_DAY).toEpochMilliseconds()
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
             return
         }
@@ -62,6 +64,10 @@ internal class TaskNotificationManagerImpl(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.cancel(newPendingIntent)
+    }
+
+    override fun cancelNotifications(dates: List<Instant>) {
+        dates.forEach { cancelNotification(it) }
     }
 
 }

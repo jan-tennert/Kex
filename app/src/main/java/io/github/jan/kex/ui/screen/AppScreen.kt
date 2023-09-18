@@ -3,6 +3,7 @@ package io.github.jan.kex.ui.screen
 import android.app.Activity
 import android.net.ConnectivityManager
 import android.net.Network
+import android.os.Build
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -35,6 +36,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import io.github.jan.kex.ui.dialog.NotificationPermissionDialog
 import io.github.jan.kex.ui.nav.NavigationTarget
 import io.github.jan.kex.ui.screen.exam.ExamCreateScreen
 import io.github.jan.kex.ui.screen.exam.ExamDetailScreen
@@ -51,7 +54,7 @@ import io.github.jan.kex.vm.TaskViewModel
 import io.github.jan.kex.vm.UpdateViewModel
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun AppScreen(
     examVm: ExamViewModel = getViewModel(),
@@ -66,6 +69,7 @@ fun AppScreen(
     val currentDestination = remember(navBackStackEntry) { NavigationTarget.entries.firstOrNull { it.destination == navBackStackEntry?.destination?.route } }
     val context = LocalContext.current
     val windowSizeClass = calculateWindowSizeClass(context as Activity)
+    val showedNotificationDialog by settingsVm.showedNotificationDialog.collectAsStateWithLifecycle()
     AutoRefresh(
         examVm = examVm,
         authVm = authVm,
@@ -165,6 +169,13 @@ fun AppScreen(
             }
         }
     }
+    if(!showedNotificationDialog) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            NotificationPermissionDialog {
+                settingsVm.setShowedNotificationDialog(true)
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -234,7 +245,7 @@ fun AutoRefresh(
         val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
-                examVm.syncExams(authVm.schoolUsername.value, authVm.schoolPassword.value)
+             //   examVm.syncExams(authVm.schoolUsername.value, authVm.schoolPassword.value)
                 subjectVm.refreshSubjects()
 
                 taskVm.syncTasks()

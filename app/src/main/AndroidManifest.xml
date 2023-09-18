@@ -44,6 +44,7 @@
         </provider>
 
         <receiver android:name=".notifications.TaskBroadcastReceiver" />
+        <receiver android:name=".notifications.ExamBroadcastReceiver" />
 
     </application>
 

@@ -6,7 +6,9 @@ import androidx.annotation.StringRes
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
@@ -50,3 +52,5 @@ val Int.localizedDay
     }
 
 fun Instant.toDate() = this.toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+fun LocalDate.toInstant(): Instant = LocalDateTime(this, LocalTime(0,0)).toInstant(TimeZone.UTC)

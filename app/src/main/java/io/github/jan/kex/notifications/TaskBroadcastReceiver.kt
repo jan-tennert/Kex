@@ -1,11 +1,11 @@
 package io.github.jan.kex.notifications
 
 import android.app.NotificationManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
-import androidx.work.impl.utils.ForceStopRunnable.BroadcastReceiver
 import io.github.jan.kex.MainApplication
 import io.github.jan.kex.R
 

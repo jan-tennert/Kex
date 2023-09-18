@@ -125,6 +125,7 @@ dependencies {
     implementation(libs.compose.rich.editor)
   //  ksp(libs.compose.destinations.ksp)
     implementation(libs.swipe.refresh)
+    implementation(libs.permissions)
     implementation(libs.semver)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

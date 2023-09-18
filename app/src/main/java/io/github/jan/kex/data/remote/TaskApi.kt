@@ -6,6 +6,7 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.time.Duration.Companion.days
 
 @Serializable
 data class TaskData(
@@ -34,7 +35,13 @@ data class Task(
     val loading: Boolean = false,
     @Transient
     val offlineCreated: Boolean = false
-)
+) {
+
+     companion object {
+         val NOTIFICATION_DAY = 1.days
+     }
+
+}
 
 interface TaskApi {
 

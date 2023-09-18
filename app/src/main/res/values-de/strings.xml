@@ -76,4 +76,10 @@
     <string name="edit_subject_fail">Schulfach konnte nicht bearbeitet werden. Bitte überprüfe deine Internetverbindung!</string>
     <string name="delete_subject_fail">Schulfach konnte nicht gelöscht werden. Bitte überprüfe deine Internetverbindung!</string>
     <string name="create_subject_fail">Schulfach konnte nicht erstellt werden. Bitte überprüfe deine Internetverbindung!</string>
+    <string name="notifications">Benachrichtigungen</string>
+    <string name="notifications_text">Willst du Benachrichtigungen für Hausaufgaben und Klassenarbeiten bekommen?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="exam_notification">Du hast in 5 Tagen eine %s %s!</string>
+    <string name="exam_notification_title">%s %s in 5 Tagen!</string>
 </resources>

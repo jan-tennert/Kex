@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import io.github.jan.kex.BuildConfig
 import io.github.jan.kex.ui.dialog.UpdateDialog
 import io.github.jan.kex.ui.screen.settings.LocalKexTheme
@@ -25,6 +26,7 @@ import io.github.jan.supabase.gotrue.SessionStatus
 import io.github.z4kn4fein.semver.Version
 import org.koin.androidx.compose.getViewModel
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RootScreen(
     authVM: AuthenticationViewModel = getViewModel(),

@@ -22,6 +22,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
+import kotlin.time.Duration.Companion.days
 
 @Serializable
 data class ExamData(
@@ -51,6 +52,10 @@ data class Exam(
 
     enum class Type(val nameId: Int) {
         EXAM(R.string.exam), TEST(R.string.test), GFS(R.string.gfs)
+    }
+
+    companion object {
+        val NOTIFICATION_DAY = 5.days
     }
 }
 

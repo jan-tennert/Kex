@@ -76,4 +76,10 @@
     <string name="edit_subject_fail">Subject couldn\'t be edited. Please check your internet connection!</string>
     <string name="delete_subject_fail">Subject couldn\'t be deleted. Please check your internet connection!</string>
     <string name="create_subject_fail">Subject couldn\'t be created. Please check your internet connection!</string>
+    <string name="notifications">Notifications</string>
+    <string name="notifications_text">Get notified for tasks and exams?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="exam_notification">You have a %s %s in 5 days!</string>
+    <string name="exam_notification_title">%s %s in 5 days!</string>
 </resources>

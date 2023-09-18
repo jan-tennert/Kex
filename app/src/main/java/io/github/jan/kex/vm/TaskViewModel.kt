@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlin.time.Duration.Companion.days
 
 class TaskViewModel(
     private val tasksApi: TaskApi,
@@ -50,8 +49,7 @@ class TaskViewModel(
         withContext(Dispatchers.Default) {
             val subjects = subjectDataSource.getSubjects()
             tasks.filter { it.doneDate == null }.groupBy { it.dueDate }.forEach { (date, tasks) ->
-                if((date - 1.days) > Clock.System.now()) { // Only schedule notifications for tasks that are at least 1 day in the future
-                    println("hey")
+                if((date - Task.NOTIFICATION_DAY) > Clock.System.now()) { // Only schedule notifications for tasks that are at least 1 day in the future
                     taskNotificationManager.scheduleNotifications(date, tasks.size, tasks.map { task ->
                         subjects.find { it.id == task.subjectId }?.name ?: ""
                     })
@@ -116,14 +114,16 @@ class TaskViewModel(
             }.onFailure {
                 when(it) {
                     is HttpRequestException, is HttpRequestTimeoutException -> {
-                        taskDataSource.insertTask(listOf(Task(
+                        val newTask = Task(
                             id = -1,
                             task = task,
                             dueDate = dueDate,
                             subjectId = subjectId,
                             loading = false,
                             offlineCreated = true
-                        )))
+                        )
+                        taskDataSource.insertTask(listOf(newTask))
+                        scheduleOrUpdateNotifications(tasks.value + newTask)
                     }
                 }
                 it.printStackTrace()
@@ -140,7 +140,9 @@ class TaskViewModel(
                     tasksApi.updateSubject(oldTask.id, task, dueDate, doneDate)
                 }
             }.onSuccess {
-                taskDataSource.insertTask(listOf(oldTask.copy(task = task, dueDate = dueDate, doneDate = doneDate, loading = false)))
+                val newTask = oldTask.copy(task = task, dueDate = dueDate, doneDate = doneDate, loading = false)
+                taskDataSource.insertTask(listOf(newTask))
+                scheduleOrUpdateNotifications(tasks.value.filter { it.id != oldTask.id } + newTask)
             }.onFailure {
                 taskDataSource.toggleLoading(oldTask.id)
                 errorMessage.value = R.string.edit_task_fail
@@ -151,6 +153,7 @@ class TaskViewModel(
 
     fun clearLocalEntries() {
         viewModelScope.launch {
+            taskNotificationManager.cancelNotifications(tasks.value.map(Task::dueDate))
             taskDataSource.clear()
         }
     }
