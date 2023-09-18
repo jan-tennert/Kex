@@ -11,12 +11,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,12 +53,14 @@ fun SubjectDetailScreen(
     val subjects by subjectViewModel.subjects.collectAsStateWithLifecycle(emptyList())
     val subject = remember(subjects) { subjects.firstOrNull { it.id == subjectId } }
     val tasks by taskViewModel.tasks.collectAsStateWithLifecycle(emptyList())
-    val subjectTasks = remember(tasks, subject) {
-        tasks.filter { it.subjectId == subjectId }.sortedBy { it.dueDate }
+    val subjectTasks by remember {
+        derivedStateOf {
+            tasks.filter { it.subjectId == subjectId }.sortedBy { it.dueDate }
+        }
     }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showCreateTaskScreen by remember { mutableStateOf(false) }
-    val creatingTask by taskViewModel.creatingTask.collectAsStateWithLifecycle()
+    val errorMessage = taskViewModel.errorMessage.collectAsStateWithLifecycle()
     subject?.let {
         Column(
             modifier = Modifier
@@ -71,7 +76,9 @@ fun SubjectDetailScreen(
                     TaskCard(
                         task = it,
                         subject = null,
-                        modifier = Modifier.padding(8.dp).animateItemPlacement(),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .animateItemPlacement(),
                         onUpdate = { done, task, dueDate ->
                             taskViewModel.updateTask(
                                 it,
@@ -85,46 +92,57 @@ fun SubjectDetailScreen(
                 }
             }
         }
-    }
-    Box(
-        contentAlignment = Alignment.BottomStart,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+        Box(
+            contentAlignment = Alignment.BottomStart,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            FloatingActionButton(
-                onClick = { showDeleteDialog = true },
-                containerColor = MaterialTheme.colorScheme.errorContainer
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             ) {
-                Icon(rememberDelete(), contentDescription = null)
+                FloatingActionButton(
+                    onClick = { showDeleteDialog = true },
+                    containerColor = MaterialTheme.colorScheme.errorContainer
+                ) {
+                    Icon(rememberDelete(), contentDescription = null)
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                ExtendedFloatingActionButton(
+                    onClick = { showCreateTaskScreen = true },
+                    text = { Text(stringResource(R.string.create)) },
+                    icon = {
+                        Icon(EditIcon, contentDescription = null)
+                    }
+                )
             }
-            Spacer(modifier = Modifier.weight(1f))
-            ExtendedFloatingActionButton(
-                onClick = { showCreateTaskScreen = true },
-                text = { Text(stringResource(R.string.create)) },
-                icon = {
-                    Icon(EditIcon, contentDescription = null)
+        }
+        if (showCreateTaskScreen) {
+            TaskCreateDialog(
+                task = null,
+                onDismiss = { showCreateTaskScreen = false },
+                onCreate = { task, dueDate -> taskViewModel.createTask(subjectId, task, dueDate) })
+        }
+        if (showDeleteDialog) {
+            DeleteDialog(textId = R.string.delete_subject, onDelete = {
+                subjectViewModel.deleteSubject(subjectId)
+                showDeleteDialog = false;
+                navController.navigate("subjects")
+            }) {
+                showDeleteDialog = false
+            }
+        }
+        if(errorMessage.value != null) {
+            AlertDialog(
+                onDismissRequest = { taskViewModel.errorMessage.value = null },
+                text = { Text(stringResource(errorMessage.value!!)) },
+                confirmButton = {
+                    TextButton(onClick = { taskViewModel.errorMessage.value = null }) {
+                        Text("Ok")
+                    }
                 }
             )
-        }
-    }
-    if (showCreateTaskScreen) {
-        TaskCreateDialog(
-            task = null,
-            onDismiss = { showCreateTaskScreen = false },
-            onCreate = { task, dueDate -> taskViewModel.createTask(subjectId, task, dueDate) })
-    }
-    if (showDeleteDialog) {
-        DeleteDialog(textId = R.string.delete_subject, onDelete = {
-            subjectViewModel.deleteSubject(subjectId)
-            showDeleteDialog = false;
-            navController.navigate("subjects")
-        }) {
-            showDeleteDialog = false
         }
     }
 }

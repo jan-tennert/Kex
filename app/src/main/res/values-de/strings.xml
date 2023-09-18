@@ -69,4 +69,11 @@
     <string name="edit_task">Hausaufgabe bearbeiten</string>
     <string name="create_subject">Schulfach erstellen</string>
     <string name="edit_subject">Schulfach bearbeiten</string>
+    <string name="task_notification_single">Du hast eine Hausaufgabe bis morgen</string>
+    <string name="task_notification">Du hast %s Hausaufgaben bis morgen</string>
+    <string name="edit_task_fail">Hausaufgabe konnte nicht bearbeitet werden. Bitte überprüfe deine Internetverbindung!</string>
+    <string name="delete_task_fail">Hausaufgabe konnte nicht gelöscht werden. Bitte überprüfe deine Internetverbindung!</string>
+    <string name="edit_subject_fail">Schulfach konnte nicht bearbeitet werden. Bitte überprüfe deine Internetverbindung!</string>
+    <string name="delete_subject_fail">Schulfach konnte nicht gelöscht werden. Bitte überprüfe deine Internetverbindung!</string>
+    <string name="create_subject_fail">Schulfach konnte nicht erstellt werden. Bitte überprüfe deine Internetverbindung!</string>
 </resources>

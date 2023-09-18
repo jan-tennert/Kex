@@ -48,3 +48,5 @@ val Int.localizedDay
         2 -> R.string.day_after_tomorrow
         else -> R.string.in_days
     }
+
+fun Instant.toDate() = this.toLocalDateTime(TimeZone.currentSystemDefault()).date

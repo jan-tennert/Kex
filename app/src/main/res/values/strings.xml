@@ -68,4 +68,12 @@
     <string name="edit_task">Edit Task</string>
     <string name="create_subject">Create Subject</string>
     <string name="edit_subject">Edit Subject</string>
+    <string name="task_notification_single">Your have one task due to tomorrow</string>
+    <string name="task_notification">Your have %s tasks due to tomorrow</string>
+    <string name="task_notification_detail" translatable="false">in %s</string>
+    <string name="edit_task_fail">Task couldn\'t be edited. Please check your internet connection!</string>
+    <string name="delete_task_fail">Task couldn\'t be deleted. Please check your internet connection!</string>
+    <string name="edit_subject_fail">Subject couldn\'t be edited. Please check your internet connection!</string>
+    <string name="delete_subject_fail">Subject couldn\'t be deleted. Please check your internet connection!</string>
+    <string name="create_subject_fail">Subject couldn\'t be created. Please check your internet connection!</string>
 </resources>

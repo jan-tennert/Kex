@@ -13,6 +13,8 @@ interface SubjectDataSource {
 
     fun getSubjectsAsFlow(): Flow<List<Subject>>
 
+    suspend fun getSubjects(): List<Subject>
+
     suspend fun insertSubject(exams: List<Subject>)
 
     suspend fun deleteSubject(id: Long)
@@ -28,6 +30,12 @@ internal class SubjectDataSourceImpl(
 ): SubjectDataSource {
 
     private val queries = appDatabase.subjectQueries
+
+    override suspend fun getSubjects(): List<Subject> {
+        return withContext(Dispatchers.IO) {
+            queries.selectAll().executeAsList().map(LocalSubject::toSubject)
+        }
+    }
 
     override suspend fun deleteSubject(id: Long) {
         withContext(Dispatchers.IO) {

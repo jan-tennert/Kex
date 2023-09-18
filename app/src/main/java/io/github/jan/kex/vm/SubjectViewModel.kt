@@ -2,11 +2,12 @@ package io.github.jan.kex.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.jan.kex.R
 import io.github.jan.kex.data.local.SubjectDataSource
 import io.github.jan.kex.data.remote.Subject
 import io.github.jan.kex.data.remote.SubjectApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class SubjectViewModel(
     private val subjectApi: SubjectApi,
@@ -15,6 +16,7 @@ class SubjectViewModel(
 
     val subjects = subjectDataSource.getSubjectsAsFlow()
     val refreshing = MutableStateFlow(false)
+    val errorMessage = MutableStateFlow<Int?>(null)
 
     fun refreshSubjects() {
         refreshing.value = true
@@ -37,6 +39,7 @@ class SubjectViewModel(
             }.onSuccess {
                 subjectDataSource.deleteSubject(id)
             }.onFailure {
+                errorMessage.value = R.string.delete_subject_fail
                 it.printStackTrace()
             }
         }
@@ -49,6 +52,7 @@ class SubjectViewModel(
             }.onSuccess {
                 subjectDataSource.insertSubject(listOf(it))
             }.onFailure {
+                errorMessage.value = R.string.create_subject_fail
                 it.printStackTrace()
             }
         }
@@ -61,6 +65,7 @@ class SubjectViewModel(
             }.onSuccess {
                 subjectDataSource.insertSubject(listOf(subject.copy(name = name)))
             }.onFailure {
+                errorMessage.value = R.string.edit_subject_fail
                 it.printStackTrace()
             }
         }
