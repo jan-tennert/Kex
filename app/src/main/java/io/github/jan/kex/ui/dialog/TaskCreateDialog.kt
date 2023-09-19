@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -26,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import io.github.jan.kex.R
@@ -67,8 +65,8 @@ fun TaskCreateDialog(task: Task?, onDismiss: () -> Unit, onCreate: (task: String
                         stringResource(R.string.task)
                     )
                 },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+  //              singleLine = true,
+                maxLines = 3,
                 keyboardActions = KeyboardActions(onDone = {
                     if(selectedDate != null && newTask.isNotBlank()) {
                         onCreate(

@@ -19,6 +19,7 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,11 +54,17 @@ fun HomeScreen(
     navController: NavController
 ) {
     val exams by examVm.exams.collectAsStateWithLifecycle(emptyList())
-    val examsByDays = remember(exams) { exams.groupBy { it.daysUntil }.entries.sortedBy { it.key }.filter { it.key >= 0 }.take(3) }
+    val examsByDays by remember {
+        derivedStateOf {
+            exams.groupBy { it.daysUntil }.entries.sortedBy { it.key }.filter { it.key >= 0 }.take(3)
+        }
+    }
     val tasks by taskVm.tasks.collectAsStateWithLifecycle(emptyList())
     val subjects by subjectVm.subjects.collectAsStateWithLifecycle(emptyList())
-    val tasksByDays = remember(tasks) {
-        tasks.filter { it.doneDate == null }.groupBy { it.daysUntil }.entries.sortedBy { it.key }.filter { it.key >= 0 }.take(3)
+    val tasksByDays by remember {
+        derivedStateOf {
+            tasks.filter { it.doneDate == null }.groupBy { it.daysUntil }.entries.sortedBy { it.key }.filter { it.key >= 0 }.take(3)
+        }
     }
     val context = LocalContext.current
     val windowSizeClass = calculateWindowSizeClass(context as Activity)

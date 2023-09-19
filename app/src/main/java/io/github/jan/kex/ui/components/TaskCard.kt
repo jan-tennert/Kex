@@ -36,10 +36,10 @@ import kotlinx.datetime.Instant
 //subject is null when not in home screen
 @Composable
 fun TaskCard(task: Task, subject: String?, modifier: Modifier = Modifier, onUpdate: (done: Boolean, task: String, dueDate: Instant) -> Unit, onDelete: () -> Unit) {
+    var showEditDialog by remember { mutableStateOf(false) }
+    val done = task.doneDate != null
     ElevatedCard(modifier) {
         Row(Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            val done = task.doneDate != null
-            var showEditDialog by remember { mutableStateOf(false) }
             Box(contentAlignment = Alignment.Center, modifier = Modifier.size(24.dp)) {
                 CircularProgressIndicator(
                     Modifier
@@ -69,13 +69,14 @@ fun TaskCard(task: Task, subject: String?, modifier: Modifier = Modifier, onUpda
                     Icon(EditIcon, null)
                 }
             }
-            if(showEditDialog) {
-                TaskCreateDialog(task = task, onDismiss = { showEditDialog = false }, onCreate = { task, dueDate ->
-                    onUpdate(done, task, dueDate)
-                    showEditDialog = false
-                })
-            }
+
         }
+    }
+    if(showEditDialog) {
+        TaskCreateDialog(task = task, onDismiss = { showEditDialog = false }, onCreate = { task, dueDate ->
+            onUpdate(done, task, dueDate)
+            showEditDialog = false
+        })
     }
 }
 

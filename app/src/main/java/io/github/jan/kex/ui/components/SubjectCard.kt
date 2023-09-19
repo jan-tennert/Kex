@@ -51,4 +51,4 @@ fun SubjectCard(
     }
 }
 
-val Task.daysUntil get() = (dueDate - Clock.System.now()).inWholeDays
+val Task.daysUntil get(): Long = (dueDate - Clock.System.now()).inWholeDays + 1
