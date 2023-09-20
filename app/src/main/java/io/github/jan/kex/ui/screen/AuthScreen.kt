@@ -10,10 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import io.github.jan.kex.R
 import io.github.jan.kex.StringResource
 import io.github.jan.kex.vm.AuthenticationViewModel
@@ -34,6 +39,12 @@ fun AuthScreen(
 ) {
     val loggingIn by authVM.loggingIn.collectAsStateWithLifecycle()
     val authError by authVM.authError.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val useBrowserLogin by remember {
+        mutableStateOf(
+            GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS
+        )
+    }
     val state = composeAuth.rememberLoginWithGoogle(
         onResult = {
             when (it) {
@@ -58,7 +69,11 @@ fun AuthScreen(
             OutlinedButton(
                 onClick = {
                     authVM.loggingIn.value = true
-                    state.startFlow()
+                    if(useBrowserLogin) {
+                        authVM.loginWithGoogle()
+                    } else {
+                        state.startFlow()
+                    }
                 },
             ) {
                 ProviderButtonContent(provider = Google)

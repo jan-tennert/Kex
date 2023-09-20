@@ -30,6 +30,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="io.github.kex"
+                    android:host="callback" />
+            </intent-filter>
 
         </activity>
 

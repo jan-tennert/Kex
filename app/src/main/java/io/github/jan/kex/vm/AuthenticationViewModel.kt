@@ -36,6 +36,18 @@ class AuthenticationViewModel(
         }
     }
 
+    fun loginWithGoogle() {
+        loggingIn.value = true
+        viewModelScope.launch {
+            kotlin.runCatching {
+                authenticationApi.loginWithGoogle()
+            }.onFailure {
+                Log.e("LOG", "Failed to login", it)
+            }
+            loggingIn.value = false
+        }
+    }
+
     fun setSchoolCredentials(username: String?, password: String?) {
         viewModelScope.launch {
             kotlin.runCatching {

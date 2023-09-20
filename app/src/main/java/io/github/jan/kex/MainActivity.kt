@@ -12,11 +12,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.jan.kex.ui.screen.RootScreen
 import io.github.jan.kex.ui.theme.KexTheme
 import io.github.jan.kex.vm.SettingsViewModel
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.gotrue.handleDeeplinks
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class MainActivity : ComponentActivity() {
+
+    private val supabaseClient by inject<SupabaseClient>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supabaseClient.handleDeeplinks(intent)
         setContent {
             val settingsVm: SettingsViewModel = getViewModel()
             val theme by settingsVm.currentTheme.collectAsStateWithLifecycle()

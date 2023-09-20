@@ -74,7 +74,7 @@ fun SettingsScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(10.dp)
     ) {
         items(settingsEntries, { it.name }) {
             var showEntry by remember { mutableStateOf(false) }

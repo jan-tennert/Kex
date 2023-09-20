@@ -16,6 +16,8 @@ interface AuthenticationApi {
 
     suspend fun logout()
 
+    suspend fun loginWithGoogle()
+
 }
 
 internal class AuthenticationApiImpl(
@@ -33,6 +35,10 @@ internal class AuthenticationApiImpl(
 
     override suspend fun logout() {
         supabaseClient.gotrue.logout()
+    }
+
+    override suspend fun loginWithGoogle() {
+        supabaseClient.gotrue.loginWith(Google)
     }
 
 }
