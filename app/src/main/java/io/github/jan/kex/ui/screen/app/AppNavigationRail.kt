@@ -16,7 +16,7 @@ fun AppNavigationRail(
         NavigationTarget.Main.entries.forEach {
             NavigationRailItem(
                 selected = currentDestination == it.destination,
-                onClick = { navigate(it.destination) },
+                onClick = { if(currentDestination != it.destination) navigate(it.destination) },
                 icon = {
                     Icon(
                         imageVector = it.icon,

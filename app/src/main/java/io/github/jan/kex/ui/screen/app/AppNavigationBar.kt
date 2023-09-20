@@ -16,7 +16,7 @@ fun AppNavigationBar(
         NavigationTarget.Main.entries.forEach {
             NavigationBarItem(
                 selected = it.destination == currentDestination,
-                onClick = { navigate(it.destination) },
+                onClick = { if(it.destination != currentDestination) navigate(it.destination) },
                 icon = {
                     Icon(
                         imageVector = it.icon,

@@ -4,22 +4,16 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -33,12 +27,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.jan.kex.BuildConfig
 import io.github.jan.kex.R
 import io.github.jan.kex.ui.components.SettingsCard
 import io.github.jan.kex.ui.dialog.LogoutDialog
 import io.github.jan.kex.ui.icons.rememberLogout
-import io.github.jan.kex.ui.icons.rememberMail
+import io.github.jan.kex.ui.screen.settings.entries.InformationEntry
+import io.github.jan.kex.ui.screen.settings.entries.SchoolEntry
+import io.github.jan.kex.ui.screen.settings.entries.ThemeEntry
 import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
 import io.github.jan.kex.vm.SettingsViewModel
@@ -48,7 +43,6 @@ import io.github.jan.kex.vm.UpdateViewModel
 import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.compose.auth.ComposeAuth
 import io.github.jan.supabase.compose.auth.composable.rememberSignOut
-import io.github.jan.supabase.compose.auth.ui.password.OutlinedPasswordField
 import org.koin.compose.koinInject
 
 @OptIn(SupabaseExperimental::class, ExperimentalMaterial3Api::class,
@@ -98,47 +92,16 @@ fun SettingsScreen(
                 AnimatedVisibility(visible = showEntry, Modifier.padding(top = 6.dp)) {
                     when(it) {
                         SettingsEntry.SchoolCredentials -> {
-                            Column {
-                                OutlinedTextField(
-                                    value = username,
-                                    onValueChange = { username = it },
-                                    label = { Text(text = stringResource(R.string.username)) },
-                                    leadingIcon = { Icon(rememberMail(), contentDescription = null) },
-                                    singleLine = true,
-                                )
-                                Spacer(modifier = Modifier.height(6.dp))
-                                OutlinedPasswordField(
-                                    value = password,
-                                    onValueChange = { password = it },
-                                    label = { Text(text = stringResource(R.string.password)) },
-                                    mandatory = false
-                                )
-                            }
+                            SchoolEntry(username, password, { username = it }, { password = it })
                         }
                         SettingsEntry.OpenAiCredentials -> {
 
                         }
                         SettingsEntry.Information -> {
-                            Column {
-                                Text(stringResource(R.string.current_version, BuildConfig.VERSION_NAME))
-                                Spacer(modifier = Modifier.height(6.dp))
-                                Button(onClick = { updateVm.ignoreUpdate.value = false; updateVm.checkForUpdates(false) }) {
-                                    Text(stringResource(R.string.check_for_updates))
-                                }
-                            }
+                            InformationEntry(updateVm)
                         }
                         SettingsEntry.Theme -> {
-                            val themes = remember { KexTheme.entries }
-                            val currentTheme = LocalKexTheme.current
-                            Column {
-                                themes.forEach { theme ->
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        RadioButton(selected = currentTheme == theme, onClick = { settingsVm.setTheme(theme) })
-                                     //   Icon(theme.icon(), contentDescription = null)
-                                        Text(stringResource(theme.title))
-                                    }
-                                }
-                            }
+                            ThemeEntry(settingsVm)
                         }
                     }
                 }

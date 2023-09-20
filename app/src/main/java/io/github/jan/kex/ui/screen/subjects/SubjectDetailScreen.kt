@@ -36,7 +36,7 @@ import io.github.jan.kex.R
 import io.github.jan.kex.ui.components.TaskCard
 import io.github.jan.kex.ui.dialog.DeleteDialog
 import io.github.jan.kex.ui.dialog.TaskCreateDialog
-import io.github.jan.kex.ui.icons.EditIcon
+import io.github.jan.kex.ui.icons.rememberAddIcon
 import io.github.jan.kex.ui.icons.rememberDelete
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
@@ -113,7 +113,7 @@ fun SubjectDetailScreen(
                     onClick = { showCreateTaskScreen = true },
                     text = { Text(stringResource(R.string.create)) },
                     icon = {
-                        Icon(EditIcon, contentDescription = null)
+                        Icon(rememberAddIcon(), contentDescription = null)
                     }
                 )
             }

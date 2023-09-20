@@ -8,7 +8,6 @@ import io.github.jan.supabase.compose.auth.googleNativeLogin
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.functions.Functions
 import io.github.jan.supabase.functions.functions
-import io.github.jan.supabase.gotrue.ExternalAuthAction
 import io.github.jan.supabase.gotrue.GoTrue
 import io.github.jan.supabase.gotrue.gotrue
 import io.github.jan.supabase.postgrest.Postgrest
@@ -34,7 +33,6 @@ val supabaseModule = module {
             install(GoTrue) {
                 scheme = "io.github.kex"
                 host = "callback"
-                defaultExternalAuthAction = ExternalAuthAction.CUSTOM_TABS
             }
             install(Postgrest)
             install(Functions)

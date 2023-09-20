@@ -62,7 +62,7 @@ fun AppNavigationContent(
         }
         NavHost(
             navController = navController,
-            startDestination = NavigationTarget.Home.destination,
+            startDestination = NavigationTarget.Home.destination
         ) {
             animatedComposable(
                 NavigationTarget.Home.destination,

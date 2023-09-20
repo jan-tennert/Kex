@@ -32,7 +32,7 @@
     <string name="google_login_cancelled">Google Login cancelled</string>
     <string name="google_login_error">Google Login failed. Reason: %s</string>
     <string name="google_login_network_error">Google Login failed due to a network error. Reason: %s</string>
-    <string name="settings_school_credentials">School Login Credentials</string>
+    <string name="settings_school_credentials">School Settings</string>
     <string name="settings_openai">OpenAI</string>
     <string name="username">Username</string>
     <string name="not_set">Not set</string>

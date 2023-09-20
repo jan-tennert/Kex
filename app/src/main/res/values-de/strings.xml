@@ -33,7 +33,7 @@
     <string name="google_login_cancelled">Google Login abgebrochen</string>
     <string name="google_login_error">Google Login fehlgeschlagen. Grund: %s</string>
     <string name="google_login_network_error">Google Login wegen eines Netzwerkfehlers fehlgeschlagen. Grund: %s</string>
-    <string name="settings_school_credentials">Schul-Anmeldedaten</string>
+    <string name="settings_school_credentials">Schul-Einstellungen</string>
     <string name="settings_openai">OpenAI</string>
     <string name="username">Benutzername</string>
     <string name="not_set">Nicht festgelegt</string>
