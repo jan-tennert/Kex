@@ -2,6 +2,7 @@ package io.github.jan.kex.ui.screen
 
 import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -30,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
 import io.github.jan.kex.data.remote.Subject
 import io.github.jan.kex.data.remote.Task
@@ -94,7 +97,10 @@ fun HomeScreen(
         }
     } else {
         Column {
-            LazyColumn(Modifier.fillMaxHeight(0.5f).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            LazyColumn(
+                Modifier
+                    .fillMaxHeight(0.5f)
+                    .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 examList(examsByDays) {
                     navController.navigate(NavigationTarget.Exams.Detail.destinationFormat.format(it.id))
                 }
@@ -102,7 +108,10 @@ fun HomeScreen(
             Box(Modifier.padding(8.dp)) {
                 HorizontalDivider(Modifier.fillMaxWidth())
             }
-            LazyColumn(Modifier.fillMaxHeight().fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            LazyColumn(
+                Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 taskList(tasksByDays, subjects, taskVm::updateTask, taskVm::deleteTask)
             }
         }
@@ -111,30 +120,46 @@ fun HomeScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 private fun LazyListScope.examList(examsByDay: List<Map.Entry<Int, List<Exam>>>, onClick: (Exam) -> Unit) {
-    item {
-        Text("Anstehende Klassenarbeiten", fontSize = 25.sp)
+    stickyHeader {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center) {
+            Text(stringResource(R.string.upcoming_exams), fontSize = 25.sp, modifier = Modifier.padding(8.dp))
+        }
     }
     examsByDay.forEach { (days, exams) ->
         item {
             Text(stringResource(days.localizedDay, days), fontSize = 20.sp)
         }
         items(exams) {
-            ExamHomeCard(it, modifier = Modifier.padding(8.dp).animateItemPlacement()) { onClick(it) }
+            ExamHomeCard(it, modifier = Modifier
+                .padding(8.dp)
+                .animateItemPlacement()) { onClick(it) }
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 private fun LazyListScope.taskList(tasksByDay: List<Map.Entry<Long, List<Task>>>, subjects: List<Subject>, updateTask: (Task, String, Instant, Instant?) -> Unit, delete: (Long, Boolean) -> Unit) {
-    item {
-        Text("Anstehende Hausaufgaben", fontSize = 25.sp)
+    stickyHeader {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center) {
+            Text(stringResource(R.string.pending_tasks), fontSize = 25.sp, modifier = Modifier.padding(8.dp))
+        }
     }
     tasksByDay.forEach { (days, tasks) ->
         item {
             Text(stringResource(days.toInt().localizedDay, days), fontSize = 20.sp)
         }
         items(tasks) {
-            val subject = remember { subjects.find { subject -> subject.id == it.subjectId } }
+            val subject by remember {
+                derivedStateOf {
+                    subjects.find { subject -> subject.id == it.subjectId }
+                }
+            }
             TaskCard(
                 task = it,
                 onUpdate = { done, task, dueDate ->
@@ -146,7 +171,9 @@ private fun LazyListScope.taskList(tasksByDay: List<Map.Entry<Long, List<Task>>>
                     )
                 },
                 onDelete = { delete(it.id, it.offlineCreated) },
-                modifier = Modifier.padding(8.dp).animateItemPlacement(),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .animateItemPlacement(),
                 subject = subject?.name
             )
         }

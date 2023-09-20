@@ -82,4 +82,6 @@
     <string name="no">No</string>
     <string name="exam_notification">You have a %s %s in 5 days!</string>
     <string name="exam_notification_title">%s %s in 5 days!</string>
+    <string name="upcoming_exams">Upcoming Exams</string>
+    <string name="pending_tasks">Pending Tasks</string>
 </resources>
