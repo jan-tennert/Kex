@@ -20,13 +20,13 @@ import io.github.jan.supabase.compose.auth.ui.password.OutlinedPasswordField
 @Composable
 fun SchoolEntry(username: String, password: String, onUsernameChange: (String) -> Unit, onPasswordChange: (String) -> Unit) {
     Column {
+        Text(stringResource(R.string.lower_grades))
         OutlinedTextField(
             value = username,
             onValueChange = onUsernameChange,
             label = { Text(text = stringResource(R.string.username)) },
             leadingIcon = { Icon(rememberMail(), contentDescription = null) },
             singleLine = true,
-            enabled = false
         )
         Spacer(modifier = Modifier.height(6.dp))
         OutlinedPasswordField(
@@ -34,7 +34,6 @@ fun SchoolEntry(username: String, password: String, onUsernameChange: (String) -
             onValueChange = onPasswordChange,
             label = { Text(text = stringResource(R.string.password)) },
             mandatory = false,
-            enabled = false
         )
     }
 }

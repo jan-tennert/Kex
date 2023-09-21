@@ -89,4 +89,5 @@
     <string name="importA">Import</string>
     <string name="continueA">Continue</string>
     <string name="select_exam_plan">Select Exam Plan</string>
+    <string name="lower_grades">For grades 5-10</string>
 </resources>
