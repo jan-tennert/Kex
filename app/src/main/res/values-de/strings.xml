@@ -87,4 +87,6 @@
     <string name="exam_import_screen">Klassenarbeit-Importierer</string>
     <string name="select_courses">Kurse auswählen zum Importieren</string>
     <string name="importA">Importieren</string>
+    <string name="continueA">Weiter</string>
+    <string name="select_exam_plan">Klassenarbeitsplan auswählen</string>
 </resources>

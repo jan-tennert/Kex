@@ -25,7 +25,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import io.github.jan.kex.R
 import io.github.jan.kex.ui.components.DropDownField
 import io.github.jan.kex.ui.icons.rememberRefreshIcon
 
@@ -52,7 +54,7 @@ fun ExamPlanKeySelection(
                 expanded = expanded,
                 onExpandChange = { expanded = it },
                 value = selectedKey,
-                placeholder = { Text("Select Exam Plan") }
+                placeholder = { Text(stringResource(R.string.select_exam_plan)) }
             ) {
                 keys.forEach {
                     DropdownMenuItem(
@@ -62,7 +64,9 @@ fun ExamPlanKeySelection(
                     )
                 }
             }
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(8.dp).size(24.dp)) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier
+                .padding(8.dp)
+                .size(24.dp)) {
                 CircularProgressIndicator(
                     Modifier
                         .alpha(if (loading) 1f else 0f)
@@ -78,7 +82,7 @@ fun ExamPlanKeySelection(
         }
         Spacer(Modifier.height(16.dp))
         Button(onClick = { onSubmit(selectedKey) }) {
-            Text("Continue")
+            Text(stringResource(R.string.continueA))
         }
     }
 }
