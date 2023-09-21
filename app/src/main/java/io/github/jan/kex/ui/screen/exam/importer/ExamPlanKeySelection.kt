@@ -81,7 +81,7 @@ fun ExamPlanKeySelection(
             }
         }
         Spacer(Modifier.height(16.dp))
-        Button(onClick = { onSubmit(selectedKey) }) {
+        Button(onClick = { onSubmit(selectedKey) }, enabled = selectedKey.isNotBlank()) {
             Text(stringResource(R.string.continueA))
         }
     }

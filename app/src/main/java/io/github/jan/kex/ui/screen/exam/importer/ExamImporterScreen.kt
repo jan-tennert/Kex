@@ -52,15 +52,21 @@ fun ExamImporterScreen(
             )
         }
         else -> {
-            ExamImportSelector(examPlan!!) { selectedSubjects ->
-                val exams = examPlan!!.examsByDate.toList().map { (date, exams) ->
-                    exams.map {
-                        ExamData(it.subject, date)
-                    }
-                }.flatten().filter { it.subject in selectedSubjects }
-                examVm.importExams(exams)
-                navigator.navigate(NavigationTarget.Exams.destination)
-            }
+            ExamImportSelector(
+                plan = examPlan!!,
+                onImport = { selectedSubjects ->
+                    val exams = examPlan!!.examsByDate.toList().map { (date, exams) ->
+                        exams.map {
+                            ExamData(it.subject, date)
+                        }
+                    }.flatten().filter { it.subject in selectedSubjects }
+                    examVm.importExams(exams)
+                    navigator.navigate(NavigationTarget.Exams.destination)
+                },
+                onBack = {
+                    examPlanVm.examPlan.value = null
+                }
+            )
         }
     }
 }

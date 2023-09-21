@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDate
 import kotlinx.datetime.toLocalDateTime
 
 class ExamViewModel(
@@ -119,6 +120,11 @@ class ExamViewModel(
     fun createExam(subject: String, date: String, theme: String, type: Exam.Type) {
         viewModelScope.launch(Dispatchers.IO) {
             subjectSuggestionDataSource.insert(subject)
+            val currentExams = examApi.retrieveExamData()
+            if(currentExams.any { it.subject == subject && it.date == date.toLocalDate() }) {
+                //error.value = R.string.exam_already_exists
+                return@launch
+            }
             kotlin.runCatching {
                 examApi.createExam(subject, date, theme, type)
             }.onSuccess {
@@ -149,7 +155,9 @@ class ExamViewModel(
     fun importExams(exams: List<ExamData>) {
         viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
-                examApi.createExams(exams)
+                val currentExams = examApi.retrieveExamData()
+                val noDuplicates = exams.filter { exam -> currentExams.none { it.id == exam.id } }
+                examApi.createExams(noDuplicates)
             }.onSuccess {
                 examDataSource.insertExams(it)
                 scheduleOrUpdateNotifications(it)
