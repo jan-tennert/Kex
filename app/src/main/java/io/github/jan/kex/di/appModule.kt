@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.NotificationManager
 import android.content.Context.NOTIFICATION_SERVICE
 import io.github.jan.kex.vm.AuthenticationViewModel
+import io.github.jan.kex.vm.ExamPlanViewModel
 import io.github.jan.kex.vm.ExamViewModel
 import io.github.jan.kex.vm.SettingsViewModel
 import io.github.jan.kex.vm.SubjectViewModel
@@ -31,6 +32,9 @@ val appModule = module {
     }
     viewModel {
         SettingsViewModel(get())
+    }
+    viewModel {
+        ExamPlanViewModel(get())
     }
     single {
         androidContext().getSystemService(NOTIFICATION_SERVICE) as NotificationManager

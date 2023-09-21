@@ -33,7 +33,8 @@ class ExamViewModel(
     private val examApi: ExamApi,
     private val examDataSource: ExamDataSource,
     private val subjectSuggestionDataSource: SubjectSuggestionDataSource,
-    private val examNotificationManager: ExamNotificationManager
+    private val examNotificationManager: ExamNotificationManager,
+
 ): ViewModel() {
 
     val exams: StateFlow<List<Exam>> = examDataSource.getExamsAsFlow().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
@@ -58,7 +59,7 @@ class ExamViewModel(
             val newExams = schoolExams.filter { examData.none { data -> it.id == data.id } }.map(ExamData::toExam)
             examData + newExams
         }.onSuccess {
-            examDataSource.insertExams(it)
+            examDataSource.insertExams(it, true)
             subjectSuggestionDataSource.insertAll(it.map(Exam::subject))
             scheduleOrUpdateNotifications(it)
         }.onFailure {
@@ -145,6 +146,19 @@ class ExamViewModel(
         }
     }
 
+    fun importExams(exams: List<ExamData>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            kotlin.runCatching {
+                examApi.createExams(exams)
+            }.onSuccess {
+                examDataSource.insertExams(it)
+                scheduleOrUpdateNotifications(it)
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+    }
+
     fun deleteExam(exam: Exam, custom: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
@@ -186,4 +200,5 @@ class ExamViewModel(
         }
     }
 
+    //importing:
 }

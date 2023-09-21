@@ -3,6 +3,7 @@ package io.github.jan.kex
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -25,7 +26,7 @@ val LocalDate.localizedDateString
             TextStyle.FULL,
             Locale.getDefault()
         )
-    }"
+    }" + if (year != Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year) " $year" else ""
 
 val LocalDateTime.localizedDateString
     @RequiresApi(Build.VERSION_CODES.O)

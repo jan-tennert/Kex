@@ -18,6 +18,7 @@ import kotlinx.datetime.todayIn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
@@ -68,6 +69,8 @@ interface ExamApi {
     suspend fun updateExam(exam: Exam, subject: String, theme: String?, points: Long?)
 
     suspend fun createExam(subject: String, date: String, theme: String, type: Exam.Type): Exam
+
+    suspend fun createExams(exams: List<ExamData>): List<Exam>
 
     suspend fun deleteExam(examId: String)
 
@@ -131,6 +134,22 @@ internal class ExamApiImpl(
             put("creator_id", gotrue.currentUserOrNull()?.id)
         })
         return exam
+    }
+
+    @OptIn(SupabaseInternal::class)
+    override suspend fun createExams(exams: List<ExamData>): List<Exam> {
+        val examList = exams.map {
+            it.toExam().copy(custom = true)
+        }
+        val result = this.exams.insert(buildJsonArray {
+            examList.forEach {
+                add(buildJsonObject {
+                    putJsonObject(Json.encodeToJsonElement(it).jsonObject)
+                    put("creator_id", gotrue.currentUserOrNull()?.id)
+                })
+            }
+        })
+        return result.decodeList()
     }
 
     override suspend fun deleteExam(examId: String) {

@@ -19,8 +19,9 @@ sealed class NavigationTarget(val destination: String, val labelId: Int, val des
         data object Detail: NavigationTarget("exams/{examId}", R.string.exam_detail, "exams/%s")
         data object Create: NavigationTarget("exams/create", R.string.exam_create)
         data object Edit: NavigationTarget("exams/edit/{examId}", R.string.exam_edit, "exams/edit/%s")
+        data object Import: NavigationTarget("exams/import", R.string.exam_import_screen)
 
-        val entries = listOf(Detail, Create, Edit)
+        val entries = listOf(Detail, Create, Edit, Import)
     }
     data object Settings: Main("settings", SettingsIcon, R.string.settings)
 

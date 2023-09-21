@@ -6,22 +6,28 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import io.github.jan.kex.ui.nav.NavigationTarget
 
+val WindowSizeClass.upDirection get() = if(this.widthSizeClass == WindowWidthSizeClass.Compact) AnimatedContentTransitionScope.SlideDirection.Left else AnimatedContentTransitionScope.SlideDirection.Up
+
+val WindowSizeClass.downDirection get() = if(this.widthSizeClass == WindowWidthSizeClass.Compact) AnimatedContentTransitionScope.SlideDirection.Right else AnimatedContentTransitionScope.SlideDirection.Down
+
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.animatedComposable(destination: String, content: @Composable () -> Unit) {
+fun NavGraphBuilder.animatedComposable(destination: String, windowSizeClass: WindowSizeClass, content: @Composable () -> Unit) {
     composable(
         destination,
         enterTransition = {
             val target = NavigationTarget.Main.entries.indexOfFirst { it.destination == this.targetState.destination.route }
             val initial = NavigationTarget.Main.entries.indexOfFirst { it.destination == this.initialState.destination.route }
             val direction = if (target > initial) {
-                AnimatedContentTransitionScope.SlideDirection.Left
+                windowSizeClass.upDirection
             } else {
-                AnimatedContentTransitionScope.SlideDirection.Right
+                windowSizeClass.downDirection
             }
             if(initial == -1) {
                 fadeIn()
@@ -39,9 +45,9 @@ fun NavGraphBuilder.animatedComposable(destination: String, content: @Composable
             val target = NavigationTarget.Main.entries.indexOfFirst { it.destination == this.targetState.destination.route }
             val initial = NavigationTarget.Main.entries.indexOfFirst { it.destination == this.initialState.destination.route }
             val direction = if (target > initial) {
-                AnimatedContentTransitionScope.SlideDirection.Left
+                windowSizeClass.upDirection
             } else {
-                AnimatedContentTransitionScope.SlideDirection.Right
+                windowSizeClass.downDirection
             }
             if(target == -1) {
                 fadeOut()

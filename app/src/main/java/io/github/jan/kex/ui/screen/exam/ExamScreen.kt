@@ -62,7 +62,6 @@ fun ExamScreen(
 ) {
     val showPastExams by examVm.showPastExams.collectAsStateWithLifecycle()
     val filteredExams by examVm.filteredExams.collectAsStateWithLifecycle(emptyList())
-    val ignoreSchoolLogin by authVm.ignoreSchoolLogin.collectAsStateWithLifecycle()
 
     val isLoading by examVm.isLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isLoading)
@@ -103,7 +102,6 @@ fun ExamScreen(
                     ExamCard(
                         exam = it,
                         selected = it in selectedExams,
-                        showSelection = selectedExams.isNotEmpty(),
                         modifier = Modifier
                             .size(ExamCardDefaults.SIZE)
                             .padding(8.dp)

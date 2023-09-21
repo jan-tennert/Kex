@@ -13,7 +13,15 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownField(expanded: Boolean, onExpandChange: (Boolean) -> Unit, value: String, label: (@Composable () -> Unit)? = null, trailingIcon: (@Composable () -> Unit)? = null, content: @Composable ColumnScope.() -> Unit) {
+fun DropDownField(
+    expanded: Boolean,
+    onExpandChange: (Boolean) -> Unit,
+    value: String,
+    label: (@Composable () -> Unit)? = null,
+    trailingIcon: (@Composable () -> Unit)? = null,
+    placeholder: (@Composable () -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit
+) {
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = onExpandChange,
@@ -21,10 +29,13 @@ fun DropDownField(expanded: Boolean, onExpandChange: (Boolean) -> Unit, value: S
         OutlinedTextField(
             value = value,
             onValueChange = {},
-            modifier = Modifier.menuAnchor().clickable { onExpandChange(!expanded) },
+            modifier = Modifier
+                .menuAnchor()
+                .clickable { onExpandChange(!expanded) },
             enabled = false,
             label = label,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            placeholder = placeholder,
             colors = OutlinedTextFieldDefaults.colors(
                 disabledTextColor = MaterialTheme.colorScheme.onSurface,
                 disabledBorderColor = MaterialTheme.colorScheme.outline,

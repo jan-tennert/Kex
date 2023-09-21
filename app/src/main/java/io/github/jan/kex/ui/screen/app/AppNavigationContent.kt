@@ -24,10 +24,12 @@ import io.github.jan.kex.ui.screen.exam.ExamCreateScreen
 import io.github.jan.kex.ui.screen.exam.ExamDetailScreen
 import io.github.jan.kex.ui.screen.exam.ExamEditScreen
 import io.github.jan.kex.ui.screen.exam.ExamScreen
+import io.github.jan.kex.ui.screen.exam.importer.ExamImporterScreen
 import io.github.jan.kex.ui.screen.settings.SettingsScreen
 import io.github.jan.kex.ui.screen.subjects.SubjectDetailScreen
 import io.github.jan.kex.ui.screen.subjects.SubjectScreen
 import io.github.jan.kex.vm.AuthenticationViewModel
+import io.github.jan.kex.vm.ExamPlanViewModel
 import io.github.jan.kex.vm.ExamViewModel
 import io.github.jan.kex.vm.SettingsViewModel
 import io.github.jan.kex.vm.SubjectViewModel
@@ -44,6 +46,7 @@ fun AppNavigationContent(
     taskVm: TaskViewModel,
     updateVm: UpdateViewModel,
     settingsVm: SettingsViewModel,
+    examPlanVm: ExamPlanViewModel,
     currentDestination: NavigationTarget?,
     navController: NavHostController,
     windowSizeClass: WindowSizeClass
@@ -66,10 +69,14 @@ fun AppNavigationContent(
         ) {
             animatedComposable(
                 NavigationTarget.Home.destination,
+                windowSizeClass
             ) {
                 HomeScreen(examVm, taskVm, subjectVm, navController)
             }
-            animatedComposable(NavigationTarget.Exams.destination) {
+            animatedComposable(
+                NavigationTarget.Exams.destination,
+                windowSizeClass
+            ) {
                 ExamScreen(examVm, authVm, navController)
             }
             composable(NavigationTarget.Exams.Detail.destination, arguments = listOf(navArgument("examId") { type = NavType.StringType })) { entry ->
@@ -112,10 +119,19 @@ fun AppNavigationContent(
                         })
                 }
             }
-            animatedComposable(NavigationTarget.Settings.destination) {
+            composable(NavigationTarget.Exams.Import.destination) {
+                ExamImporterScreen(examPlanVm, examVm, navController)
+            }
+            animatedComposable(
+                NavigationTarget.Settings.destination,
+                windowSizeClass
+            ) {
                 SettingsScreen(authVm, examVm, subjectVm, taskVm, updateVm, settingsVm)
             }
-            animatedComposable(NavigationTarget.Subjects.destination) {
+            animatedComposable(
+                NavigationTarget.Subjects.destination,
+                windowSizeClass
+            ) {
                 SubjectScreen(subjectVm, taskVm, navController)
             }
             composable(NavigationTarget.Subjects.Detail.destination, arguments = listOf(navArgument("subjectId") { type = NavType.StringType })) { entry ->

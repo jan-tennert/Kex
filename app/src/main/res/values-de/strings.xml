@@ -84,4 +84,7 @@
     <string name="exam_notification_title">%s %s in 5 Tagen!</string>
     <string name="upcoming_exams">Anstehende Klassenarbeiten</string>
     <string name="pending_tasks">Anstehende Aufgaben</string>
+    <string name="exam_import_screen">Klassenarbeit-Importierer</string>
+    <string name="select_courses">Kurse auswählen zum Importieren</string>
+    <string name="importA">Importieren</string>
 </resources>

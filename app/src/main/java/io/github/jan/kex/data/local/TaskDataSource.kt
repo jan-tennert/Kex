@@ -15,7 +15,7 @@ interface TaskDataSource {
 
     suspend fun getTasks(): List<Task>
 
-    suspend fun insertTask(tasks: List<Task>)
+    suspend fun insertTask(tasks: List<Task>, deleteRest: Boolean = false)
 
     suspend fun deleteTask(id: Long)
 
@@ -61,8 +61,10 @@ internal class TaskDataSourceImpl(
         }
     }
 
-    override suspend fun insertTask(tasks: List<Task>) {
+    override suspend fun insertTask(tasks: List<Task>, deleteRest: Boolean) {
         withContext(Dispatchers.IO) {
+            val oldTasks = getTasks()
+            val toDelete = if(deleteRest) oldTasks.filter { oldTask -> tasks.none { it.id == oldTask.id } }.map { it.id } else emptyList()
             queries.transaction {
                 tasks.forEach { task ->
                     queries.insert(
@@ -73,6 +75,9 @@ internal class TaskDataSourceImpl(
                         doneDate = task.doneDate,
                         offlineCreated = task.offlineCreated,
                     )
+                }
+                toDelete.forEach {
+                    queries.delete(it)
                 }
             }
         }

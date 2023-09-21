@@ -4,6 +4,8 @@ import io.github.jan.kex.data.remote.AuthenticationApi
 import io.github.jan.kex.data.remote.AuthenticationApiImpl
 import io.github.jan.kex.data.remote.ExamApi
 import io.github.jan.kex.data.remote.ExamApiImpl
+import io.github.jan.kex.data.remote.ExamPlanApi
+import io.github.jan.kex.data.remote.ExamPlanApiImpl
 import io.github.jan.kex.data.remote.GithubApi
 import io.github.jan.kex.data.remote.GithubApiImpl
 import io.github.jan.kex.data.remote.SubjectApi
@@ -42,5 +44,8 @@ val remoteModule = module {
     }
     single<UpdateManager> {
         UpdateManagerImpl(get(), get())
+    }
+    single<ExamPlanApi> {
+        ExamPlanApiImpl(get())
     }
 }

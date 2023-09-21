@@ -37,7 +37,7 @@ class TaskViewModel(
         kotlin.runCatching {
             tasksApi.retrieveTasks()
         }.onSuccess {
-            taskDataSource.insertTask(it)
+            taskDataSource.insertTask(it, true)
             scheduleOrUpdateNotifications(it)
         }.onFailure {
             it.printStackTrace()

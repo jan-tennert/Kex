@@ -22,6 +22,7 @@ import io.github.jan.kex.ui.screen.app.AppNavigationContent
 import io.github.jan.kex.ui.screen.app.AppTopBar
 import io.github.jan.kex.ui.screen.app.AutoRefresh
 import io.github.jan.kex.vm.AuthenticationViewModel
+import io.github.jan.kex.vm.ExamPlanViewModel
 import io.github.jan.kex.vm.ExamViewModel
 import io.github.jan.kex.vm.SettingsViewModel
 import io.github.jan.kex.vm.SubjectViewModel
@@ -39,7 +40,8 @@ fun AppScreen(
     subjectVm: SubjectViewModel = getViewModel(),
     taskVm: TaskViewModel = getViewModel(),
     updateVm: UpdateViewModel = getViewModel(),
-    settingsVm: SettingsViewModel = getViewModel()
+    settingsVm: SettingsViewModel = getViewModel(),
+    examPlanVm: ExamPlanViewModel = getViewModel()
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -55,7 +57,7 @@ fun AppScreen(
     )
     Scaffold(
         topBar = {
-            AppTopBar(currentDestination)
+            AppTopBar(currentDestination, navController)
         },
         bottomBar = {
             if(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
@@ -76,6 +78,7 @@ fun AppScreen(
             taskVm = taskVm,
             updateVm = updateVm,
             settingsVm = settingsVm,
+            examPlanVm = examPlanVm,
             currentDestination = currentDestination,
             navController = navController,
             windowSizeClass = windowSizeClass

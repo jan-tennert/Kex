@@ -16,7 +16,7 @@ interface ExamDataSource {
 
     suspend fun getExams(): List<Exam>
 
-    suspend fun insertExams(exams: List<Exam>)
+    suspend fun insertExams(exams: List<Exam>, deleteRest: Boolean = false)
 
     suspend fun updateOfflineCreated(id: String, offlineCreated: Boolean, newId: String)
 
@@ -44,8 +44,10 @@ internal class ExamDataSourceImpl(
         }
     }
 
-    override suspend fun insertExams(exams: List<Exam>) {
+    override suspend fun insertExams(exams: List<Exam>, deleteRest: Boolean) {
         withContext(Dispatchers.IO) {
+            val oldExams = getExams()
+            val toDelete = if(deleteRest) oldExams.filter { oldExam -> exams.none { it.id == oldExam.id } }.map { it.id } else emptyList()
             queries.transaction {
                 exams.forEach { exam ->
                     queries.insert(
@@ -58,6 +60,9 @@ internal class ExamDataSourceImpl(
                         points = exam.points,
                         offlineCreated = exam.offlineCreated
                     )
+                }
+                toDelete.forEach {
+                    queries.delete(it)
                 }
             }
         }
