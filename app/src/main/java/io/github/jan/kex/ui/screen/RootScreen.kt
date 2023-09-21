@@ -37,7 +37,7 @@ fun RootScreen(
     val currentTheme by settingsVm.currentTheme.collectAsState()
     CompositionLocalProvider(LocalKexTheme provides currentTheme) {
         when(sessionStatus) {
-            is SessionStatus.Authenticated -> {
+            is SessionStatus.Authenticated, is SessionStatus.NetworkError -> {
                 AppScreen(authVm = authVM, updateVm = updateVm, settingsVm = settingsVm)
             }
             SessionStatus.LoadingFromStorage -> {
