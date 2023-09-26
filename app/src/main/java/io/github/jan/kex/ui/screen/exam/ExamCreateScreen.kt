@@ -72,7 +72,7 @@ fun ExamCreateScreen(
                 val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(
                     TimeZone.currentSystemDefault()
                 )
-                "${date.dayOfMonth}.${date.monthNumber}.${date.year}"
+                "${if(date.dayOfMonth < 10) "0" + date.dayOfMonth else date.dayOfMonth}.${date.monthNumber}.${date.year}"
             }
         }
         var type by remember {

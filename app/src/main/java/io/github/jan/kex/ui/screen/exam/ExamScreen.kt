@@ -31,7 +31,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -170,7 +173,11 @@ fun ExamScreen(
                     checked = showPastExams,
                     onCheckedChange = { examVm.showPastExams.value = !showPastExams })
                 Spacer(modifier = Modifier.size(12.dp))
-                Text(stringResource(R.string.past_exams), modifier = Modifier.weight(1f))
+                Text(
+                    stringResource(R.string.past_exams),
+                    modifier = Modifier.weight(1f),
+                    style = TextStyle(shadow = Shadow(MaterialTheme.colorScheme.inverseOnSurface,  Offset(5.0f, 5.0f), 1f))
+                )
                 ExtendedFloatingActionButton(
                     onClick = { navController.navigate(NavigationTarget.Exams.Create.destinationFormat) },
                     text = { Text(stringResource(R.string.create)) },
