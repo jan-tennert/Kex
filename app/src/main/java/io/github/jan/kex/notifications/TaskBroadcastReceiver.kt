@@ -1,11 +1,13 @@
 package io.github.jan.kex.notifications
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
+import io.github.jan.kex.MainActivity
 import io.github.jan.kex.MainApplication
 import io.github.jan.kex.R
 
@@ -32,6 +34,10 @@ class TaskBroadcastReceiver: BroadcastReceiver() {
             .setContentText(text)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
+            .setContentIntent(PendingIntent.getActivity(
+                context, 0,
+                Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            ))
 
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
