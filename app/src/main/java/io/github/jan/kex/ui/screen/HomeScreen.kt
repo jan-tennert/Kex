@@ -66,7 +66,7 @@ fun HomeScreen(
     val subjects by subjectVm.subjects.collectAsStateWithLifecycle(emptyList())
     val tasksByDays by remember {
         derivedStateOf {
-            tasks.filter { it.doneDate == null }.groupBy { it.daysUntil }.entries.sortedBy { it.key }.filter { it.key >= 0 }.take(3)
+            tasks.filter { it.doneDate == null && it.dueDate > Clock.System.now() }.groupBy { it.daysUntil }.entries.sortedBy { it.key }.filter { it.key >= 0 }.take(3)
         }
     }
     val context = LocalContext.current
@@ -155,10 +155,8 @@ private fun LazyListScope.taskList(tasksByDay: List<Map.Entry<Long, List<Task>>>
             Text(stringResource(days.toInt().localizedDay, days), fontSize = 20.sp)
         }
         items(tasks) {
-            val subject by remember {
-                derivedStateOf {
-                    subjects.find { subject -> subject.id == it.subjectId }
-                }
+            val subject = remember(subjects) {
+                subjects.find { subject -> subject.id == it.subjectId }
             }
             TaskCard(
                 task = it,

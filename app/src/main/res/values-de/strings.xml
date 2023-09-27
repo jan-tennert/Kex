@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Kex</string>
-    <string name="past_exams">Vergangene Klassenarbeiten anzeigen</string>
+    <string name="past_exams">Vergangene Prüfungen anzeigen</string>
     <string name="score">Note/Punkte</string>
     <string name="theme">Themen</string>
     <string name="save">Speichern</string>
@@ -13,7 +13,7 @@
     <string name="home">Startseite</string>
     <string name="tasks">Hausaufgaben</string>
     <string name="settings">Einstellungen</string>
-    <string name="exams">Klassenarbeiten</string>
+    <string name="exams">Prüfungen</string>
     <string name="subject">Schulfach</string>
     <string name="date">Datum</string>
     <string name="exam">Klassenarbeit</string>
@@ -40,9 +40,9 @@
     <string name="password">Passwort</string>
     <string name="login">Einloggen</string>
     <string name="sign_out">Ausloggen</string>
-    <string name="exam_detail">Klassenarbeiten</string>
-    <string name="exam_create">Klassenarbeit erstellen</string>
-    <string name="exam_edit">Klassenarbeit bearbeiten</string>
+    <string name="exam_detail">Prüfungen</string>
+    <string name="exam_create">Prüfung erstellen</string>
+    <string name="exam_edit">Prüfung bearbeiten</string>
     <string name="create_task">Hausaufgabe erstellen</string>
     <string name="gfs">GFS</string>
     <string name="task">Hausaufgabe</string>
@@ -50,7 +50,7 @@
     <string name="today">Heute</string>
     <string name="day_after_tomorrow">Übermorgen</string>
     <string name="in_days">In %s Tagen</string>
-    <string name="no_exams">Keine Klassenarbeiten verfügbar</string>
+    <string name="no_exams">Keine Prüfungen verfügbar</string>
     <string name="no_tasks">Keine Hausaufgaben verfügbar</string>
     <string name="install">Installieren</string>
     <string name="download">Herunterladen</string>
@@ -77,12 +77,12 @@
     <string name="delete_subject_fail">Schulfach konnte nicht gelöscht werden. Bitte überprüfe deine Internetverbindung!</string>
     <string name="create_subject_fail">Schulfach konnte nicht erstellt werden. Bitte überprüfe deine Internetverbindung!</string>
     <string name="notifications">Benachrichtigungen</string>
-    <string name="notifications_text">Willst du Benachrichtigungen für Hausaufgaben und Klassenarbeiten bekommen?</string>
+    <string name="notifications_text">Willst du Benachrichtigungen für Hausaufgaben und Prüfungen bekommen?</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="exam_notification">Du hast in 5 Tagen eine %s %s!</string>
     <string name="exam_notification_title">%s %s in 5 Tagen!</string>
-    <string name="upcoming_exams">Anstehende Klassenarbeiten</string>
+    <string name="upcoming_exams">Anstehende Prüfungen</string>
     <string name="pending_tasks">Anstehende Aufgaben</string>
     <string name="exam_import_screen">Klassenarbeit-Importierer</string>
     <string name="select_courses">Kurse auswählen zum Importieren</string>

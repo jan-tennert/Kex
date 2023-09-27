@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,7 @@ fun ExamCard(exam: Exam, selected: Boolean, modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(exam.subject, fontWeight = FontWeight.Bold, fontSize = 15.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(stringResource(id = exam.type.nameId), fontSize = 10.sp)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Text(
                     text = exam.date.localizedDateString,

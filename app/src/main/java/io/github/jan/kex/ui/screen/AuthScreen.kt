@@ -76,7 +76,7 @@ fun AuthScreen(
                     }
                 },
             ) {
-                ProviderButtonContent(provider = Google)
+                ProviderButtonContent(provider = Google, text = stringResource(id = R.string.login_google))
             }
         }
     }
