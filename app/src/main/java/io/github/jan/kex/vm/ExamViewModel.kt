@@ -51,6 +51,7 @@ class ExamViewModel(
     private suspend fun refreshExams(username: String?, password: String?) {
         isLoading.value = true
         kotlin.runCatching {
+            println(username)
             val schoolExams = if(username != null && password != null) examApi.retrieveExamsFromSchool(username, password) else emptyList()
             val examData = examApi.retrieveExamData().map {
                 if(!it.custom) {

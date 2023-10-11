@@ -60,6 +60,8 @@ android {
                 "proguard-rules.pro")
             if(isCI) {
                 signingConfig = signingConfigs.getByName("release")
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
             }
         }
         named("debug") {
