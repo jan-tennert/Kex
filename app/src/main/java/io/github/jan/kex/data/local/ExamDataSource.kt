@@ -47,7 +47,7 @@ internal class ExamDataSourceImpl(
     override suspend fun insertExams(exams: List<Exam>, deleteRest: Boolean) {
         withContext(Dispatchers.IO) {
             val oldExams = getExams()
-            val toDelete = if(deleteRest) oldExams.filter { oldExam -> exams.none { it.id == oldExam.id } }.map { it.id } else emptyList()
+         //   val toDelete = if(deleteRest) oldExams.filter { oldExam -> exams.none { it.id == oldExam.id } && !oldExam.offlineCreated }.map { it.id } else emptyList()
             queries.transaction {
                 exams.forEach { exam ->
                     queries.insert(
@@ -61,9 +61,9 @@ internal class ExamDataSourceImpl(
                         offlineCreated = exam.offlineCreated
                     )
                 }
-                toDelete.forEach {
+            /*    toDelete.forEach {
                     queries.delete(it)
-                }
+                }*/
             }
         }
     }
