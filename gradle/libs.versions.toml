@@ -17,7 +17,7 @@ swipe-refresh = "0.33.2-alpha"
 compose-navigation = "2.7.4"
 compose = "1.6.0-alpha07"
 material3 = "1.2.0-alpha09"
-compose-rich-editor = "1.0.0-beta03"
+compose-rich-editor = "1.0.0-beta04"
 semver = "1.4.2"
 
 [libraries]
