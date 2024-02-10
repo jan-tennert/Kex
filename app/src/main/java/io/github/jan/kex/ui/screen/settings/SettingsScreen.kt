@@ -42,7 +42,7 @@ import io.github.jan.kex.vm.TaskViewModel
 import io.github.jan.kex.vm.UpdateViewModel
 import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.compose.auth.ComposeAuth
-import io.github.jan.supabase.compose.auth.composable.rememberSignOut
+import io.github.jan.supabase.compose.auth.composable.rememberSignOutWithGoogle
 import org.koin.compose.koinInject
 
 @OptIn(SupabaseExperimental::class, ExperimentalMaterial3Api::class,
@@ -120,7 +120,7 @@ fun SettingsScreen(
     }
 
     if(showLogoutDialog) {
-        val logoutState = composeAuth.rememberSignOut()
+        val logoutState = composeAuth.rememberSignOutWithGoogle()
         LogoutDialog(
             onLogout = {
                 logoutState.startFlow()

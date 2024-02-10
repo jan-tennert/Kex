@@ -8,8 +8,8 @@ import io.github.jan.supabase.compose.auth.googleNativeLogin
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.functions.Functions
 import io.github.jan.supabase.functions.functions
-import io.github.jan.supabase.gotrue.GoTrue
-import io.github.jan.supabase.gotrue.gotrue
+import io.github.jan.supabase.gotrue.Auth
+import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.serializer.KotlinXSerializer
@@ -32,7 +32,7 @@ val supabaseModule = module {
             supabaseKey = BuildConfig.SUPABASE_KEY
         ) {
             defaultSerializer = KotlinXSerializer(get())
-            install(GoTrue) {
+            install(Auth) {
                 scheme = "io.github.kex"
                 host = "callback"
             }
@@ -45,7 +45,7 @@ val supabaseModule = module {
         }
     }
     single {
-        get<SupabaseClient>().gotrue
+        get<SupabaseClient>().auth
     }
     single {
         get<SupabaseClient>().postgrest

@@ -1,6 +1,6 @@
 package io.github.jan.kex.data.remote
 
-import io.github.jan.supabase.gotrue.GoTrue
+import io.github.jan.supabase.gotrue.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -33,26 +33,30 @@ interface SubjectApi {
 }
 
 internal class SubjectApiImpl(
-    private val goTrue: GoTrue,
+    private val auth: Auth,
     postgrest: Postgrest
 ): SubjectApi {
 
     private val subjects = postgrest["subjects"]
 
     override suspend fun createSubject(name: String): Subject {
-        val subject = SubjectData(name, goTrue.currentUserOrNull()!!.id)
+        val subject = SubjectData(name, auth.currentUserOrNull()!!.id)
         return subjects.insert(subject).decodeSingle()
     }
 
     override suspend fun deleteSubject(subjectId: Long) {
         subjects.delete {
-            Subject::id eq subjectId
+            filter {
+                Subject::id eq subjectId
+            }
         }
     }
 
     override suspend fun deleteSubjects(subjectIds: List<Long>) {
         subjects.delete {
-            Subject::id isIn subjectIds
+            filter {
+                Subject::id isIn subjectIds
+            }
         }
     }
 
@@ -66,7 +70,9 @@ internal class SubjectApiImpl(
                 Subject::name setTo name
             }
         ) {
-            Subject::id eq id
+            filter {
+                Subject::id eq id
+            }
         }
     }
 

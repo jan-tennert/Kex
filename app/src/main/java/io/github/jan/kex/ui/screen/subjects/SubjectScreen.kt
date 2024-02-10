@@ -16,15 +16,19 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,7 +55,9 @@ import io.github.jan.kex.ui.nav.NavigationTarget
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3WindowSizeClassApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 @Suppress("Deprecation") //The alternative is not yet compatible with Material 3
 fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, navController: NavController) {
@@ -58,7 +65,7 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
     val tasksRefreshing by taskViewModel.refreshing.collectAsStateWithLifecycle()
 
     val refreshing = subjectsRefreshing || tasksRefreshing
-
+    var refreshStarted by remember { mutableStateOf(false) }
     val subjects by subjectVm.subjects.collectAsStateWithLifecycle(emptyList())
 
     var showSubjectCreateDialog by remember { mutableStateOf(false) }
@@ -72,21 +79,24 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
 
     val expandCreateButton by remember { derivedStateOf { gridState.firstVisibleItemIndex == 0 } }
 
-    val swipeRefreshState = rememberSwipeRefreshState(refreshing)
-    val errorMessage by subjectVm.errorMessage.collectAsStateWithLifecycle()
-    SwipeRefresh(
-        modifier = Modifier.fillMaxSize(),
-        state = swipeRefreshState,
-        onRefresh = { subjectVm.refreshSubjects(); taskViewModel.syncTasks() },
-        indicator = { state, refreshTrigger ->
-            SwipeRefreshIndicator(
-                state = state,
-                refreshTriggerDistance = refreshTrigger,
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            )
+    val swipeRefreshState = rememberPullToRefreshState()
+    if(swipeRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            subjectVm.refreshSubjects(); taskViewModel.syncTasks()
         }
-    ) {
+    }
+    if(refreshing) {
+        LaunchedEffect(true) {
+            refreshStarted = true
+        }
+    }
+    if(refreshStarted && !refreshing) {
+        LaunchedEffect(true) {
+            swipeRefreshState.endRefresh()
+        }
+    }
+    val errorMessage by subjectVm.errorMessage.collectAsStateWithLifecycle()
+    Box(Modifier.nestedScroll(swipeRefreshState.nestedScrollConnection)) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -118,6 +128,7 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
                 }
             }
         }
+        PullToRefreshContainer(state = swipeRefreshState, modifier = Modifier.align(Alignment.TopCenter))
     }
 
     Box(

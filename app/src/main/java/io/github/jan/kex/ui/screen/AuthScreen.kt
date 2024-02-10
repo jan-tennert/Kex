@@ -25,7 +25,7 @@ import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.compose.auth.ComposeAuth
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
-import io.github.jan.supabase.compose.auth.composable.rememberLoginWithGoogle
+import io.github.jan.supabase.compose.auth.composable.rememberSignInWithGoogle
 import io.github.jan.supabase.compose.auth.ui.ProviderButtonContent
 import io.github.jan.supabase.gotrue.providers.Google
 import org.koin.androidx.compose.getViewModel
@@ -45,7 +45,7 @@ fun AuthScreen(
             GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS
         )
     }
-    val state = composeAuth.rememberLoginWithGoogle(
+    val state = composeAuth.rememberSignInWithGoogle(
         onResult = {
             when (it) {
                 NativeSignInResult.ClosedByUser -> authVM.authError.value =

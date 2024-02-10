@@ -49,9 +49,7 @@ class ExamViewModel(
     val subjectSuggestions: StateFlow<List<String>> = subjectSuggestionDataSource.getSuggestionsAsFlow().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     private suspend fun refreshExams(username: String?, password: String?) {
-        isLoading.value = true
         kotlin.runCatching {
-            println(username)
             val schoolExams = if(username != null && password != null) examApi.retrieveExamsFromSchool(username, password) else emptyList()
             val examData = examApi.retrieveExamData().map {
                 if(!it.custom) {
@@ -70,10 +68,10 @@ class ExamViewModel(
             }
             it.printStackTrace()
         }
-        isLoading.value = false
     }
 
     fun syncExams(username: String?, password: String?) {
+        isLoading.value = true
         viewModelScope.launch {
             val tasks = examDataSource.getExams()
             val offlineCreated = tasks.filter { it.offlineCreated }
@@ -88,6 +86,7 @@ class ExamViewModel(
                 }
             }
             refreshExams(username, password)
+            isLoading.value = false
         }
     }
 

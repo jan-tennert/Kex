@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -22,7 +23,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -33,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -55,7 +60,7 @@ import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 @Suppress("Deprecation") //The alternative is not yet compatible with Material 3
 fun ExamScreen(
@@ -67,10 +72,28 @@ fun ExamScreen(
     val filteredExams by examVm.filteredExams.collectAsStateWithLifecycle(emptyList())
 
     val isLoading by examVm.isLoading.collectAsStateWithLifecycle()
-    val swipeRefreshState = rememberSwipeRefreshState(isLoading)
+    var refreshStarted by remember { mutableStateOf(false) }
+    val swipeRefreshState = rememberPullToRefreshState()
+
 
     val username by authVm.schoolUsername.collectAsStateWithLifecycle()
     val password by authVm.schoolPassword.collectAsStateWithLifecycle()
+
+    if(swipeRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            examVm.syncExams(username, password)
+        }
+    }
+    if(isLoading) {
+        LaunchedEffect(true) {
+            refreshStarted = true
+        }
+    }
+    if(refreshStarted && !isLoading) {
+        LaunchedEffect(true) {
+            swipeRefreshState.endRefresh()
+        }
+    }
 
     val selectedExams = remember { mutableStateListOf<Exam>() }
 
@@ -79,19 +102,7 @@ fun ExamScreen(
     val error: Int? by examVm.error.collectAsStateWithLifecycle()
     val gridState = rememberLazyGridState()
     val expandCreateButton by remember { derivedStateOf { gridState.firstVisibleItemIndex == 0 } }
-    SwipeRefresh(
-        modifier = Modifier.fillMaxSize(),
-        state = swipeRefreshState,
-        onRefresh = { examVm.syncExams(username, password) },
-        indicator = { state, refreshTrigger ->
-            SwipeRefreshIndicator(
-                state = state,
-                refreshTriggerDistance = refreshTrigger,
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            )
-        }
-    ) {
+    Box(Modifier.nestedScroll(swipeRefreshState.nestedScrollConnection)) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -133,6 +144,7 @@ fun ExamScreen(
                 }
             }
         }
+        PullToRefreshContainer(state = swipeRefreshState, modifier = Modifier.align(Alignment.TopCenter))
     }
 
     Box(

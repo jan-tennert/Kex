@@ -3,7 +3,7 @@ package io.github.jan.kex.data.remote
 import io.github.jan.kex.R
 import io.github.jan.supabase.annotations.SupabaseInternal
 import io.github.jan.supabase.functions.Functions
-import io.github.jan.supabase.gotrue.GoTrue
+import io.github.jan.supabase.gotrue.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.putJsonObject
 import io.ktor.client.call.body
@@ -81,7 +81,7 @@ interface ExamApi {
 internal class ExamApiImpl(
     private val functions: Functions,
     postgrest: Postgrest,
-    private val gotrue: GoTrue
+    private val auth: Auth
 ) : ExamApi {
 
     private val exams = postgrest["exams"]
@@ -105,7 +105,7 @@ internal class ExamApiImpl(
 
     @OptIn(SupabaseInternal::class)
     override suspend fun updateExam(exam: Exam, subject: String, theme: String?, points: Long?) {
-        exams.insert(buildJsonObject {
+        exams.upsert(buildJsonObject {
             putJsonObject(
                 Json.encodeToJsonElement(
                     exam.copy(
@@ -115,8 +115,8 @@ internal class ExamApiImpl(
                     )
                 ).jsonObject
             )
-            put("creator_id", gotrue.currentUserOrNull()?.id)
-        }, upsert = true)
+            put("creator_id", auth.currentUserOrNull()?.id)
+        })
     }
 
     @OptIn(SupabaseInternal::class)
@@ -131,7 +131,7 @@ internal class ExamApiImpl(
         )
         exams.insert(buildJsonObject {
             putJsonObject(Json.encodeToJsonElement(exam).jsonObject)
-            put("creator_id", gotrue.currentUserOrNull()?.id)
+            put("creator_id", auth.currentUserOrNull()?.id)
         })
         return exam
     }
@@ -145,7 +145,7 @@ internal class ExamApiImpl(
             examList.forEach {
                 add(buildJsonObject {
                     putJsonObject(Json.encodeToJsonElement(it).jsonObject)
-                    put("creator_id", gotrue.currentUserOrNull()?.id)
+                    put("creator_id", auth.currentUserOrNull()?.id)
                 })
             }
         })
@@ -154,13 +154,17 @@ internal class ExamApiImpl(
 
     override suspend fun deleteExam(examId: String) {
         exams.delete {
-            Exam::id eq examId
+            filter {
+                Exam::id eq examId
+            }
         }
     }
 
     override suspend fun deleteExams(examIds: List<String>) {
         exams.delete {
-            Exam::id isIn examIds
+            filter {
+                Exam::id isIn examIds
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 package io.github.jan.kex.data.remote
 
-import io.github.jan.supabase.gotrue.GoTrue
+import io.github.jan.supabase.gotrue.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
@@ -58,7 +58,7 @@ interface TaskApi {
 }
 
 internal class TaskApiImpl(
-    private val goTrue: GoTrue,
+    private val goTrue: Auth,
     postgrest: Postgrest
 ): TaskApi {
 
@@ -71,13 +71,17 @@ internal class TaskApiImpl(
 
     override suspend fun deleteTask(subjectId: Long) {
         subjects.delete {
-            Task::id eq subjectId
+            filter {
+                Task::id eq subjectId
+            }
         }
     }
 
     override suspend fun deleteTasks(subjectIds: List<Long>) {
         subjects.delete {
-            Task::id isIn subjectIds
+            filter {
+                Task::id isIn subjectIds
+            }
         }
     }
 
@@ -94,7 +98,9 @@ internal class TaskApiImpl(
                 Task::doneDate setTo doneDate
             }
         ) {
-            Task::id eq id
+            filter {
+                Task::id eq id
+            }
         }
     }
 

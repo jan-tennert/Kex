@@ -50,7 +50,7 @@ fun TaskCard(task: Task, subject: String?, modifier: Modifier = Modifier, onUpda
                     .matchParentSize(), onCheckedChange = { onUpdate(!done, task.task, task.dueDate) })
             }
             Spacer(Modifier.width(8.dp))
-            Column {
+            Column(Modifier.weight(1f)) {
                 Text(task.task)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     Text(
@@ -59,7 +59,6 @@ fun TaskCard(task: Task, subject: String?, modifier: Modifier = Modifier, onUpda
                     )
                 }
             }
-            Spacer(Modifier.weight(1f))
             if(done) {
                 IconButton(onClick = onDelete, enabled = !task.loading) {
                     Icon(rememberDelete(), null)
@@ -83,5 +82,5 @@ fun TaskCard(task: Task, subject: String?, modifier: Modifier = Modifier, onUpda
 @Composable
 @Preview
 fun TaskCardPreview() {
-    TaskCard(Task(0, "Test", Clock.System.now(), 0, Clock.System.now()), null, Modifier.padding(8.dp), { _ ,_, _ ->}, {})
+    TaskCard(Task(0, "Teaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaast", Clock.System.now(), 0, Clock.System.now()), null, Modifier.padding(8.dp), { _ ,_, _ ->}, {})
 }
