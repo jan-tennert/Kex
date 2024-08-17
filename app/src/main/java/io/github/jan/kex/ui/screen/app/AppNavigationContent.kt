@@ -28,13 +28,7 @@ import io.github.jan.kex.ui.screen.exam.importer.ExamImporterScreen
 import io.github.jan.kex.ui.screen.settings.SettingsScreen
 import io.github.jan.kex.ui.screen.subjects.SubjectDetailScreen
 import io.github.jan.kex.ui.screen.subjects.SubjectScreen
-import io.github.jan.kex.vm.AuthenticationViewModel
-import io.github.jan.kex.vm.ExamPlanViewModel
-import io.github.jan.kex.vm.ExamViewModel
-import io.github.jan.kex.vm.SettingsViewModel
-import io.github.jan.kex.vm.SubjectViewModel
-import io.github.jan.kex.vm.TaskViewModel
-import io.github.jan.kex.vm.UpdateViewModel
+import io.github.jan.kex.vm.*
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalAnimationApi::class)
 @Composable
@@ -79,9 +73,9 @@ fun AppNavigationContent(
             ) {
                 ExamScreen(examVm, authVm, navController)
             }
-            composable(NavigationTarget.Exams.Detail.destination, arguments = listOf(navArgument("examId") { type = NavType.StringType })) { entry ->
+            composable(NavigationTarget.Exams.Detail.destination, arguments = listOf(navArgument("examId") { type = NavType.LongType })) { entry ->
                 val exams by examVm.exams.collectAsStateWithLifecycle(emptyList())
-                val examId = entry.arguments?.getString("examId") ?: error("No examId provided")
+                val examId = entry.arguments?.getLong("examId") ?: error("No examId provided")
                 val selectedExam = remember(exams) { exams.firstOrNull { exam -> exam.id == examId } }
                 selectedExam?.let {
                     ExamDetailScreen(
@@ -99,9 +93,9 @@ fun AppNavigationContent(
                     navController.navigate(NavigationTarget.Exams.destination)
                 }
             }
-            composable(NavigationTarget.Exams.Edit.destination, arguments = listOf(navArgument("examId") { type = NavType.StringType})) { entry ->
+            composable(NavigationTarget.Exams.Edit.destination, arguments = listOf(navArgument("examId") { type = NavType.LongType })) { entry ->
                 val exams by examVm.exams.collectAsStateWithLifecycle(emptyList())
-                val examId = entry.arguments?.getString("examId") ?: error("No examId provided")
+                val examId = entry.arguments?.getLong("examId") ?: error("No examId provided")
                 val selectedExam = remember(exams) { exams.firstOrNull { exam -> exam.id == examId } }
                 val subjectSuggestions by examVm.subjectSuggestions.collectAsStateWithLifecycle()
                 selectedExam?.let {  exam ->

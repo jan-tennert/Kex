@@ -5,24 +5,14 @@ import androidx.lifecycle.viewModelScope
 import io.github.jan.kex.R
 import io.github.jan.kex.data.local.ExamDataSource
 import io.github.jan.kex.data.local.SubjectSuggestionDataSource
-import io.github.jan.kex.data.remote.Exam
-import io.github.jan.kex.data.remote.ExamApi
-import io.github.jan.kex.data.remote.ExamData
-import io.github.jan.kex.data.remote.toCustomLocalDate
-import io.github.jan.kex.data.remote.toCustomString
-import io.github.jan.kex.data.remote.toExam
+import io.github.jan.kex.data.remote.*
 import io.github.jan.kex.notifications.ExamNotificationManager
 import io.github.jan.kex.toInstant
 import io.github.jan.supabase.exceptions.BadRequestRestException
 import io.github.jan.supabase.exceptions.HttpRequestException
-import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
@@ -53,10 +43,10 @@ class ExamViewModel(
             val schoolExams = if(username != null && password != null) examApi.retrieveExamsFromSchool(username, password) else emptyList()
             val examData = examApi.retrieveExamData().map {
                 if(!it.custom) {
-                    if(schoolExams.none { exam -> exam.id == it.id }) it.copy(custom = true) else it
+                    if(schoolExams.none { exam -> exam.date == it.date.toCustomString() && exam.subject == it.subject }) it.copy(custom = true) else it
                 } else it
             }
-            val newExams = schoolExams.filter { examData.none { data -> it.id == data.id } }.map(ExamData::toExam)
+            val newExams = schoolExams.filter { examData.none { data -> it.date == data.date.toCustomString() && data.subject == it.subject } }.map(ExamData::toExam)
             examData + newExams
         }.onSuccess {
             examDataSource.insertExams(it, true)
@@ -79,7 +69,7 @@ class ExamViewModel(
                 kotlin.runCatching {
                     examApi.createExam(exam.subject, exam.date.toCustomString(), exam.theme!!, exam.type)
                 }.onSuccess {
-                    examDataSource.updateOfflineCreated(it.id, false, it.id)
+                    examDataSource.updateOfflineCreated(it.id, false)
                 }.onFailure {
                     //delete the exam if it was created offline and there is a RestException
                     it.printStackTrace()
@@ -134,7 +124,6 @@ class ExamViewModel(
                 when(it) {
                     is HttpRequestException, is HttpRequestTimeoutException -> {
                         val newExam = Exam(
-                            id = subject + date,
                             subject = subject,
                             date = date.toCustomLocalDate(),
                             theme = theme,
@@ -156,7 +145,7 @@ class ExamViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
                 val currentExams = examApi.retrieveExamData()
-                val noDuplicates = exams.filter { exam -> currentExams.none { it.id == exam.id } }
+                val noDuplicates = exams.filter { exam -> currentExams.none { it.date.toCustomString() == exam.date && it.subject == exam.subject } }
                 examApi.createExams(noDuplicates)
             }.onSuccess {
                 examDataSource.insertExams(it)
@@ -186,7 +175,7 @@ class ExamViewModel(
         }
     }
 
-    fun deleteExams(examIds: List<String>) {
+    fun deleteExams(examIds: List<Long>) {
         viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
                 examApi.deleteExams(examIds)

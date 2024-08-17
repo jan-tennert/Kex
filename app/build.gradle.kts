@@ -1,5 +1,5 @@
 import java.io.FileInputStream
-import java.util.Properties
+import java.util.*
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.compose.compiler)
 }
 
 val secretsFile = rootProject.file("secrets.properties");
@@ -81,9 +82,6 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.9"
-    }
     packaging {
         resources {
             excludes += "META-INF/DEPENDENCIES"
@@ -126,14 +124,9 @@ dependencies {
     //implementation(libs.compose.onetap)
     implementation(libs.compose.rich.editor)
   //  ksp(libs.compose.destinations.ksp)
-    implementation(libs.swipe.refresh)
     implementation(libs.permissions)
     implementation(libs.semver)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
     //   androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 }

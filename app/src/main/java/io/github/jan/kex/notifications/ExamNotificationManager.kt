@@ -13,9 +13,9 @@ interface ExamNotificationManager {
 
     fun scheduleNotifications(exam: Exam)
 
-    fun cancelNotifications(exams: List<String>)
+    fun cancelNotifications(exams: List<Long>)
 
-    fun cancelNotification(id: String)
+    fun cancelNotification(id: Long)
 
 }
 
@@ -51,7 +51,7 @@ internal class ExamNotificationManagerImpl(
         )
     }
 
-    override fun cancelNotification(id: String) {
+    override fun cancelNotification(id: Long) {
         val notificationIntent = Intent(context, ExamBroadcastReceiver::class.java)
         val newPendingIntent = PendingIntent.getBroadcast(
             context,
@@ -62,7 +62,7 @@ internal class ExamNotificationManagerImpl(
         alarmManager.cancel(newPendingIntent)
     }
 
-    override fun cancelNotifications(exams: List<String>) {
+    override fun cancelNotifications(exams: List<Long>) {
         exams.forEach { cancelNotification(it) }
     }
 

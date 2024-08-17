@@ -6,11 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,19 +22,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mohamedrejeb.richeditor.model.RichTextState
-import io.github.jan.kex.ui.icons.rememberAddLinkIcon
-import io.github.jan.kex.ui.icons.rememberCircle
-import io.github.jan.kex.ui.icons.rememberCode
-import io.github.jan.kex.ui.icons.rememberFormatAlignCenter
-import io.github.jan.kex.ui.icons.rememberFormatAlignLeft
-import io.github.jan.kex.ui.icons.rememberFormatAlignRight
-import io.github.jan.kex.ui.icons.rememberFormatBold
-import io.github.jan.kex.ui.icons.rememberFormatItalic
-import io.github.jan.kex.ui.icons.rememberFormatListBulleted
-import io.github.jan.kex.ui.icons.rememberFormatListNumbered
-import io.github.jan.kex.ui.icons.rememberFormatSize
-import io.github.jan.kex.ui.icons.rememberFormatStrikethrough
-import io.github.jan.kex.ui.icons.rememberFormatUnderlined
+import io.github.jan.kex.ui.icons.*
 
 @Composable
 fun RichTextStyleButton(
@@ -282,9 +266,9 @@ fun RichTextStyleRow(
         item {
             RichTextStyleButton(
                 onClick = {
-                    state.toggleCode()
+                    state.toggleCodeSpan()
                 },
-                isSelected = state.isCode,
+                isSelected = state.isCodeSpan,
                 icon = rememberCode(),
             )
         }

@@ -14,9 +14,10 @@ import androidx.compose.ui.unit.dp
 import io.github.jan.kex.R
 import io.github.jan.kex.ui.icons.rememberMail
 import io.github.jan.supabase.annotations.SupabaseExperimental
+import io.github.jan.supabase.compose.auth.ui.annotations.AuthUiExperimental
 import io.github.jan.supabase.compose.auth.ui.password.OutlinedPasswordField
 
-@OptIn(SupabaseExperimental::class, ExperimentalMaterial3Api::class)
+@OptIn(SupabaseExperimental::class, ExperimentalMaterial3Api::class, AuthUiExperimental::class)
 @Composable
 fun SchoolEntry(username: String, password: String, onUsernameChange: (String) -> Unit, onPasswordChange: (String) -> Unit) {
     Column {

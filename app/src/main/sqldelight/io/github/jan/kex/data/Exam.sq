@@ -1,7 +1,7 @@
 import kotlin.Boolean;
 
 CREATE TABLE localExam(
-    id TEXT PRIMARY KEY NOT NULL,
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     subject TEXT NOT NULL,
     theme TEXT,
     date TEXT NOT NULL,
@@ -21,7 +21,7 @@ update:
 UPDATE localExam SET id = ?, subject = ?, date = ?, points = ?, offlineCreated = ? WHERE id = ?;
 
 updateOfflineCreated:
-UPDATE localExam SET offlineCreated = ?, id = ? WHERE id = ?;
+UPDATE localExam SET offlineCreated = ? WHERE id = ?;
 
 delete:
 DELETE FROM localExam WHERE id = ?;

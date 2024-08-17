@@ -2,26 +2,11 @@ package io.github.jan.kex.ui.screen.settings
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,15 +19,9 @@ import io.github.jan.kex.ui.icons.rememberLogout
 import io.github.jan.kex.ui.screen.settings.entries.InformationEntry
 import io.github.jan.kex.ui.screen.settings.entries.SchoolEntry
 import io.github.jan.kex.ui.screen.settings.entries.ThemeEntry
-import io.github.jan.kex.vm.AuthenticationViewModel
-import io.github.jan.kex.vm.ExamViewModel
-import io.github.jan.kex.vm.SettingsViewModel
-import io.github.jan.kex.vm.SubjectViewModel
-import io.github.jan.kex.vm.TaskViewModel
-import io.github.jan.kex.vm.UpdateViewModel
+import io.github.jan.kex.vm.*
 import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.compose.auth.ComposeAuth
-import io.github.jan.supabase.compose.auth.composable.rememberSignOutWithGoogle
 import org.koin.compose.koinInject
 
 @OptIn(SupabaseExperimental::class, ExperimentalMaterial3Api::class,
@@ -120,10 +99,9 @@ fun SettingsScreen(
     }
 
     if(showLogoutDialog) {
-        val logoutState = composeAuth.rememberSignOutWithGoogle()
         LogoutDialog(
             onLogout = {
-                logoutState.startFlow()
+                authVm.signOut()
                 //authVm.logout() not neccessary as invoked by compose auth
                 authVm.clearSchoolCredentials()
                 examVm.clearLocalEntries()

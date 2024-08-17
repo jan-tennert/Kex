@@ -6,38 +6,25 @@ import io.github.jan.supabase.functions.Functions
 import io.github.jan.supabase.gotrue.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.putJsonObject
-import io.ktor.client.call.body
-import io.ktor.client.request.parameter
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.daysUntil
-import kotlinx.datetime.todayIn
+import kotlinx.datetime.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.buildJsonArray
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.encodeToJsonElement
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.put
+import kotlinx.serialization.json.*
 import kotlin.time.Duration.Companion.days
 
 @Serializable
 data class ExamData(
     val subject: String,
     val date: String,
-) {
-
-    val id = subject + date
-
-}
+)
 
 @Serializable
 data class Exam(
-    val id: String,
+    val id: Long = -1,
     val subject: String,
     val date: LocalDate,
     val theme: String?,
@@ -72,9 +59,9 @@ interface ExamApi {
 
     suspend fun createExams(exams: List<ExamData>): List<Exam>
 
-    suspend fun deleteExam(examId: String)
+    suspend fun deleteExam(examId: Long)
 
-    suspend fun deleteExams(examIds: List<String>)
+    suspend fun deleteExams(examIds: List<Long>)
 
 }
 
@@ -84,8 +71,9 @@ internal class ExamApiImpl(
     private val auth: Auth
 ) : ExamApi {
 
-    private val exams = postgrest["exams"]
-    private val getExams = functions.buildEdgeFunction("class-tests", Headers.build {
+    private val json = Json { encodeDefaults = false }
+    private val exams = postgrest["exams_new"]
+    private val getExams = functions.buildEdgeFunction("class-tests", headers = Headers.build {
         append(HttpHeaders.ContentType, "application/json")
     })
 
@@ -122,18 +110,19 @@ internal class ExamApiImpl(
     @OptIn(SupabaseInternal::class)
     override suspend fun createExam(subject: String, date: String, theme: String, type: Exam.Type): Exam {
         val exam = Exam(
-            id = subject + date,
             subject = subject,
             date = date.toCustomLocalDate(),
             theme = theme,
             type = type,
             custom = true
         )
-        exams.insert(buildJsonObject {
-            putJsonObject(Json.encodeToJsonElement(exam).jsonObject)
+        val newExam = exams.insert(buildJsonObject {
+            putJsonObject(json.encodeToJsonElement(exam).jsonObject)
             put("creator_id", auth.currentUserOrNull()?.id)
-        })
-        return exam
+        }) {
+            select()
+        }
+        return newExam.decodeSingle()
     }
 
     @OptIn(SupabaseInternal::class)
@@ -144,15 +133,17 @@ internal class ExamApiImpl(
         val result = this.exams.insert(buildJsonArray {
             examList.forEach {
                 add(buildJsonObject {
-                    putJsonObject(Json.encodeToJsonElement(it).jsonObject)
+                    putJsonObject(json.encodeToJsonElement(it).jsonObject)
                     put("creator_id", auth.currentUserOrNull()?.id)
                 })
             }
-        })
+        }) {
+            select()
+        }
         return result.decodeList()
     }
 
-    override suspend fun deleteExam(examId: String) {
+    override suspend fun deleteExam(examId: Long) {
         exams.delete {
             filter {
                 Exam::id eq examId
@@ -160,7 +151,7 @@ internal class ExamApiImpl(
         }
     }
 
-    override suspend fun deleteExams(examIds: List<String>) {
+    override suspend fun deleteExams(examIds: List<Long>) {
         exams.delete {
             filter {
                 Exam::id isIn examIds
@@ -172,7 +163,6 @@ internal class ExamApiImpl(
 
 fun ExamData.toExam(): Exam {
     return Exam(
-        id = subject + date,
         subject = subject,
         date = date.toCustomLocalDate(),
         theme = null,

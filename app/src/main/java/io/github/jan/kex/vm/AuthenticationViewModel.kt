@@ -69,4 +69,14 @@ class AuthenticationViewModel(
         }
     }
 
+    fun signOut() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                authenticationApi.logout()
+            }.onFailure {
+                Log.e("LOG", "Failed to logout", it)
+            }
+        }
+    }
+
 }

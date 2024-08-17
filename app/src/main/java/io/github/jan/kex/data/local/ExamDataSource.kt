@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.toLocalDate
+import kotlinx.datetime.LocalDate
 
 interface ExamDataSource {
 
@@ -18,11 +18,11 @@ interface ExamDataSource {
 
     suspend fun insertExams(exams: List<Exam>, deleteRest: Boolean = false)
 
-    suspend fun updateOfflineCreated(id: String, offlineCreated: Boolean, newId: String)
+    suspend fun updateOfflineCreated(id: Long, offlineCreated: Boolean)
 
-    suspend fun deleteExam(id: String)
+    suspend fun deleteExam(id: Long)
 
-    suspend fun deleteExams(ids: List<String>)
+    suspend fun deleteExams(ids: List<Long>)
 
     suspend fun clear()
 
@@ -47,11 +47,11 @@ internal class ExamDataSourceImpl(
     override suspend fun insertExams(exams: List<Exam>, deleteRest: Boolean) {
         withContext(Dispatchers.IO) {
             val oldExams = getExams()
-         //   val toDelete = if(deleteRest) oldExams.filter { oldExam -> exams.none { it.id == oldExam.id } && !oldExam.offlineCreated }.map { it.id } else emptyList()
+            val toDelete = if(deleteRest) oldExams.filter { oldExam -> exams.none { it.id == oldExam.id } && !oldExam.offlineCreated }.map { it.id } else emptyList()
             queries.transaction {
                 exams.forEach { exam ->
                     queries.insert(
-                        id = exam.id,
+                        id = if(exam.id != -1L) exam.id else null,
                         subject = exam.subject,
                         date = exam.date.toString(),
                         theme = exam.theme,
@@ -61,20 +61,20 @@ internal class ExamDataSourceImpl(
                         offlineCreated = exam.offlineCreated
                     )
                 }
-            /*    toDelete.forEach {
+                toDelete.forEach {
                     queries.delete(it)
-                }*/
+                }
             }
         }
     }
 
-    override suspend fun deleteExam(id: String) {
+    override suspend fun deleteExam(id: Long) {
         withContext(Dispatchers.IO) {
             queries.delete(id)
         }
     }
 
-    override suspend fun deleteExams(ids: List<String>) {
+    override suspend fun deleteExams(ids: List<Long>) {
         withContext(Dispatchers.IO) {
             queries.transaction {
                 ids.forEach { id ->
@@ -90,9 +90,9 @@ internal class ExamDataSourceImpl(
         }
     }
 
-    override suspend fun updateOfflineCreated(id: String, offlineCreated: Boolean, newId: String) {
+    override suspend fun updateOfflineCreated(id: Long, offlineCreated: Boolean) {
         withContext(Dispatchers.IO) {
-            queries.updateOfflineCreated(offlineCreated, id, newId)
+            queries.updateOfflineCreated(offlineCreated, id)
         }
     }
 
@@ -102,7 +102,7 @@ fun LocalExam.toExam(): Exam {
     return Exam(
         id = id,
         subject = subject,
-        date = date.toLocalDate(),
+        date = LocalDate.parse(date),
         theme = theme,
         type = Exam.Type.valueOf(type),
         custom = custom == 1L,
