@@ -102,12 +102,13 @@ fun AppNavigationContent(
                     ExamEditScreen(
                         exam = exam,
                         suggestions = subjectSuggestions,
-                        onEdit = { subject, theme, points ->
+                        onEdit = { subject, theme, points, date ->
                             examVm.updateExam(
                                 selectedExam,
                                 subject,
                                 theme,
-                                points?.toLongOrNull()
+                                points?.toLongOrNull(),
+                                date
                             )
                             navController.popBackStack()
                         })

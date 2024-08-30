@@ -53,7 +53,7 @@ interface ExamApi {
 
     suspend fun retrieveExamData(): List<Exam>
 
-    suspend fun updateExam(exam: Exam, subject: String, theme: String?, points: Long?)
+    suspend fun updateExam(exam: Exam, subject: String, theme: String?, points: Long?, date: String?)
 
     suspend fun createExam(subject: String, date: String, theme: String, type: Exam.Type): Exam
 
@@ -92,14 +92,15 @@ internal class ExamApiImpl(
     }
 
     @OptIn(SupabaseInternal::class)
-    override suspend fun updateExam(exam: Exam, subject: String, theme: String?, points: Long?) {
+    override suspend fun updateExam(exam: Exam, subject: String, theme: String?, points: Long?, date: String?) {
         exams.upsert(buildJsonObject {
             putJsonObject(
                 Json.encodeToJsonElement(
                     exam.copy(
                         theme = theme,
                         subject = subject,
-                        points = points
+                        points = points,
+                        date = date?.toCustomLocalDate() ?: exam.date
                     )
                 ).jsonObject
             )

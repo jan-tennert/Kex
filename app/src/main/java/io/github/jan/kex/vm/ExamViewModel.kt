@@ -90,15 +90,15 @@ class ExamViewModel(
         }
     }
 
-    fun updateExam(exam: Exam, subject: String, theme: String?, points: Long?) {
+    fun updateExam(exam: Exam, subject: String, theme: String?, points: Long?, date: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             subjectSuggestionDataSource.insert(exam.subject)
             kotlin.runCatching {
                 if(!exam.offlineCreated) {
-                    examApi.updateExam(exam, subject, theme, points)
+                    examApi.updateExam(exam, subject, theme, points, date)
                 }
             }.onSuccess {
-                val newExam = exam.copy(subject = subject, theme = theme, points = points)
+                val newExam = exam.copy(subject = subject, theme = theme, points = points, date = date?.toCustomLocalDate() ?: exam.date)
                 examDataSource.insertExams(listOf(newExam))
                 examNotificationManager.scheduleNotifications(newExam)
             }.onFailure {

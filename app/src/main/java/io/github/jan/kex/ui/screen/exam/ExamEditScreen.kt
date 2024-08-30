@@ -4,11 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,18 +21,22 @@ import androidx.compose.ui.unit.sp
 import com.mohamedrejeb.richeditor.model.RichTextState
 import io.github.jan.kex.R
 import io.github.jan.kex.data.remote.Exam
+import io.github.jan.kex.ui.components.DatePickerField
 import io.github.jan.kex.ui.components.SubjectField
 import io.github.jan.kex.ui.components.ThemeEditor
 import io.github.jan.kex.ui.icons.rememberNumbersIcon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExamEditScreen(
     exam: Exam,
     suggestions: List<String>,
-    onEdit: (subject: String, theme: String?, points: String?) -> Unit
+    onEdit: (subject: String, theme: String?, points: String?, date: String?) -> Unit
 ) {
     Column(
      //   modifier = Modifier.padding(16.dp),
@@ -59,7 +59,22 @@ fun ExamEditScreen(
             exam.theme?.let { setHtml(it) }
         }) }
         val markdownTheme = remember { mutableStateOf(TextFieldValue(richTheme.toMarkdown())) }
+        val datePickerState = rememberDatePickerState()
+        var showDatePicker by remember { mutableStateOf(false) }
+        val selectedDate = remember(datePickerState, showDatePicker) {
+            datePickerState.selectedDateMillis?.let {
+                val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(
+                    TimeZone.currentSystemDefault()
+                )
+                "${if(date.dayOfMonth < 10) "0" + date.dayOfMonth else date.dayOfMonth}.${if (date.monthNumber < 10) "0" + date.monthNumber else date.monthNumber}.${date.year}"
+            }
+        }
         SubjectField(subject = subject, onSubjectChange = { subject = it }, isError = isError, suggestions = filteredSuggestions)
+        DatePickerField(
+            selectedDate = selectedDate,
+            onClick = { showDatePicker = true },
+            displayError = isError && selectedDate == null
+        )
         OutlinedTextField(
             value = points,
             onValueChange = {
@@ -80,7 +95,7 @@ fun ExamEditScreen(
         Button(
             onClick = {
                 if (subject.text.isNotBlank()) {
-                    onEdit(subject.text, richTheme.toHtml().ifBlank { null }, points.ifBlank { null })
+                    onEdit(subject.text, richTheme.toHtml().ifBlank { null }, points.ifBlank { null }, selectedDate)
                 } else {
                     errorScope.launch {
                         isError = true
@@ -93,6 +108,20 @@ fun ExamEditScreen(
                 .padding(12.dp)
         ) {
             Text(stringResource(id = R.string.save))
+        }
+        if (showDatePicker) {
+            DatePickerDialog(
+                onDismissRequest = { showDatePicker = false },
+                confirmButton = {
+                    TextButton(onClick = { showDatePicker = false }) {
+                        Text("Ok")
+                    }
+                }
+            ) {
+                DatePicker(
+                    state = datePickerState
+                )
+            }
         }
     }
 }
