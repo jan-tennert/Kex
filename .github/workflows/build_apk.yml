@@ -100,6 +100,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: apk  
+      - name: Display structure of downloaded files
+        run: ls -R
       - if: github.event_name == 'workflow_dispatch' 
         run: echo "TAG_NAME=${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
       - if: github.event_name == 'push'
