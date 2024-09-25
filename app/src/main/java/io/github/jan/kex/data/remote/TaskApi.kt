@@ -66,7 +66,7 @@ internal class TaskApiImpl(
 
     override suspend fun createTask(subjectId: Long, task: String, dueDate: Instant): Task {
         val subject = TaskData(task, dueDate, goTrue.currentUserOrNull()!!.id, subjectId)
-        return subjects.insert(subject).decodeSingle()
+        return subjects.insert(subject) { select() }.decodeSingle()
     }
 
     override suspend fun deleteTask(subjectId: Long) {
