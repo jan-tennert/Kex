@@ -16,7 +16,7 @@ sqldelight = "2.0.2"
 compose-navigation = "2.7.7"
 compose = "1.6.8"
 material3 = "1.2.1"
-compose-rich-editor = "1.0.0-rc06"
+compose-rich-editor = "1.0.0-dev01"
 semver = "1.4.2"
 permissions = "0.35.1-alpha"
 
