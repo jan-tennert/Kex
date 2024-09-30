@@ -18,7 +18,7 @@ compose = "1.6.8"
 material3 = "1.2.1"
 compose-rich-editor = "1.0.0-rc06"
 semver = "1.4.2"
-permissions = "0.35.1-alpha"
+permissions = "0.36.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
