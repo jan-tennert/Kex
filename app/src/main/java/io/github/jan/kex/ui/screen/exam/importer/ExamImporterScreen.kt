@@ -77,7 +77,7 @@ private fun findMatchingAbiDates(plan: ExamPlan, exams: List<ExamData>): List<Ex
         it.subject.clean()
     }
     return plan.examsByDate.toList().map { (date, exams) ->
-        exams.filter { e -> e.isAbi && subjects.any { it == e.subject.clean() } }.map {
+        exams.filter { e -> e.isAbi && subjects.any { it == e.subject.clean() || e.subject == "*" } }.map {
             ExamData(it.teacher + " " + it.subject, date)
         }
     }.filter { it.isNotEmpty() }.flatten()
