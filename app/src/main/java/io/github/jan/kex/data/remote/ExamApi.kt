@@ -3,7 +3,7 @@ package io.github.jan.kex.data.remote
 import io.github.jan.kex.R
 import io.github.jan.supabase.annotations.SupabaseInternal
 import io.github.jan.supabase.functions.Functions
-import io.github.jan.supabase.gotrue.Auth
+import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.putJsonObject
 import io.ktor.client.call.*

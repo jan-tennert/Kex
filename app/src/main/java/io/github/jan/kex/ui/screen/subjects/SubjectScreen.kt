@@ -9,8 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.*
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -57,12 +56,7 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
 
     val expandCreateButton by remember { derivedStateOf { gridState.firstVisibleItemIndex == 0 } }
 
-    val swipeRefreshState = rememberPullToRefreshState()
-    if(swipeRefreshState.isRefreshing) {
-        LaunchedEffect(true) {
-            subjectVm.refreshSubjects(); taskViewModel.syncTasks()
-        }
-    }
+    var isRefreshing by remember { mutableStateOf(false) }
     if(refreshing) {
         LaunchedEffect(true) {
             refreshStarted = true
@@ -70,11 +64,17 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
     }
     if(refreshStarted && !refreshing) {
         LaunchedEffect(true) {
-            swipeRefreshState.endRefresh()
+            isRefreshing = false
         }
     }
     val errorMessage by subjectVm.errorMessage.collectAsStateWithLifecycle()
-    Box(Modifier.nestedScroll(swipeRefreshState.nestedScrollConnection)) {
+    PullToRefreshBox(
+        onRefresh = {
+            isRefreshing = true
+            subjectVm.refreshSubjects(); taskViewModel.syncTasks()
+        },
+        isRefreshing = isRefreshing
+    ) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -106,7 +106,6 @@ fun SubjectScreen(subjectVm: SubjectViewModel, taskViewModel: TaskViewModel, nav
                 }
             }
         }
-        PullToRefreshContainer(state = swipeRefreshState, modifier = Modifier.align(Alignment.TopCenter))
     }
 
     Box(

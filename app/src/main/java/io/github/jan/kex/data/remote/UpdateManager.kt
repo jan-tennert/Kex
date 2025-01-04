@@ -48,7 +48,7 @@ internal class UpdateManagerImpl(
             callbackFlow {
                 val response = httpClient.get(API_URL.format(version.toString())) {
                     onDownload { bytesSentTotal, contentLength ->
-                        val float = bytesSentTotal.toFloat() / contentLength.toFloat()
+                        val float = bytesSentTotal.toFloat() / (contentLength?.toFloat() ?: 1f)
                         trySend(UpdateDownloadEvent.Progress(if(float.isNaN()) 0f else float))
                     }
                 }

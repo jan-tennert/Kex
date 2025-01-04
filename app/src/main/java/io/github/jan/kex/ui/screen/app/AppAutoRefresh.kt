@@ -12,15 +12,15 @@ import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.ExamViewModel
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun AutoRefresh(
-    examVm: ExamViewModel = getViewModel(),
-    authVm: AuthenticationViewModel = getViewModel(),
-    subjectVm: SubjectViewModel = getViewModel(),
-    taskVm: TaskViewModel = getViewModel()
+    examVm: ExamViewModel = koinViewModel(),
+    authVm: AuthenticationViewModel = koinViewModel(),
+    subjectVm: SubjectViewModel = koinViewModel(),
+    taskVm: TaskViewModel = koinViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current

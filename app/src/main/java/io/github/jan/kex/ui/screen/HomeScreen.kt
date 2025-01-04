@@ -46,14 +46,14 @@ import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun HomeScreen(
-    examVm: ExamViewModel = getViewModel(),
-    taskVm: TaskViewModel = getViewModel(),
-    subjectVm: SubjectViewModel = getViewModel(),
+    examVm: ExamViewModel = koinViewModel(),
+    taskVm: TaskViewModel = koinViewModel(),
+    subjectVm: SubjectViewModel = koinViewModel(),
     navController: NavController
 ) {
     val exams by examVm.exams.collectAsStateWithLifecycle(emptyList())

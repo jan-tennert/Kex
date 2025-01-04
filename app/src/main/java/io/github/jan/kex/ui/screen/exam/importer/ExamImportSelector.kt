@@ -29,7 +29,7 @@ fun ExamImportSelector(plan: ExamPlan, onImport: (List<String>) -> Unit, onBack:
     val subjects = remember(plan) {
         plan.examsByDate.toList().map { (_, exams) ->
             exams.map { it }
-        }.flatten().distinctBy { it.subject }.sortedBy { it.subject }
+        }.flatten().filter { !it.isAbi }.distinctBy { it.subject }.sortedBy { it.subject }
     }
     val selectedCourses = remember { mutableStateListOf<String>() }
     Column(

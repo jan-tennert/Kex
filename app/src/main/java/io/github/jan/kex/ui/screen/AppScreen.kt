@@ -28,20 +28,20 @@ import io.github.jan.kex.vm.SettingsViewModel
 import io.github.jan.kex.vm.SubjectViewModel
 import io.github.jan.kex.vm.TaskViewModel
 import io.github.jan.kex.vm.UpdateViewModel
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalPermissionsApi::class,
     ExperimentalFoundationApi::class
 )
 @Composable
 fun AppScreen(
-    examVm: ExamViewModel = getViewModel(),
-    authVm: AuthenticationViewModel = getViewModel(),
-    subjectVm: SubjectViewModel = getViewModel(),
-    taskVm: TaskViewModel = getViewModel(),
-    updateVm: UpdateViewModel = getViewModel(),
-    settingsVm: SettingsViewModel = getViewModel(),
-    examPlanVm: ExamPlanViewModel = getViewModel()
+    examVm: ExamViewModel = koinViewModel(),
+    authVm: AuthenticationViewModel = koinViewModel(),
+    subjectVm: SubjectViewModel = koinViewModel(),
+    taskVm: TaskViewModel = koinViewModel(),
+    updateVm: UpdateViewModel = koinViewModel(),
+    settingsVm: SettingsViewModel = koinViewModel(),
+    examPlanVm: ExamPlanViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()

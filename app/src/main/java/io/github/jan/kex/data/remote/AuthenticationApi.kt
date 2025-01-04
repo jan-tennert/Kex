@@ -1,11 +1,11 @@
 package io.github.jan.kex.data.remote
 
 import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.gotrue.SessionStatus
-import io.github.jan.supabase.gotrue.auth
-import io.github.jan.supabase.gotrue.providers.Google
-import io.github.jan.supabase.gotrue.providers.IDTokenProvider
-import io.github.jan.supabase.gotrue.providers.builtin.IDToken
+import io.github.jan.supabase.auth.status.SessionStatus
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.Google
+import io.github.jan.supabase.auth.providers.IDTokenProvider
+import io.github.jan.supabase.auth.providers.builtin.IDToken
 import kotlinx.coroutines.flow.StateFlow
 
 interface AuthenticationApi {

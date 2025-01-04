@@ -13,7 +13,7 @@ import io.github.jan.kex.ui.screen.RootScreen
 import io.github.jan.kex.ui.theme.KexTheme
 import io.github.jan.kex.vm.SettingsViewModel
 import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.gotrue.handleDeeplinks
+import io.github.jan.supabase.auth.handleDeeplinks
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 

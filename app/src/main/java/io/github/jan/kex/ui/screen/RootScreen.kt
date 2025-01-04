@@ -22,25 +22,25 @@ import io.github.jan.kex.ui.screen.settings.LocalKexTheme
 import io.github.jan.kex.vm.AuthenticationViewModel
 import io.github.jan.kex.vm.SettingsViewModel
 import io.github.jan.kex.vm.UpdateViewModel
-import io.github.jan.supabase.gotrue.SessionStatus
+import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.z4kn4fein.semver.Version
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RootScreen(
-    authVM: AuthenticationViewModel = getViewModel(),
-    updateVm: UpdateViewModel = getViewModel(),
-    settingsVm: SettingsViewModel = getViewModel()
+    authVM: AuthenticationViewModel = koinViewModel(),
+    updateVm: UpdateViewModel = koinViewModel(),
+    settingsVm: SettingsViewModel = koinViewModel()
 ) {
     val sessionStatus by authVM.sessionStatus.collectAsStateWithLifecycle()
     val currentTheme by settingsVm.currentTheme.collectAsState()
     CompositionLocalProvider(LocalKexTheme provides currentTheme) {
         when(sessionStatus) {
-            is SessionStatus.Authenticated, is SessionStatus.NetworkError -> {
+            is SessionStatus.Authenticated, is SessionStatus.RefreshFailure -> {
                 AppScreen(authVm = authVM, updateVm = updateVm, settingsVm = settingsVm)
             }
-            SessionStatus.LoadingFromStorage -> {
+            SessionStatus.Initializing -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
@@ -55,7 +55,7 @@ fun RootScreen(
 
 @Composable
 fun VersionCheck(
-    updateVm: UpdateViewModel = getViewModel()
+    updateVm: UpdateViewModel = koinViewModel()
 ) {
     val latestVersion by updateVm.latestVersion.collectAsState()
     val currentVersion = remember { Version.parse(BuildConfig.VERSION_NAME) }

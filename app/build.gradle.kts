@@ -24,7 +24,7 @@ val packageName = "io.github.jan.kex"
 
 android {
     namespace = packageName
-    compileSdk = 34
+    compileSdk = 35
 
     signingConfigs {
         if(isCI) {
@@ -34,12 +34,16 @@ android {
                 keyAlias = System.getenv("SIGNING_KEY_ALIAS")
                 keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
             }
+        } else {
+            named("debug") {
+                storeFile = File("/home/jan/.android/debug.keystore")
+            }
         }
     }
     defaultConfig {
         applicationId = packageName
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = appVersionCode
         versionName = appVersionName
 

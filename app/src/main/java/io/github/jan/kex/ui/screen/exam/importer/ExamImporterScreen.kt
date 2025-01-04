@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import io.github.jan.kex.data.remote.ExamData
+import io.github.jan.kex.data.remote.ExamPlan
 import io.github.jan.kex.ui.nav.NavigationTarget
 import io.github.jan.kex.vm.ExamPlanViewModel
 import io.github.jan.kex.vm.ExamViewModel
@@ -60,7 +61,7 @@ fun ExamImporterScreen(
                             ExamData(it.subject, date)
                         }
                     }.flatten().filter { it.subject in selectedSubjects }
-                    examVm.importExams(exams)
+                    examVm.importExams(exams + findMatchingAbiDates(examPlan!!, exams))
                     navigator.navigate(NavigationTarget.Exams.destination)
                 },
                 onBack = {
@@ -69,4 +70,19 @@ fun ExamImporterScreen(
             )
         }
     }
+}
+
+private fun findMatchingAbiDates(plan: ExamPlan, exams: List<ExamData>): List<ExamData> {
+    val subjects = exams.filter { !it.subject.endsWith("B") }.map {
+        it.subject.clean()
+    }
+    return plan.examsByDate.toList().map { (date, exams) ->
+        exams.filter { e -> e.isAbi && subjects.any { it == e.subject.clean() } }.map {
+            ExamData(it.teacher + " " + it.subject, date)
+        }
+    }.filter { it.isNotEmpty() }.flatten()
+}
+
+private fun String.clean(): String {
+    return if(this.last().isDigit()) this.substring(0, this.length - 1) else this
 }

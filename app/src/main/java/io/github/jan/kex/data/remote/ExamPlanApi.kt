@@ -1,6 +1,7 @@
 package io.github.jan.kex.data.remote
 
 import io.github.jan.supabase.storage.Storage
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -9,7 +10,9 @@ typealias ExamPlanMap = Map<String, List<ExamPlanEntry>>
 @Serializable
 data class ExamPlanEntry(
     val subject: String,
-    val teacher: String
+    val teacher: String,
+    @SerialName("abi")
+    val isAbi: Boolean = false
 )
 
 data class ExamPlan(
